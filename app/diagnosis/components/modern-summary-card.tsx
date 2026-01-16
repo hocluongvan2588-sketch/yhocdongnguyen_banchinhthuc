@@ -106,13 +106,15 @@ export function ModernSummaryCard({ interpretation }: ModernSummaryCardProps) {
           <AlertTitle className="text-lg font-semibold mb-2 whitespace-normal">Phân tích chi tiết</AlertTitle>
           <AlertDescription className="text-base leading-relaxed space-y-2 whitespace-normal break-words">
             <p className="whitespace-normal">{renderMarkdown(interpretation.summary)}</p>
-            <div className="text-muted-foreground space-y-3">
-              {interpretation.healthDetail.split("\n\n").map((paragraph, index) => (
-                <p key={index} className="leading-relaxed whitespace-normal break-words">
-                  {renderMarkdown(paragraph)}
-                </p>
-              ))}
-            </div>
+            {interpretation.healthDetail && (
+              <div className="text-muted-foreground space-y-3">
+                {interpretation.healthDetail.split("\n\n").map((paragraph, index) => (
+                  <p key={index} className="leading-relaxed whitespace-normal break-words">
+                    {renderMarkdown(paragraph)}
+                  </p>
+                ))}
+              </div>
+            )}
           </AlertDescription>
         </Alert>
 
