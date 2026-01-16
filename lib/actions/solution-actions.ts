@@ -1,0 +1,86 @@
+"use server"
+
+import { getSupabaseServerClient } from "@/lib/supabase/server"
+
+export async function getSolutionsByHexagram(hexagram: string) {
+  const supabase = await getSupabaseServerClient()
+
+  const { data: solutions, error } = await supabase
+    .from("solutions")
+    .select("*")
+    .eq("hexagram", hexagram)
+    .order("solution_type")
+
+  if (error) {
+    console.error("[v0] Error fetching solutions:", error)
+    return { error: "Không thể tải giải pháp" }
+  }
+
+  return { solutions }
+}
+
+export async function checkUserAccess(solutionId: string) {
+  const supabase = await getSupabaseServerClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return { hasAccess: false }
+  }
+
+  // Check if user has access to this solution
+  const { data: access, error } = await supabase
+    .from("user_access")
+    .select("*")
+    .eq("user_id", user.id)
+    .eq("solution_id", solutionId)
+    .maybeSingle()
+
+  if (error) {
+    console.error("[v0] Error checking access:", error)
+    return { hasAccess: false }
+  }
+
+  // Check if access has expired
+  if (access && access.expires_at) {
+    const now = new Date()
+    const expiresAt = new Date(access.expires_at)
+    if (now > expiresAt) {
+      return { hasAccess: false, expired: true }
+    }
+  }
+
+  return { hasAccess: !!access, access }
+}
+
+export async function getUserAccessibleSolutions() {
+  const supabase = await getSupabaseServerClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return { error: "Người dùng chưa đăng nhập" }
+  }
+
+  // Get all solutions the user has access to
+  const { data: accessRecords, error } = await supabase
+    .from("user_access")
+    .select(
+      `
+      *,
+      solutions (*)
+    `,
+    )
+    .eq("user_id", user.id)
+
+  if (error) {
+    console.error("[v0] Error fetching accessible solutions:", error)
+    return { error: "Không thể tải danh sách giải pháp" }
+  }
+
+  return { accessRecords }
+}
