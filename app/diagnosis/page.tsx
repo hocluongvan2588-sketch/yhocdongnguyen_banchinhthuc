@@ -64,6 +64,10 @@ function DiagnosisContent() {
   const hour = searchParams.get("hour") || ""
   const minute = searchParams.get("minute") || ""
   const method = searchParams.get("method") || "time"
+  const gender = searchParams.get("gender") || ""
+  const age = searchParams.get("age") || ""
+  const painLocation = searchParams.get("painLocation") || ""
+  const userLocation = searchParams.get("location") || ""
 
   const currentMonth = month ? Number.parseInt(month) : new Date().getMonth() + 1
 
@@ -193,6 +197,10 @@ function DiagnosisContent() {
         transformedLower: transformedHexagram?.lower || null,
         healthConcern,
         currentMonth,
+        gender: gender || undefined,
+        age: age ? Number.parseInt(age) : undefined,
+        painLocation: painLocation || undefined,
+        userLocation: userLocation || undefined,
       }
 
       console.log("[v0] Request body:", requestBody)
@@ -597,7 +605,11 @@ function DiagnosisContent() {
                     onClick={() => handlePackageClick(1)}
                   >
                     <div className="relative h-48 bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900/20 dark:to-green-800/10">
-                      <img src="/traditional-herbal-medicine-herbs-natural-remedies.jpg" alt="Gói Nam Dược" className="w-full h-full object-cover" />
+                      <img
+                        src="/traditional-herbal-medicine-herbs-natural-remedies.jpg"
+                        alt="Gói Nam Dược"
+                        className="w-full h-full object-cover"
+                      />
                       {recommendedPackage.primary === "nam-duoc" && (
                         <Badge className="absolute top-3 right-3">Phù hợp với bạn</Badge>
                       )}
@@ -653,7 +665,11 @@ function DiagnosisContent() {
                     onClick={() => handlePackageClick(3)}
                   >
                     <div className="relative h-48 bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/20 dark:to-purple-800/10">
-                      <img src="/i-ching-hexagram-yijing-divination-ancient-wisdom.jpg" alt="Gói Tượng Số" className="w-full h-full object-cover" />
+                      <img
+                        src="/i-ching-hexagram-yijing-divination-ancient-wisdom.jpg"
+                        alt="Gói Tượng Số"
+                        className="w-full h-full object-cover"
+                      />
                       {recommendedPackage.primary === "tuong-so" && (
                         <Badge className="absolute top-3 right-3">Phù hợp với bạn</Badge>
                       )}

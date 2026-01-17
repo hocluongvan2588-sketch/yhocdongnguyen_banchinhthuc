@@ -178,7 +178,13 @@ function findSimilarPreviousQuestion(
 export default function MainPage() {
   const router = useRouter()
   const { user } = useAuth()
-  const [authModalOpen, setAuthModalOpen] = useState(false) // Renamed from showAuthModal to authModalOpen to match usage
+  const [authModalOpen, setAuthModalOpen] = useState(false)
+
+  const handleAuthModalClose = async () => {
+    setAuthModalOpen(false)
+    // Refresh the page to get updated user state
+    window.location.reload()
+  }
 
   const [input, setInput] = useState<TimeInput>({
     year: new Date().getFullYear(),
@@ -692,7 +698,7 @@ export default function MainPage() {
                         <SelectContent>
                           <SelectItem value="left">Bên trái cơ thể</SelectItem>
                           <SelectItem value="right">Bên phải cơ thể</SelectItem>
-                          <SelectItem value="center">Bên trong/Trung tâm</SelectItem>
+                          <SelectItem value="center">Ở giữa/Trung tâm</SelectItem>
                           <SelectItem value="whole">Toàn thân</SelectItem>
                           <SelectItem value="unknown">Không rõ ràng</SelectItem>
                         </SelectContent>
@@ -1220,7 +1226,7 @@ export default function MainPage() {
         </div>
       </section>
 
-      <QuickAuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
+      <QuickAuthModal open={authModalOpen} onOpenChange={handleAuthModalClose} />
     </div>
   )
 }

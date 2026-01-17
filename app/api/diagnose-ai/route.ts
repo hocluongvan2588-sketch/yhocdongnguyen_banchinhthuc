@@ -1,6 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { performComprehensiveDiagnosis } from "@/lib/diagnosis/interpretation-logic-v2"
-import { SYSTEM_INSTRUCTION } from "@/lib/ai/prompts/system-instruction"
+import {
+  SYSTEM_INSTRUCTION,
+  ANALYSIS_RULES,
+  CORE_KNOWLEDGE,
+  GEOGRAPHY_KNOWLEDGE,
+} from "@/lib/ai/prompts/system-instruction"
 import fs from "fs"
 import path from "path"
 import { selectRelevantChunks } from "@/lib/ai/knowledge/knowledge-loader"
@@ -49,13 +54,13 @@ function constructPrompt(
   userLocation?: string,
 ): string {
   const anthropometricContext =
-    gender && age
+    gender || age || painLocation || userLocation
       ? `
 **Thông tin bệnh nhân:**
-- Giới tính: ${gender === "male" ? "Nam" : gender === "female" ? "Nữ" : "Không rõ"}
-- Tuổi: ${age} tuổi
-- Vị trí đau: ${painLocation === "left" ? "Bên trái" : painLocation === "right" ? "Bên phải" : painLocation === "center" ? "Ở giữa" : painLocation === "whole" ? "Toàn thân" : "Không rõ"}
-- Địa lý: ${userLocation || "Không rõ"}
+${gender ? `- Giới tính: ${gender === "male" ? "Nam" : gender === "female" ? "Nữ" : "Không rõ"}` : ""}
+${age ? `- Tuổi: ${age} tuổi` : ""}
+${painLocation && painLocation !== "unknown" ? `- Vị trí đau: ${painLocation === "left" ? "Bên trái" : painLocation === "right" ? "Bên phải" : painLocation === "center" ? "Ở giữa" : painLocation === "whole" ? "Toàn thân" : "Không rõ"}` : ""}
+${userLocation ? `- Địa lý: ${userLocation}` : ""}
 `
       : ""
 
@@ -66,7 +71,7 @@ ${anthropometricContext}
 **Cơ quan:** ${rawData.affectedOrgans.primary}, ${rawData.affectedOrgans.secondary}
 **Tháng:** ${currentMonth}
 
-Phân tích theo 6 phần, mỗi phần ≤100 từ.`
+Phân tích theo 7 phần (Nhân trắc + 6 phần chính), mỗi phần ≤100 từ.`
 }
 
 async function generateTextWithOpenAI(systemPrompt: string, userPrompt: string): Promise<string> {
@@ -83,7 +88,7 @@ async function generateTextWithOpenAI(systemPrompt: string, userPrompt: string):
         { role: "user", content: userPrompt },
       ],
       temperature: 0.7,
-      max_tokens: 800, // Giảm từ 1200 xuống 800
+      max_tokens: 800,
     }),
   })
 
@@ -291,7 +296,17 @@ export async function POST(request: NextRequest) {
         painLocation,
         userLocation,
       )
-      const systemPrompt = `${SYSTEM_INSTRUCTION}\n\nKIẾN THỨC LIÊN QUAN:\n${relevantKnowledge}`
+
+      const systemPrompt = `${SYSTEM_INSTRUCTION}
+
+${ANALYSIS_RULES}
+
+${CORE_KNOWLEDGE}
+
+${userLocation ? GEOGRAPHY_KNOWLEDGE : ""}
+
+KIẾN THỨC LIÊN QUAN:
+${relevantKnowledge}`
 
       const text = await generateTextWithOpenAI(systemPrompt, userPrompt)
       const aiInterpretation = parseAIResponse(text)
