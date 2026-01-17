@@ -453,12 +453,10 @@ export default function MainPage() {
             </div>
           </div>
           <div className="flex items-center gap-2 md:gap-3">
+            {/* CHANGE */}
             <Button variant="ghost" size="sm" onClick={() => router.push("/learn")} className="hidden md:flex">
               <BookOpen className="w-4 h-4 mr-2" />
               Tìm hiểu
-            </Button>
-            <Button variant="ghost" size="icon" onClick={() => router.push("/learn")} className="md:hidden">
-              <BookOpen className="w-4 h-4" />
             </Button>
             <UserNav />
           </div>
@@ -736,7 +734,7 @@ export default function MainPage() {
                         <SelectContent>
                           <SelectItem value="left">Bên trái cơ thể</SelectItem>
                           <SelectItem value="right">Bên phải cơ thể</SelectItem>
-                          <SelectItem value="center">Ở giữa/Trung tâm</SelectItem>
+                          <SelectItem value="center">Bên trong/Nội tâm</SelectItem>
                           <SelectItem value="whole">Toàn thân</SelectItem>
                           <SelectItem value="unknown">Không rõ ràng</SelectItem>
                         </SelectContent>

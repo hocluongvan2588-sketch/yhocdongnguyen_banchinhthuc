@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { User, LogOut, ShoppingBag } from "lucide-react"
+import { User, LogOut, ShoppingBag, Menu, BookOpen } from "lucide-react"
 import { getCurrentUser, signOut } from "@/lib/actions/auth-actions"
 import { QuickAuthModal } from "@/components/quick-auth-modal"
 
@@ -54,7 +54,7 @@ export function UserNav() {
   if (!user) {
     return (
       <>
-        <div className="flex items-center gap-2">
+        <div className="hidden md:flex items-center gap-2">
           <Button variant="ghost" size="sm" onClick={() => setAuthModalOpen(true)}>
             Đăng nhập
           </Button>
@@ -62,6 +62,31 @@ export function UserNav() {
             Đăng ký
           </Button>
         </div>
+
+        <div className="md:hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem onClick={() => router.push("/learn")}>
+                <BookOpen className="mr-2 h-4 w-4" />
+                <span>Tìm hiểu</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setAuthModalOpen(true)}>
+                <User className="mr-2 h-4 w-4" />
+                <span>Đăng nhập</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setAuthModalOpen(true)}>
+                <span className="ml-6">Đăng ký</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
         <QuickAuthModal
           open={authModalOpen}
           onOpenChange={(open) => {
@@ -101,6 +126,11 @@ export function UserNav() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => router.push("/learn")} className="md:hidden">
+          <BookOpen className="mr-2 h-4 w-4" />
+          <span>Tìm hiểu</span>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator className="md:hidden" />
         <DropdownMenuItem onClick={() => router.push("/profile")}>
           <User className="mr-2 h-4 w-4" />
           <span>Trang cá nhân</span>
