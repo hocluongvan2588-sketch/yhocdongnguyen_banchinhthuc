@@ -27,10 +27,10 @@ import {
 } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
-import { MaiHoaGuardrailModal } from "@/components/mai-hoa-guardrail-modal"
-import { canUserDivine, saveDivinationRecord } from "@/lib/actions/divination-actions"
 import { QuickAuthModal } from "@/components/quick-auth-modal"
+import { canUserDivine, saveDivinationRecord } from "@/lib/actions/divination-actions"
 import { useAuth } from "@/lib/auth/use-auth"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface TimeInput {
   year: number
@@ -43,6 +43,34 @@ interface TimeInput {
 interface DivinationRecord {
   timestamp: number
   concern: string
+}
+
+function flipTrigramLine(trigramNumber: number, linePosition: number): number {
+  const trigram = getTrigramByNumber(trigramNumber)
+  if (!trigram) return trigramNumber
+
+  const lines = [...trigram.lines] as [boolean, boolean, boolean]
+  // linePosition: 1, 2, 3 corresponds to lines[0], lines[1], lines[2]
+  const index = linePosition - 1
+  lines[index] = !lines[index] // Flip the line: Dương ↔ Âm
+
+  // Find the trigram that matches these lines
+  const allTrigrams = [
+    getTrigramByNumber(1),
+    getTrigramByNumber(2),
+    getTrigramByNumber(3),
+    getTrigramByNumber(4),
+    getTrigramByNumber(5),
+    getTrigramByNumber(6),
+    getTrigramByNumber(7),
+    getTrigramByNumber(8),
+  ]
+
+  const matchingTrigram = allTrigrams.find(
+    (t) => t?.lines[0] === lines[0] && t?.lines[1] === lines[1] && t?.lines[2] === lines[2],
+  )
+
+  return matchingTrigram?.number || trigramNumber
 }
 
 function calculateHexagramWithMinute(input: TimeInput) {
@@ -150,7 +178,7 @@ function findSimilarPreviousQuestion(
 export default function MainPage() {
   const router = useRouter()
   const { user } = useAuth()
-  const [authModalOpen, setAuthModalOpen] = useState(false)
+  const [authModalOpen, setAuthModalOpen] = useState(false) // Renamed from showAuthModal to authModalOpen to match usage
 
   const [input, setInput] = useState<TimeInput>({
     year: new Date().getFullYear(),
@@ -172,6 +200,12 @@ export default function MainPage() {
   const [divinationMethod, setDivinationMethod] = useState<"time" | "number">("time")
   const [numberInput, setNumberInput] = useState({ upper: "", lower: "", moving: "" })
   const [healthConcern, setHealthConcern] = useState("")
+
+  // Anthropometric data states
+  const [gender, setGender] = useState<string>("")
+  const [age, setAge] = useState<string>("") // Changed age state from number to string to allow empty input
+  const [painLocation, setPainLocation] = useState<string>("")
+  const [userLocation, setUserLocation] = useState<string>("")
 
   const [guardrailModal, setGuardrailModal] = useState<{
     isOpen: boolean
@@ -205,11 +239,18 @@ export default function MainPage() {
       const lowerTrigramData = getTrigramByNumber(calculatedResult.lowerTrigram)
       const hexagram = getHexagramByTrigrams(calculatedResult.upperTrigram, calculatedResult.lowerTrigram)
 
-      // Calculate transformed hexagram
-      const transformedUpper =
-        calculatedResult.movingLine <= 3 ? calculatedResult.lowerTrigram : calculatedResult.upperTrigram
-      const transformedLower =
-        calculatedResult.movingLine <= 3 ? calculatedResult.upperTrigram : calculatedResult.lowerTrigram
+      let transformedUpper = calculatedResult.upperTrigram
+      let transformedLower = calculatedResult.lowerTrigram
+
+      if (calculatedResult.movingLine <= 3) {
+        // Moving line is in lower trigram (lines 1, 2, 3)
+        transformedLower = flipTrigramLine(calculatedResult.lowerTrigram, calculatedResult.movingLine)
+      } else {
+        // Moving line is in upper trigram (lines 4, 5, 6 → positions 1, 2, 3)
+        const upperLinePosition = calculatedResult.movingLine - 3
+        transformedUpper = flipTrigramLine(calculatedResult.upperTrigram, upperLinePosition)
+      }
+
       const transformedHexagram = getHexagramByTrigrams(transformedUpper, transformedLower)
 
       setResult({
@@ -235,9 +276,18 @@ export default function MainPage() {
       const lowerTrigramData = getTrigramByNumber(lowerMod)
       const hexagram = getHexagramByTrigrams(upperMod, lowerMod)
 
-      // Calculate transformed hexagram
-      const transformedUpper = movingMod <= 3 ? lowerMod : upperMod
-      const transformedLower = movingMod <= 3 ? upperMod : lowerMod
+      let transformedUpper = upperMod
+      let transformedLower = lowerMod
+
+      if (movingMod <= 3) {
+        // Moving line is in lower trigram
+        transformedLower = flipTrigramLine(lowerMod, movingMod)
+      } else {
+        // Moving line is in upper trigram
+        const upperLinePosition = movingMod - 3
+        transformedUpper = flipTrigramLine(upperMod, upperLinePosition)
+      }
+
       const transformedHexagram = getHexagramByTrigrams(transformedUpper, transformedLower)
 
       setResult({
@@ -258,20 +308,29 @@ export default function MainPage() {
   }
 
   async function handleNavigateToDiagnosis() {
+    console.log("[v0] Navigation button clicked")
+    console.log("[v0] User:", user ? "logged in" : "not logged in")
+    console.log("[v0] Result:", result)
+
     if (!user) {
-      setAuthModalOpen(true)
+      console.log("[v0] Opening auth modal")
+      setAuthModalOpen(true) // Use the state variable name
       return
     }
 
     if (!result) {
+      console.log("[v0] No result - showing alert")
       alert("Vui lòng khởi quẻ trước")
       return
     }
 
+    console.log("[v0] Checking divination permission for:", healthConcern)
     // Comprehensive check theo nguyên tắc Mai Hoa
     const checkResult = await canUserDivine(healthConcern)
+    console.log("[v0] Permission check result:", checkResult)
 
     if (!checkResult.allowed) {
+      console.log("[v0] Not allowed - opening guardrail modal")
       setGuardrailModal({
         isOpen: true,
         reason: checkResult.reason || "Không thể gieo quẻ lúc này",
@@ -280,6 +339,7 @@ export default function MainPage() {
       return
     }
 
+    console.log("[v0] Permission granted - proceeding with navigation")
     // Allowed - proceed with navigation
     if (divinationMethod === "time") {
       const timeInput: TimeInput = {
@@ -301,10 +361,14 @@ export default function MainPage() {
         movingLine: result.movingLine,
         hexagramName: result.hexagramName,
         healthConcern: healthConcern,
+        gender: gender,
+        age: Number.parseInt(age) || 0, // Parse age string to number when saving
+        painLocation: painLocation,
+        location: userLocation,
       })
 
       router.push(
-        `/diagnosis?upper=${result.upperTrigram}&lower=${result.lowerTrigram}&moving=${result.movingLine}&healthConcern=${encodeURIComponent(healthConcern)}&year=${timeInput.year}&month=${timeInput.month}&day=${timeInput.day}&hour=${timeInput.hour}&minute=${timeInput.minute}&method=time`,
+        `/diagnosis?upper=${result.upperTrigram}&lower=${result.lowerTrigram}&moving=${result.movingLine}&healthConcern=${encodeURIComponent(healthConcern)}&year=${timeInput.year}&month=${timeInput.month}&day=${timeInput.day}&hour=${timeInput.hour}&minute=${timeInput.minute}&method=time&gender=${gender}&age=${age}&painLocation=${painLocation}&location=${userLocation}`,
       )
     } else {
       // Manual method
@@ -318,10 +382,14 @@ export default function MainPage() {
         movingLine: result.movingLine,
         hexagramName: result.hexagramName,
         healthConcern: healthConcern,
+        gender: gender,
+        age: Number.parseInt(age) || 0, // Parse age string to number when saving
+        painLocation: painLocation,
+        location: userLocation,
       })
 
       router.push(
-        `/diagnosis?upper=${result.upperTrigram}&lower=${result.lowerTrigram}&moving=${result.movingLine}&healthConcern=${encodeURIComponent(healthConcern)}&method=number`,
+        `/diagnosis?upper=${result.upperTrigram}&lower=${result.lowerTrigram}&moving=${result.movingLine}&healthConcern=${encodeURIComponent(healthConcern)}&method=number&gender=${gender}&age=${age}&painLocation=${painLocation}&location=${userLocation}`,
       )
     }
   }
@@ -368,8 +436,8 @@ export default function MainPage() {
               <p className="text-sm md:text-base lg:text-lg text-muted-foreground leading-relaxed max-w-xl">
                 Mỗi cơn đau, mỗi triệu chứng đều là lời cơ thể nhắc nhở. Bằng Mai Hoa Dịch Số - môn học mà ông tổ Thiệu
                 Khang Tiết truyền lại cách đây gần nghìn năm - chúng ta có thể "đọc" được những thông điệp ấy. Giờ đây,
-                trí tuệ nhân tạo giúp chúng ta giải mã những ẩn ý sâu xa từ quẻ, mang đến cho bạn cái nhìn rõ ràng về tình
-                trạng sức khỏe hiện tại.
+                trí tuệ nhân tạo giúp chúng ta giải mã những ẩn ý sâu xa từ quẻ, mang đến cho bạn cái nhìn rõ ràng về
+                tình trạng sức khỏe hiện tại.
               </p>
               <div className="flex flex-wrap gap-3 md:gap-4 pt-2 md:pt-4">
                 <Button
@@ -411,9 +479,9 @@ export default function MainPage() {
               Tích Hợp Công Nghệ Vào Phân Tích, Diễn Giải
             </h2>
             <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
-              Chúng tôi không đơn thuần "số hóa" kiến thức. Chúng tôi kết nối tinh hoa từ kho tàng kiến thức Mai Hoa Dịch Số của Thiệu
-              Khang Tiết và Hoàng Đế Nội Kinh tích hợp với công nghệ tiên tiến từ AI cập nhật, phân tích liên tục. Giúp bạn nhận được lời khuyên như đang trò chuyện
-              cùng một vị thầy thuốc kỳ lão.
+              Chúng tôi không đơn thuần "số hóa" kiến thức. Chúng tôi kết nối tinh hoa từ kho tàng kiến thức Mai Hoa
+              Dịch Số của Thiệu Khang Tiết và Hoàng Đế Nội Kinh tích hợp với công nghệ tiên tiến từ AI cập nhật, phân
+              tích liên tục. Giúp bạn nhận được lời khuyên như đang trò chuyện cùng một vị thầy thuốc kỳ lão.
             </p>
           </div>
 
@@ -581,6 +649,142 @@ export default function MainPage() {
                       Theo Số
                     </TabsTrigger>
                   </TabsList>
+
+                  <div className="mb-6 p-4 bg-secondary/30 rounded-lg border space-y-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <User className="w-4 h-4 text-primary" />
+                      <Label className="text-sm font-semibold">Thông tin bổ sung (Giúp chẩn đoán chính xác hơn)</Label>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-sm">Giới tính</Label>
+                        <Select value={gender} onValueChange={setGender}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Chọn giới tính" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="male">Nam</SelectItem>
+                            <SelectItem value="female">Nữ</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-sm">Tuổi</Label>
+                        <Input
+                          type="number"
+                          min="1"
+                          max="120"
+                          value={age}
+                          onChange={(e) => setAge(e.target.value)} // Allow empty string, no longer forces 0
+                          placeholder="Nhập tuổi"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-sm">Vị trí đau/khó chịu</Label>
+                      <Select value={painLocation} onValueChange={setPainLocation}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Chọn vị trí" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="left">Bên trái cơ thể</SelectItem>
+                          <SelectItem value="right">Bên phải cơ thể</SelectItem>
+                          <SelectItem value="center">Bên trong/Trung tâm</SelectItem>
+                          <SelectItem value="whole">Toàn thân</SelectItem>
+                          <SelectItem value="unknown">Không rõ ràng</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-sm">Tỉnh/Thành phố bạn đang sinh sống</Label>
+                      <Select value={userLocation} onValueChange={setUserLocation}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Chọn tỉnh/thành" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-[300px]">
+                          <SelectItem value="hanoi">Hà Nội</SelectItem>
+                          <SelectItem value="hochiminh">TP. Hồ Chí Minh</SelectItem>
+                          <SelectItem value="danang">Đà Nẵng</SelectItem>
+                          <SelectItem value="haiphong">Hải Phòng</SelectItem>
+                          <SelectItem value="cantho">Cần Thơ</SelectItem>
+                          <SelectItem value="halong">Hạ Long (Quảng Ninh)</SelectItem>
+                          <SelectItem value="vungtau">Vũng Tàu</SelectItem>
+                          <SelectItem value="nhatrang">Nha Trang</SelectItem>
+                          <SelectItem value="dalat">Đà Lạt</SelectItem>
+                          <SelectItem value="hue">Huế</SelectItem>
+                          <SelectItem value="angiang">An Giang</SelectItem>
+                          <SelectItem value="baria">Bà Rịa - Vũng Tàu</SelectItem>
+                          <SelectItem value="baclieu">Bạc Liêu</SelectItem>
+                          <SelectItem value="backan">Bắc Kạn</SelectItem>
+                          <SelectItem value="bacgiang">Bắc Giang</SelectItem>
+                          <SelectItem value="bacninh">Bắc Ninh</SelectItem>
+                          <SelectItem value="bentre">Bến Tre</SelectItem>
+                          <SelectItem value="binhdinh">Bình Định</SelectItem>
+                          <SelectItem value="binhduong">Bình Dương</SelectItem>
+                          <SelectItem value="binhphuoc">Bình Phước</SelectItem>
+                          <SelectItem value="binhthuan">Bình Thuận</SelectItem>
+                          <SelectItem value="camau">Cà Mau</SelectItem>
+                          <SelectItem value="caobang">Cao Bằng</SelectItem>
+                          <SelectItem value="daklak">Đắk Lắk</SelectItem>
+                          <SelectItem value="daknong">Đắk Nông</SelectItem>
+                          <SelectItem value="dienbien">Điện Biên</SelectItem>
+                          <SelectItem value="dongnai">Đồng Nai</SelectItem>
+                          <SelectItem value="dongthap">Đồng Tháp</SelectItem>
+                          <SelectItem value="gialai">Gia Lai</SelectItem>
+                          <SelectItem value="hagiang">Hà Giang</SelectItem>
+                          <SelectItem value="hanam">Hà Nam</SelectItem>
+                          <SelectItem value="hatinh">Hà Tĩnh</SelectItem>
+                          <SelectItem value="haugiang">Hậu Giang</SelectItem>
+                          <SelectItem value="hoabinh">Hòa Bình</SelectItem>
+                          <SelectItem value="hungyen">Hưng Yên</SelectItem>
+                          <SelectItem value="khanhhoa">Khánh Hòa</SelectItem>
+                          <SelectItem value="kiengiang">Kiên Giang</SelectItem>
+                          <SelectItem value="kontum">Kon Tum</SelectItem>
+                          <SelectItem value="laichau">Lai Châu</SelectItem>
+                          <SelectItem value="lamdong">Lâm Đồng</SelectItem>
+                          <SelectItem value="langson">Lạng Sơn</SelectItem>
+                          <SelectItem value="laocai">Lào Cai</SelectItem>
+                          <SelectItem value="longan">Long An</SelectItem>
+                          <SelectItem value="namdinh">Nam Định</SelectItem>
+                          <SelectItem value="nghean">Nghệ An</SelectItem>
+                          <SelectItem value="ninhbinh">Ninh Bình</SelectItem>
+                          <SelectItem value="ninhthuan">Ninh Thuận</SelectItem>
+                          <SelectItem value="phutho">Phú Thọ</SelectItem>
+                          <SelectItem value="phuyen">Phú Yên</SelectItem>
+                          <SelectItem value="quangbinh">Quảng Bình</SelectItem>
+                          <SelectItem value="quangnam">Quảng Nam</SelectItem>
+                          <SelectItem value="quangngai">Quảng Ngãi</SelectItem>
+                          <SelectItem value="quangninh">Quảng Ninh</SelectItem>
+                          <SelectItem value="quangtri">Quảng Trị</SelectItem>
+                          <SelectItem value="soctrang">Sóc Trăng</SelectItem>
+                          <SelectItem value="sonla">Sơn La</SelectItem>
+                          <SelectItem value="tayninh">Tây Ninh</SelectItem>
+                          <SelectItem value="thaibinh">Thái Bình</SelectItem>
+                          <SelectItem value="thainguyen">Thái Nguyên</SelectItem>
+                          <SelectItem value="thanhhoa">Thanh Hóa</SelectItem>
+                          <SelectItem value="tiengiang">Tiền Giang</SelectItem>
+                          <SelectItem value="travinh">Trà Vinh</SelectItem>
+                          <SelectItem value="tuyenquang">Tuyên Quang</SelectItem>
+                          <SelectItem value="vinhlong">Vĩnh Long</SelectItem>
+                          <SelectItem value="vinhphuc">Vĩnh Phúc</SelectItem>
+                          <SelectItem value="yenbai">Yên Bái</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <Alert className="bg-blue-50/50 border-blue-200/50">
+                      <Info className="h-4 w-4 text-blue-600" />
+                      <AlertDescription className="text-xs text-blue-900/70">
+                        Thông tin này giúp phân tích theo nguyên lý <strong>Âm-Dương, Tả-Hữu</strong> và{" "}
+                        <strong>ảnh hưởng địa lý</strong> trong Mai Hoa Dịch Số, từ đó đưa ra lời khuyên phù hợp hơn với
+                        thể trạng của bạn.
+                      </AlertDescription>
+                    </Alert>
+                  </div>
 
                   <TabsContent value="time" className="space-y-4">
                     <Alert className="bg-primary/5 border-primary/20">
@@ -917,7 +1121,7 @@ export default function MainPage() {
             {[
               {
                 title: "Bất Động Bất Chiêm",
-                subtitle: "不动不占",
+                subtitle: "不動不占",
                 description: "Chỉ gieo quẻ khi thực sự có sự việc xảy ra, có cảm xúc lo lắng",
                 icon: <Target className="w-5 h-5" />,
               },
@@ -1016,33 +1220,7 @@ export default function MainPage() {
         </div>
       </section>
 
-      <footer className="py-8 border-t">
-        <div className="container px-4 mx-auto max-w-7xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="text-center md:text-left">
-              <p className="font-semibold text-foreground">Y Dịch Đồng Nguyên</p>
-              <p className="text-sm text-muted-foreground">Kết hợp Y học cổ truyền và Dịch học</p>
-            </div>
-            <p className="text-sm text-muted-foreground">Copyright © {new Date().getFullYear()} Y Dịch Đồng Nguyên</p>
-          </div>
-        </div>
-      </footer>
-
-      {/* QuickAuthModal component */}
       <QuickAuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
-
-      {/* MaiHoaGuardrailModal */}
-      <MaiHoaGuardrailModal
-        open={guardrailModal.isOpen}
-        onOpenChange={(open) =>
-          setGuardrailModal({
-            ...guardrailModal,
-            isOpen: open,
-          })
-        }
-        reason={guardrailModal.reason}
-        details={guardrailModal.details}
-      />
     </div>
   )
 }

@@ -43,9 +43,24 @@ function constructPrompt(
   rawData: ReturnType<typeof performComprehensiveDiagnosis>,
   healthConcern: string,
   currentMonth: number,
+  gender?: string,
+  age?: number,
+  painLocation?: string,
+  userLocation?: string,
 ): string {
-  return `**Triệu chứng:** "${healthConcern}"
+  const anthropometricContext =
+    gender && age
+      ? `
+**Thông tin bệnh nhân:**
+- Giới tính: ${gender === "male" ? "Nam" : gender === "female" ? "Nữ" : "Không rõ"}
+- Tuổi: ${age} tuổi
+- Vị trí đau: ${painLocation === "left" ? "Bên trái" : painLocation === "right" ? "Bên phải" : painLocation === "center" ? "Ở giữa" : painLocation === "whole" ? "Toàn thân" : "Không rõ"}
+- Địa lý: ${userLocation || "Không rõ"}
+`
+      : ""
 
+  return `**Triệu chứng:** "${healthConcern}"
+${anthropometricContext}
 **Quẻ:** ${rawData.mainHexagram.upperName}/${rawData.mainHexagram.lowerName}, Hào ${rawData.mainHexagram.movingLine}
 **Thể-Dụng:** ${rawData.bodyUseAnalysis.bodyElement} vs ${rawData.bodyUseAnalysis.useElement} (${rawData.bodyUseAnalysis.relationship})
 **Cơ quan:** ${rawData.affectedOrgans.primary}, ${rawData.affectedOrgans.secondary}
@@ -159,8 +174,19 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     console.log("[v0] Received body:", body)
 
-    const { upperTrigram, lowerTrigram, movingLine, healthConcern, currentMonth, transformedUpper, transformedLower } =
-      body
+    const {
+      upperTrigram,
+      lowerTrigram,
+      movingLine,
+      healthConcern,
+      currentMonth,
+      transformedUpper,
+      transformedLower,
+      gender,
+      age,
+      painLocation,
+      userLocation,
+    } = body
 
     if (
       upperTrigram === null ||
@@ -169,7 +195,8 @@ export async function POST(request: NextRequest) {
       lowerTrigram === null ||
       lowerTrigram === undefined ||
       lowerTrigram === "" ||
-      !movingLine
+      !movingLine ||
+      !healthConcern
     ) {
       console.error("[v0] Validation failed:", {
         upperTrigram,
@@ -184,6 +211,7 @@ export async function POST(request: NextRequest) {
             upperTrigram: upperTrigram || "missing",
             lowerTrigram: lowerTrigram || "missing",
             movingLine: movingLine || "missing",
+            healthConcern: healthConcern || "missing",
           },
         },
         { status: 400 },
@@ -221,6 +249,10 @@ export async function POST(request: NextRequest) {
       healthConcernNormalized: normalizedConcern,
       transformedUpper: transformedUpperNum,
       transformedLower: transformedLowerNum,
+      gender,
+      age,
+      painLocation,
+      userLocation,
     })
 
     const cachedResult = getCachedResponse(cacheKey)
@@ -250,7 +282,15 @@ export async function POST(request: NextRequest) {
         1500,
       )
 
-      const userPrompt = constructPrompt(rawCalculation, healthConcern || "", currentMonth || 1)
+      const userPrompt = constructPrompt(
+        rawCalculation,
+        healthConcern || "",
+        currentMonth || 1,
+        gender,
+        age,
+        painLocation,
+        userLocation,
+      )
       const systemPrompt = `${SYSTEM_INSTRUCTION}\n\nKIẾN THỨC LIÊN QUAN:\n${relevantKnowledge}`
 
       const text = await generateTextWithOpenAI(systemPrompt, userPrompt)

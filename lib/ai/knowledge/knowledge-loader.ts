@@ -39,6 +39,7 @@ export function parseKnowledgeBase(): KnowledgeChunk[] {
     const knowledgePath = path.join(process.cwd(), "lib/ai/knowledge")
     const maiHoaCore = fs.readFileSync(path.join(knowledgePath, "mai-hoa-core.md"), "utf-8")
     const symptomAnalysis = fs.readFileSync(path.join(knowledgePath, "symptom-analysis.md"), "utf-8")
+    const anthropometricRules = fs.readFileSync(path.join(knowledgePath, "anthropometric-rules.md"), "utf-8")
 
     const chunks: KnowledgeChunk[] = []
 
@@ -47,6 +48,12 @@ export function parseKnowledgeBase(): KnowledgeChunk[] {
     chunks.push({
       id: "core-logic",
       content: coreSection,
+      type: "core",
+    })
+
+    chunks.push({
+      id: "anthropometric-rules",
+      content: anthropometricRules,
       type: "core",
     })
 
@@ -107,13 +114,23 @@ export function parseKnowledgeBase(): KnowledgeChunk[] {
   }
 }
 
-export function selectRelevantChunks(healthConcern: string, affectedOrgans: string[], maxTokens = 2000): string {
+export function selectRelevantChunks(
+  healthConcern: string,
+  affectedOrgans: string[],
+  hasAnthropometricData = false,
+  maxTokens = 2000,
+): string {
   const chunks = parseKnowledgeBase()
   const selected: KnowledgeChunk[] = []
 
   // Luôn thêm core logic
   const coreChunk = chunks.find((c) => c.id === "core-logic")
   if (coreChunk) selected.push(coreChunk)
+
+  if (hasAnthropometricData) {
+    const anthropometricChunk = chunks.find((c) => c.id === "anthropometric-rules")
+    if (anthropometricChunk) selected.push(anthropometricChunk)
+  }
 
   // Thêm chunks liên quan đến triệu chứng
   const concernLower = healthConcern.toLowerCase()
