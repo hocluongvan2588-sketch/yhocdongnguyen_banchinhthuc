@@ -12,12 +12,25 @@ import { getHexagramByTrigrams } from "@/lib/data/hexagram-data"
 import { HexagramSVG } from "@/components/hexagram-svg"
 import { useRouter } from "next/navigation"
 import { UserNav } from "@/components/user-nav"
-import { Sparkles, BookOpen, Info, ArrowRight, HelpCircle, CheckCircle2, Clock, Hash } from "lucide-react"
+import {
+  Sparkles,
+  BookOpen,
+  Info,
+  ArrowRight,
+  HelpCircle,
+  CheckCircle2,
+  Clock,
+  Hash,
+  Target,
+  Zap,
+  User,
+} from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { MaiHoaGuardrailModal } from "@/components/mai-hoa-guardrail-modal"
 import { canUserDivine, saveDivinationRecord } from "@/lib/actions/divination-actions"
-import { useAuth } from "@/lib/auth/use-auth" // Import useAuth hook
+import { QuickAuthModal } from "@/components/quick-auth-modal"
+import { useAuth } from "@/lib/auth/use-auth"
 
 interface TimeInput {
   year: number
@@ -136,7 +149,8 @@ function findSimilarPreviousQuestion(
 
 export default function MainPage() {
   const router = useRouter()
-  const { user, setShowAuthGateModal, AuthGateModal } = useAuth() // Declare user, setShowAuthGateModal, and AuthGateModal using useAuth hook
+  const { user } = useAuth()
+  const [authModalOpen, setAuthModalOpen] = useState(false)
 
   const [input, setInput] = useState<TimeInput>({
     year: new Date().getFullYear(),
@@ -171,9 +185,86 @@ export default function MainPage() {
   const currentHourBranch = getHourBranch(input.hour)
   const currentHourBranchName = getHourBranchName(currentHourBranch)
 
+  async function handleCalculateResult() {
+    if (!healthConcern.trim()) {
+      alert("Vui lòng nhập lý do hỏi quẻ (Chủ tố)")
+      return
+    }
+
+    if (divinationMethod === "time") {
+      const timeInput: TimeInput = {
+        year: input.year,
+        month: input.month,
+        day: input.day,
+        hour: input.hour,
+        minute: input.minute,
+      }
+
+      const calculatedResult = calculateHexagramWithMinute(timeInput)
+      const upperTrigramData = getTrigramByNumber(calculatedResult.upperTrigram)
+      const lowerTrigramData = getTrigramByNumber(calculatedResult.lowerTrigram)
+      const hexagram = getHexagramByTrigrams(calculatedResult.upperTrigram, calculatedResult.lowerTrigram)
+
+      // Calculate transformed hexagram
+      const transformedUpper =
+        calculatedResult.movingLine <= 3 ? calculatedResult.lowerTrigram : calculatedResult.upperTrigram
+      const transformedLower =
+        calculatedResult.movingLine <= 3 ? calculatedResult.upperTrigram : calculatedResult.lowerTrigram
+      const transformedHexagram = getHexagramByTrigrams(transformedUpper, transformedLower)
+
+      setResult({
+        upperTrigram: calculatedResult.upperTrigram,
+        lowerTrigram: calculatedResult.lowerTrigram,
+        movingLine: calculatedResult.movingLine,
+        hexagramName: hexagram?.vietnamese || `${upperTrigramData?.vietnamese} ${lowerTrigramData?.vietnamese}`,
+        transformedUpperTrigram: transformedUpper,
+        transformedLowerTrigram: transformedLower,
+        transformedHexagramName: transformedHexagram?.vietnamese || "",
+      })
+    } else {
+      // Number method
+      const upper = Number.parseInt(numberInput.upper) || 1
+      const lower = Number.parseInt(numberInput.lower) || 1
+      const moving = Number.parseInt(numberInput.moving) || 1
+
+      const upperMod = ((upper - 1) % 8) + 1
+      const lowerMod = ((lower - 1) % 8) + 1
+      const movingMod = ((moving - 1) % 6) + 1
+
+      const upperTrigramData = getTrigramByNumber(upperMod)
+      const lowerTrigramData = getTrigramByNumber(lowerMod)
+      const hexagram = getHexagramByTrigrams(upperMod, lowerMod)
+
+      // Calculate transformed hexagram
+      const transformedUpper = movingMod <= 3 ? lowerMod : upperMod
+      const transformedLower = movingMod <= 3 ? upperMod : lowerMod
+      const transformedHexagram = getHexagramByTrigrams(transformedUpper, transformedLower)
+
+      setResult({
+        upperTrigram: upperMod,
+        lowerTrigram: lowerMod,
+        movingLine: movingMod,
+        hexagramName: hexagram?.vietnamese || `${upperTrigramData?.vietnamese} ${lowerTrigramData?.vietnamese}`,
+        transformedUpperTrigram: transformedUpper,
+        transformedLowerTrigram: transformedLower,
+        transformedHexagramName: transformedHexagram?.vietnamese || "",
+      })
+    }
+
+    // Smooth scroll to result
+    setTimeout(() => {
+      document.getElementById("result-section")?.scrollIntoView({ behavior: "smooth" })
+    }, 100)
+  }
+
   async function handleNavigateToDiagnosis() {
     if (!user) {
-      setShowAuthGateModal(true)
+      setAuthModalOpen(true)
+      return
+    }
+
+    if (!result) {
+      alert("Vui lòng khởi quẻ trước")
       return
     }
 
@@ -189,7 +280,7 @@ export default function MainPage() {
       return
     }
 
-    // Allowed - proceed with divination
+    // Allowed - proceed with navigation
     if (divinationMethod === "time") {
       const timeInput: TimeInput = {
         year: input.year,
@@ -198,8 +289,6 @@ export default function MainPage() {
         hour: input.hour,
         minute: input.minute,
       }
-
-      const result = calculateHexagramWithMinute(timeInput)
 
       // Save to database
       await saveDivinationRecord({
@@ -219,33 +308,20 @@ export default function MainPage() {
       )
     } else {
       // Manual method
-      const upper = Number.parseInt(numberInput.upper) || 1
-      const lower = Number.parseInt(numberInput.lower) || 1
-      const moving = Number.parseInt(numberInput.moving) || 1
-
-      const upperMod = ((upper - 1) % 8) + 1
-      const lowerMod = ((lower - 1) % 8) + 1
-      const movingMod = ((moving - 1) % 6) + 1
-
-      const upperTrigram = getTrigramByNumber(upperMod)
-      const lowerTrigram = getTrigramByNumber(lowerMod)
-      const hexagram = getHexagramByTrigrams(upperMod, lowerMod)
-
-      // Save to database
       await saveDivinationRecord({
         year: new Date().getFullYear(),
         month: new Date().getMonth() + 1,
         day: new Date().getDate(),
         hour: new Date().getHours(),
-        upperTrigram: upperMod,
-        lowerTrigram: lowerMod,
-        movingLine: movingMod,
-        hexagramName: hexagram?.vietnamese || `${upperTrigram?.vietnamese} ${lowerTrigram?.vietnamese}`,
+        upperTrigram: result.upperTrigram,
+        lowerTrigram: result.lowerTrigram,
+        movingLine: result.movingLine,
+        hexagramName: result.hexagramName,
         healthConcern: healthConcern,
       })
 
       router.push(
-        `/diagnosis?upper=${upperMod}&lower=${lowerMod}&moving=${movingMod}&healthConcern=${encodeURIComponent(healthConcern)}&method=number`,
+        `/diagnosis?upper=${result.upperTrigram}&lower=${result.lowerTrigram}&moving=${result.movingLine}&healthConcern=${encodeURIComponent(healthConcern)}&method=number`,
       )
     }
   }
@@ -257,40 +333,45 @@ export default function MainPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-secondary/5 to-background">
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between px-4 mx-auto max-w-7xl">
+        <div className="container flex h-14 md:h-16 items-center justify-between px-4 mx-auto max-w-7xl">
           <div className="flex items-center gap-2">
             <div className="accent-border-left">
-              <h1 className="text-xl font-bold">Y Dịch Đồng Nguyên</h1>
-              <p className="text-xs text-muted-foreground">梅花易数 • Mai Hoa Dịch Số</p>
+              <h1 className="text-base md:text-xl font-bold">Y Dịch Đồng Nguyên</h1>
+              <p className="text-[10px] md:text-xs text-muted-foreground hidden sm:block">梅花易数 • Mai Hoa Dịch Số</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" onClick={() => router.push("/learn")}>
+          <div className="flex items-center gap-2 md:gap-3">
+            <Button variant="ghost" size="sm" onClick={() => router.push("/learn")} className="hidden md:flex">
               <BookOpen className="w-4 h-4 mr-2" />
               Tìm hiểu
+            </Button>
+            <Button variant="ghost" size="icon" onClick={() => router.push("/learn")} className="md:hidden">
+              <BookOpen className="w-4 h-4" />
             </Button>
             <UserNav />
           </div>
         </div>
       </header>
 
-      <section className="relative py-16 md:py-24 px-4 overflow-hidden">
+      <section className="relative py-12 md:py-16 lg:py-24 px-4 overflow-hidden">
         <div className="hero-pattern" />
         <div className="container px-4 mx-auto max-w-7xl relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <Badge variant="outline" className="text-sm px-3 py-1">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+            <div className="space-y-4 md:space-y-6">
+              <Badge variant="outline" className="text-xs md:text-sm px-2 md:px-3 py-1">
                 Y học cổ truyền Trung Quốc
               </Badge>
-              <h1 className="text-foreground">
+              <h1 className="text-foreground text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
                 Khám phá sức khỏe qua
                 <span className="block text-primary mt-2">Mai Hoa Dịch Số</span>
               </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
-                Phương pháp khởi quẻ linh hoạt, phân tích <strong>Thể Dụng</strong> chính xác. Kết hợp Y học cổ truyền
-                để chẩn đoán tình trạng sức khỏe và đưa ra giải pháp điều trị cụ thể.
+              <p className="text-sm md:text-base lg:text-lg text-muted-foreground leading-relaxed max-w-xl">
+                Mỗi cơn đau, mỗi triệu chứng đều là lời cơ thể nhắc nhở. Bằng Mai Hoa Dịch Số - môn học mà ông tổ Thiệu
+                Khang Tiết truyền lại cách đây gần nghìn năm - chúng ta có thể "đọc" được những thông điệp ấy. Giờ đây,
+                trí tuệ nhân tạo giúp chúng ta giải mã những ẩn ý sâu xa từ quẻ, mang đến cho bạn cái nhìn rõ ràng về tình
+                trạng sức khỏe hiện tại.
               </p>
-              <div className="flex flex-wrap gap-4 pt-4">
+              <div className="flex flex-wrap gap-3 md:gap-4 pt-2 md:pt-4">
                 <Button
                   size="lg"
                   onClick={() => document.getElementById("divination-form")?.scrollIntoView({ behavior: "smooth" })}
@@ -320,23 +401,127 @@ export default function MainPage() {
         </div>
       </section>
 
+      <section className="py-12 md:py-20 bg-gradient-to-b from-background to-secondary/20">
+        <div className="container px-4 mx-auto max-w-7xl">
+          <div className="text-center mb-8 md:mb-12">
+            <Badge variant="secondary" className="mb-4">
+              Công nghệ AI
+            </Badge>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">
+              Tích Hợp Công Nghệ Vào Phân Tích, Diễn Giải
+            </h2>
+            <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
+              Chúng tôi không đơn thuần "số hóa" kiến thức. Chúng tôi kết nối tinh hoa từ kho tàng kiến thức Mai Hoa Dịch Số của Thiệu
+              Khang Tiết và Hoàng Đế Nội Kinh tích hợp với công nghệ tiên tiến từ AI cập nhật, phân tích liên tục. Giúp bạn nhận được lời khuyên như đang trò chuyện
+              cùng một vị thầy thuốc kỳ lão.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+            <Card className="border-2 hover:border-primary/50 transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                </div>
+                <CardTitle className="text-lg md:text-xl">Tính Toán Quẻ Chuẩn Xác</CardTitle>
+                <CardDescription className="text-xs md:text-sm">
+                  Thuật toán được xây dựng dựa trên nguyên lý Thể - Dụng và quan hệ Ngũ Hành chuẩn mực
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-xs md:text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-jade mt-0.5 flex-shrink-0" />
+                    <span>Phân định Thể - Dụng theo đúng pháp môn</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-jade mt-0.5 flex-shrink-0" />
+                    <span>Xét quan hệ sinh khắc Ngũ Hành tỉ mỉ</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-jade mt-0.5 flex-shrink-0" />
+                    <span>Tính toán ảnh hưởng mùa và thời điểm</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 hover:border-primary/50 transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
+                  <BookOpen className="w-6 h-6 text-accent" />
+                </div>
+                <CardTitle className="text-lg md:text-xl">Kho Tàng Kiến Thức Kinh Điển</CardTitle>
+                <CardDescription className="text-xs md:text-sm">
+                  Mọi lời giải đều bắt nguồn từ các tác phẩm gốc, không hư cấu, không bịa đặt
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-xs md:text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-jade mt-0.5 flex-shrink-0" />
+                    <span>Tám quẻ thuần và các bộ phận cơ thể</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-jade mt-0.5 flex-shrink-0" />
+                    <span>Phân tích triệu chứng theo quy luật Ngũ hành</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-jade mt-0.5 flex-shrink-0" />
+                    <span>Phương pháp chăm sóc bằng thảo dược thiên nhiên</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 hover:border-primary/50 transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
+                  <Zap className="w-6 h-6 text-blue-500" />
+                </div>
+                <CardTitle className="text-lg md:text-xl">Tích Hợp Công Nghê AI</CardTitle>
+                <CardDescription className="text-xs md:text-sm">
+                  Phân tích hàng ngàn tài liệu để đưa ra kết quả chính xác nhất
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-xs md:text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-jade mt-0.5 flex-shrink-0" />
+                    <span>Giải thích cơ chế theo Y học cổ truyền</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-jade mt-0.5 flex-shrink-0" />
+                    <span>Lời khuyên thực tế, chi tiết từng bước</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-jade mt-0.5 flex-shrink-0" />
+                    <span>Luôn có kết quả dựa trên logic chuẩn</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       <section className="py-12 px-4 bg-gradient-to-b from-secondary/20 to-background">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">Chọn phương pháp khởi quẻ phù hợp với bạn</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">Chọn cách khởi quẻ phù hợp với bạn</h2>
 
             <Alert className="max-w-2xl mx-auto mt-4 border-primary/20 bg-primary/5">
               <Info className="h-4 w-4 text-primary" />
               <AlertDescription className="text-sm">
-                <strong>Nguyên tắc quan trọng:</strong> Một người chỉ nên khởi quẻ cho một việc duy nhất trong mỗi thời
-                khắc (cách nhau tối thiểu 1 ngày). Tâm chí phải tập trung, chân thành thì quẻ mới linh ứng.
+                <strong>Lời dặn từ xưa:</strong> Một lần hỏi cho một việc, một ngày nên hỏi một quẻ. Tâm tĩnh thì linh,
+                tâm loạn thì quẻ không ứng. Đây là điều các bậc tiền nhân luôn nhắc nhở.
               </AlertDescription>
             </Alert>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Input form */}
-            <Card className="border-2">
+            <Card id="divination-form" className="border-2">
               <CardHeader className="border-b bg-secondary/30">
                 <CardTitle className="flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-primary" />
@@ -496,7 +681,7 @@ export default function MainPage() {
                       </p>
                     </div>
 
-                    <Button onClick={handleNavigateToDiagnosis} className="w-full mt-6" size="lg">
+                    <Button onClick={handleCalculateResult} className="w-full mt-6" size="lg">
                       <Sparkles className="w-4 h-4 mr-2" />
                       Khởi Quẻ Theo Thời Gian
                     </Button>
@@ -561,7 +746,7 @@ export default function MainPage() {
                         </p>
                       </div>
 
-                      <Button onClick={handleNavigateToDiagnosis} className="w-full mt-6" size="lg">
+                      <Button onClick={handleCalculateResult} className="w-full mt-6" size="lg">
                         <Hash className="w-4 h-4 mr-2" />
                         Khởi Quẻ Theo Số
                       </Button>
@@ -572,7 +757,7 @@ export default function MainPage() {
             </Card>
 
             {/* Result display */}
-            <Card className={`border-2 ${result ? "result-card" : "border-border"}`}>
+            <Card id="result-section" className={`border-2 ${result ? "result-card" : "border-border"}`}>
               <CardHeader className="border-b bg-secondary/30">
                 <CardTitle>Kết Quả Gieo Quẻ</CardTitle>
                 <CardDescription>{result ? "Quẻ đã được khởi thành công" : "Chờ khởi quẻ"}</CardDescription>
@@ -716,10 +901,72 @@ export default function MainPage() {
         </div>
       </section>
 
-      <section className="py-20 bg-secondary/30">
+      <section className="py-12 md:py-20 bg-gradient-to-b from-secondary/20 to-background">
         <div className="container px-4 mx-auto max-w-7xl">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="relative">
+          <div className="text-center mb-8 md:mb-12">
+            <Badge variant="secondary" className="mb-4">
+              Nguyên tắc cốt lõi
+            </Badge>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">5 Nguyên Tắc Mai Hoa Dịch Số</h2>
+            <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
+              Hệ thống tuân thủ đầy đủ nguyên tắc cổ truyền của Thiệu Khang Tiết để đảm bảo độ ứng nghiệm cao
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
+            {[
+              {
+                title: "Bất Động Bất Chiêm",
+                subtitle: "不动不占",
+                description: "Chỉ gieo quẻ khi thực sự có sự việc xảy ra, có cảm xúc lo lắng",
+                icon: <Target className="w-5 h-5" />,
+              },
+              {
+                title: "Nhất Sự Nhất Chiêm",
+                subtitle: "一事一占",
+                description: "Một vấn đề chỉ nên gieo một quẻ trong ngày. Hỏi lại nhiều thì không linh",
+                icon: <Info className="w-5 h-5" />,
+              },
+              {
+                title: "Giới Hạn Tần Suất",
+                subtitle: "节制频率",
+                description: "3 lần/ngày tối đa, cách nhau 15 phút để khí bình ổn",
+                icon: <Clock className="w-5 h-5" />,
+              },
+              {
+                title: "Xác Thực Người Dùng",
+                subtitle: "用户认证",
+                description: "Tracking cross-device để đảm bảo nguyên tắc được tuân thủ",
+                icon: <User className="w-5 h-5" />,
+              },
+              {
+                title: "Kiểm Tra Toàn Diện",
+                subtitle: "全面验证",
+                description: "5 layers validation trước khi cho phép gieo quẻ",
+                icon: <CheckCircle2 className="w-5 h-5" />,
+              },
+            ].map((principle, idx) => (
+              <Card key={idx} className="text-center hover:shadow-lg transition-shadow">
+                <CardHeader className="pb-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3 text-primary">
+                    {principle.icon}
+                  </div>
+                  <CardTitle className="text-base md:text-lg">{principle.title}</CardTitle>
+                  <CardDescription className="text-xs">{principle.subtitle}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-xs md:text-sm text-muted-foreground">{principle.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 md:py-20 bg-gradient-to-b from-background to-secondary/30">
+        <div className="container px-4 mx-auto max-w-7xl">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+            <div className="relative order-2 lg:order-1">
               <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
                 <img
                   src="/ancient-chinese-medical-text-book-i-ching-hexagram.jpg"
@@ -728,22 +975,39 @@ export default function MainPage() {
                 />
               </div>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6 order-1 lg:order-2">
               <Badge variant="outline">Tài liệu tham khảo</Badge>
-              <h2 className="text-foreground">Nền tảng lý luận vững chắc</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Hệ thống được xây dựng dựa trên các tài liệu kinh điển: <strong>Mai Hoa Dịch Số</strong> của Thiệu Ung,
-                <strong> Hoàng Đế Nội Kinh</strong> (黄帝内经), <strong>Châm Cứu Đại Thành</strong>, và phương pháp trị
-                liệu độc quyền phát triển từ thực hành lâm sàng.
+              <h2 className="text-foreground text-2xl md:text-3xl lg:text-4xl font-bold">Nền tảng lý luận vững chắc</h2>
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                Hệ thống được xây dựng dựa trên các tài liệu kinh điển: Mai Hoa Dịch Số của Thiệu Ung (邵雍), Hoàng Đế
+                Nội Kinh (黄帝内经), Châm Cứu Đại Thành, và phương pháp chăm sóc sức khỏe phát triển từ thực hành lâm
+                sàng.
               </p>
-              <ul className="space-y-3">
-                <li className="flex items-center gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-jade flex-shrink-0" />
-                  <span className="font-medium text-foreground">Khởi quẻ chính xác</span>
-                </li>
-                <span className="text-muted-foreground">Phương pháp khởi quẻ chuẩn xác theo Mai Hoa Dịch Số</span>
-              </ul>
-              <Button variant="outline" onClick={() => router.push("/learn")}>
+              <div className="space-y-4">
+                {[
+                  {
+                    title: "Khởi quẻ chính xác",
+                    description: "Phương pháp khởi quẻ chuẩn xác theo Mai Hoa Dịch Số",
+                  },
+                  {
+                    title: "Thể Dụng phân tích",
+                    description: "Xác định quan hệ Thể-Dụng và Ngũ Hành sinh khắc",
+                  },
+                  {
+                    title: "Kết hợp Y học",
+                    description: "Áp dụng 8 quẻ thuần vào chẩn đoán tạng phủ",
+                  },
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-jade flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-medium text-foreground text-sm md:text-base">{item.title}</p>
+                      <p className="text-xs md:text-sm text-muted-foreground">{item.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Button variant="outline" onClick={() => router.push("/learn")} className="mt-4">
                 Tìm hiểu thêm
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
@@ -759,20 +1023,23 @@ export default function MainPage() {
               <p className="font-semibold text-foreground">Y Dịch Đồng Nguyên</p>
               <p className="text-sm text-muted-foreground">Kết hợp Y học cổ truyền và Dịch học</p>
             </div>
-            <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} Bản quyền thuộc về Y Dịch Đồng Nguyên
-            </p>
+            <p className="text-sm text-muted-foreground">Copyright © {new Date().getFullYear()} Y Dịch Đồng Nguyên</p>
           </div>
         </div>
       </footer>
 
-      {/* AuthGateModal component */}
-      <AuthGateModal />
+      {/* QuickAuthModal component */}
+      <QuickAuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
 
       {/* MaiHoaGuardrailModal */}
       <MaiHoaGuardrailModal
-        isOpen={guardrailModal.isOpen}
-        onClose={() => setGuardrailModal({ isOpen: false, reason: "" })}
+        open={guardrailModal.isOpen}
+        onOpenChange={(open) =>
+          setGuardrailModal({
+            ...guardrailModal,
+            isOpen: open,
+          })
+        }
         reason={guardrailModal.reason}
         details={guardrailModal.details}
       />

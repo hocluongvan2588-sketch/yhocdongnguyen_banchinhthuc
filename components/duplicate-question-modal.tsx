@@ -60,7 +60,10 @@ export function DuplicateQuestionModal({
             </div>
             <AlertDialogTitle className="text-xl">Câu hỏi tương tự đã gieo</AlertDialogTitle>
           </div>
-          <AlertDialogDescription className="text-base space-y-4">
+          <AlertDialogDescription className="sr-only">
+            Thông báo về câu hỏi trùng lặp trong Mai Hoa Dịch Số
+          </AlertDialogDescription>
+          <div className="text-base space-y-4">
             <div className="flex items-start gap-2 text-muted-foreground">
               <Calendar className="w-4 h-4 mt-1 flex-shrink-0" />
               <span>
@@ -85,7 +88,7 @@ export function DuplicateQuestionModal({
             <p className="text-sm text-muted-foreground italic">
               Độ tương đồng: <strong className="text-foreground">{Math.round(similarity * 100)}%</strong>
             </p>
-          </AlertDialogDescription>
+          </div>
         </AlertDialogHeader>
         <AlertDialogFooter className="flex-col sm:flex-row gap-2">
           <AlertDialogCancel className="sm:flex-1">Hủy bỏ</AlertDialogCancel>

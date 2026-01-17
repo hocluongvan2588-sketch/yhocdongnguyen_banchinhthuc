@@ -14,11 +14,13 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { User, LogOut, ShoppingBag } from "lucide-react"
 import { getCurrentUser, signOut } from "@/lib/actions/auth-actions"
+import { QuickAuthModal } from "@/components/quick-auth-modal"
 
 export function UserNav() {
   const router = useRouter()
   const [user, setUser] = useState<{ email: string; full_name?: string } | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [authModalOpen, setAuthModalOpen] = useState(false)
 
   useEffect(() => {
     const loadUser = async () => {
@@ -35,6 +37,12 @@ export function UserNav() {
     router.refresh()
   }
 
+  const handleAuthSuccess = async () => {
+    const { user } = await getCurrentUser()
+    setUser(user)
+    router.refresh()
+  }
+
   if (isLoading) {
     return (
       <div className="flex items-center gap-2">
@@ -45,14 +53,25 @@ export function UserNav() {
 
   if (!user) {
     return (
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" onClick={() => router.push("/auth/login")}>
-          Đăng nhập
-        </Button>
-        <Button size="sm" onClick={() => router.push("/auth/register")}>
-          Đăng ký
-        </Button>
-      </div>
+      <>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" onClick={() => setAuthModalOpen(true)}>
+            Đăng nhập
+          </Button>
+          <Button size="sm" onClick={() => setAuthModalOpen(true)}>
+            Đăng ký
+          </Button>
+        </div>
+        <QuickAuthModal
+          open={authModalOpen}
+          onOpenChange={(open) => {
+            setAuthModalOpen(open)
+            if (!open) {
+              handleAuthSuccess()
+            }
+          }}
+        />
+      </>
     )
   }
 

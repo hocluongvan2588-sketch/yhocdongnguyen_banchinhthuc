@@ -31,7 +31,10 @@ export function AuthGateModal({ open, onOpenChange }: AuthGateModalProps) {
             </div>
             <AlertDialogTitle className="text-xl">Yêu cầu đăng nhập</AlertDialogTitle>
           </div>
-          <AlertDialogDescription className="text-base space-y-3">
+          <AlertDialogDescription className="sr-only">
+            Yêu cầu đăng nhập để sử dụng tính năng gieo quẻ
+          </AlertDialogDescription>
+          <div className="text-base space-y-3">
             <p>Bạn cần đăng nhập để sử dụng tính năng gieo quẻ Mai Hoa Dịch Số.</p>
 
             <div className="bg-secondary/30 rounded-lg p-4 space-y-2">
@@ -43,7 +46,7 @@ export function AuthGateModal({ open, onOpenChange }: AuthGateModalProps) {
                 <li>✓ Theo dõi tiến trình sức khỏe</li>
               </ul>
             </div>
-          </AlertDialogDescription>
+          </div>
         </AlertDialogHeader>
         <AlertDialogFooter className="flex-col sm:flex-row gap-2">
           <Button
