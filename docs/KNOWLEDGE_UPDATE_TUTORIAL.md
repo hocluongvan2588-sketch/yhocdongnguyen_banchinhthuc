@@ -12,7 +12,7 @@ Mở file: `lib/ai/knowledge/symptom-analysis.md`
 
 ### Bước 2: Cuộn xuống cuối file và thêm:
 
-```markdown
+\`\`\`markdown
 ## ĐAU VAI GÁY
 
 ### Nguyên nhân theo Ngũ hành:
@@ -34,7 +34,7 @@ Mở file: `lib/ai/knowledge/symptom-analysis.md`
 - **Thể khắc Dụng**: Đau vai gáy nhẹ dần, tự khỏi sau vài ngày
 - **Thể sinh Dụng**: Đau vai gáy mạn tính, cần điều trị lâu dài
 - **Dụng sinh Thể**: Đau vai gáy dễ điều trị, massage 3-5 ngày là khỏi
-```
+\`\`\`
 
 ### Bước 3: Save file (Ctrl+S hoặc Cmd+S)
 
@@ -50,13 +50,13 @@ AI sẽ trả lời theo nội dung bạn vừa thêm!
 
 Tìm section "Thảo dược bổ [Tạng]" và thêm:
 
-```markdown
+\`\`\`markdown
 ### Thảo dược bổ Gan:
 - **Đương quy**: Bổ huyết Gan, giúp gân cốt khỏe
 - **Bạch thược**: Nhu Can, giảm đau co quắp
 - **Câu kỷ tử**: Bổ Gan Thận, sáng mắt
 - **Linh chi**: Bổ Can khí, an thần
-```
+\`\`\`
 
 ## Ví Dụ 3: Sửa Nội Dung Sai
 
@@ -64,15 +64,15 @@ Tìm section "Thảo dược bổ [Tạng]" và thêm:
 
 Giả sử bạn thấy trong file có viết:
 
-```markdown
+\`\`\`markdown
 **Thận chủ xương** ← SAI! Phải là "Thận chủ cốt"
-```
+\`\`\`
 
 ### Sửa lại:
 
-```markdown
+\`\`\`markdown
 **Thận chủ cốt**
-```
+\`\`\`
 
 ### Save và test ngay!
 
@@ -80,21 +80,21 @@ Giả sử bạn thấy trong file có viết:
 
 ### 1. Heading (Tiêu đề)
 
-```markdown
+\`\`\`markdown
 # Tiêu đề lớn nhất
 ## Tiêu đề cấp 2
 ### Tiêu đề cấp 3
-```
+\`\`\`
 
 ### 2. Bold (In đậm)
 
-```markdown
+\`\`\`markdown
 **Text in đậm**
-```
+\`\`\`
 
 ### 3. Danh sách
 
-```markdown
+\`\`\`markdown
 - Mục 1
 - Mục 2
 - Mục 3
@@ -102,13 +102,13 @@ Giả sử bạn thấy trong file có viết:
 1. Bước 1
 2. Bước 2
 3. Bước 3
-```
+\`\`\`
 
 ### 4. Link
 
-```markdown
+\`\`\`markdown
 [Tên link](https://example.com)
-```
+\`\`\`
 
 ## Checklist Trước Khi Save
 
@@ -122,26 +122,26 @@ Giả sử bạn thấy trong file có viết:
 ### 1. Quên dấu # trước tiêu đề
 
 SAI:
-```
+\`\`\`
 Đau vai gáy
-```
+\`\`\`
 
 ĐÚNG:
-```markdown
+\`\`\`markdown
 ## ĐAU VAI GÁY
-```
+\`\`\`
 
 ### 2. Quên ** ở cuối text in đậm
 
 SAI:
-```
+\`\`\`
 **Gan chủ gân
-```
+\`\`\`
 
 ĐÚNG:
-```markdown
+\`\`\`markdown
 **Gan chủ gân**
-```
+\`\`\`
 
 ## Khi Nào Cần Cập Nhật?
 

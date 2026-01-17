@@ -1,9 +1,9 @@
 "use client"
 
 import { useSearchParams, useRouter } from "next/navigation"
-import { useEffect, useState, Suspense } from "react"
+import { useEffect, useState, Suspense, useMemo, useRef } from "react"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Package, Sparkles } from "lucide-react"
+import { ArrowLeft, Package, Sparkles, AlertCircle } from "lucide-react"
 import { getTrigramByNumber, TRIGRAMS } from "@/lib/data/trigram-data"
 import { getHexagramByTrigrams } from "@/lib/data/hexagram-data"
 import { generateDiagnosis, type DiagnosisResult } from "@/lib/diagnosis-data"
@@ -12,8 +12,6 @@ import { analyzeBodyUse } from "@/lib/plum-blossom-calculations"
 import { ELEMENT_TO_ORGAN } from "@/lib/diagnosis/organ-mappings"
 import { analyzeSeasonalInfluence } from "@/lib/diagnosis/seasonal-calculations"
 import { getDetailedInterpretation } from "@/lib/diagnosis/interpretation-logic"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
 
 import { ModernDiagnosisHeader } from "./components/modern-diagnosis-header"
 import { ModernSummaryCard } from "./components/modern-summary-card"
@@ -34,7 +32,27 @@ function DiagnosisContent() {
   const [selectedPackage, setSelectedPackage] = useState<1 | 2 | 3 | null>(null)
   const [useAI, setUseAI] = useState(true)
   const [isLoadingAI, setIsLoadingAI] = useState(false)
-  const [aiInterpretation, setAiInterpretation] = useState<any>(null)
+  const [aiResult, setAiResult] = useState<{
+    rawCalculation: any
+    aiInterpretation?: {
+      summary: string
+      mechanism: string
+      symptoms: string
+      timing: string
+      immediateAdvice: string
+      longTermTreatment: string
+    }
+    usedAI: boolean
+    generatedAt: string
+  } | null>(null)
+  const [retryCount, setRetryCount] = useState(0)
+  const [retryAfter, setRetryAfter] = useState(0)
+  const requestInFlight = useRef(false)
+  const hasResult = useRef(false)
+  const abortControllerRef = useRef<AbortController | null>(null)
+  const currentRequestId = useRef<string>("")
+  const [aiCompleted, setAiCompleted] = useState(false)
+  const [aiFailed, setAiFailed] = useState(false)
 
   const upper = Number.parseInt(searchParams.get("upper") || "1")
   const lower = Number.parseInt(searchParams.get("lower") || "1")
@@ -116,50 +134,173 @@ function DiagnosisContent() {
     currentMonth,
   )
 
-  const fetchAIInterpretation = async () => {
-    if (!useAI || !hexagramData) return
+  const stableBodyUseKey = useMemo(() => {
+    return `${upper}-${lower}-${moving}`
+  }, [upper, lower, moving])
 
+  const stableDiagnosisKey = useMemo(() => {
+    return `${healthConcern}-${currentMonth}-${stableBodyUseKey}`
+  }, [healthConcern, currentMonth, stableBodyUseKey])
+
+  const fetchAIInterpretation = async () => {
+    if (requestInFlight.current) {
+      console.log("[v0] Request already in flight, aborting duplicate")
+      return
+    }
+
+    if (hasResult.current) {
+      console.log("[v0] Already have result, skipping fetch")
+      return
+    }
+
+    if (isLoadingAI) {
+      console.log("[v0] Already loading, skipping fetch")
+      return
+    }
+
+    if (!useAI) {
+      console.log("[v0] useAI is false, skipping AI fetch")
+      return
+    }
+
+    if (!upper || !lower || !moving || !healthConcern) {
+      console.error("[v0] Missing required parameters:", { upper, lower, moving, healthConcern })
+      return
+    }
+
+    requestInFlight.current = true
+    hasResult.current = false
     setIsLoadingAI(true)
+    setAiCompleted(false)
+    setAiFailed(false)
+
+    if (abortControllerRef.current) {
+      console.log("[v0] Aborting previous request")
+      abortControllerRef.current.abort()
+    }
+
+    const abortController = new AbortController()
+    abortControllerRef.current = abortController
+
+    console.log("[v0] Starting AI interpretation fetch")
+
     try {
+      const requestBody = {
+        upperTrigram: upper,
+        lowerTrigram: lower,
+        movingLine: moving,
+        transformedUpper: transformedHexagram?.upper || null,
+        transformedLower: transformedHexagram?.lower || null,
+        healthConcern,
+        currentMonth,
+      }
+
+      console.log("[v0] Request body:", requestBody)
+
       const response = await fetch("/api/diagnose-ai", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          upperTrigram: upperTrigram?.vietnamese || "",
-          lowerTrigram: lowerTrigram?.vietnamese || "",
-          movingLine: moving,
-          healthConcern,
-          currentMonth,
-          transformedUpper: transformedHexagram?.upper,
-          transformedLower: transformedHexagram?.lower,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+        signal: abortController.signal,
       })
 
-      const aiResult = await response.json()
+      if (response.status === 429) {
+        const data = await response.json()
+        const retrySeconds = data.retryAfter || 60
+        setRetryAfter(retrySeconds)
 
-      if (!response.ok || aiResult.status === "error") {
-        console.error("[v0] AI diagnosis returned error:", aiResult)
-        setAiInterpretation(null)
+        const countdownInterval = setInterval(() => {
+          setRetryAfter((prev) => {
+            if (prev <= 1) {
+              clearInterval(countdownInterval)
+              return 0
+            }
+            return prev - 1
+          })
+        }, 1000)
+
+        setAiFailed(true)
+        setAiCompleted(true)
         return
       }
 
-      console.log("[v0] AI diagnosis result:", aiResult.usedAI ? "AI generated" : "Fallback logic")
-      setAiInterpretation(aiResult)
-    } catch (error) {
-      console.error("[v0] AI interpretation error:", error)
-      setAiInterpretation(null)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      console.log("[v0] AI interpretation received:", result)
+
+      setAiResult(result)
+      hasResult.current = true
+
+      setAiCompleted(true)
+      setAiFailed(!result.usedAI)
+
+      if (!result.usedAI) {
+        console.log("[v0] Backend returned fallback, not retrying")
+      }
+    } catch (error: any) {
+      if (error.name === "AbortError") {
+        console.log("[v0] Request was aborted")
+      } else {
+        console.error("[v0] AI interpretation failed:", error)
+        setAiFailed(true)
+        setAiCompleted(true)
+      }
     } finally {
       setIsLoadingAI(false)
+      requestInFlight.current = false
     }
   }
 
   useEffect(() => {
-    fetchAIInterpretation()
-  }, [useAI, hexagramData, moving, healthConcern, bodyUseAnalysis, currentMonth])
+    const requestId = `${stableDiagnosisKey}-${Date.now()}`
 
-  const displayInterpretation = useAI && aiInterpretation ? aiInterpretation : detailedInterpretation
+    if (currentRequestId.current !== stableDiagnosisKey) {
+      console.log("[v0] New query detected, resetting state")
+      currentRequestId.current = stableDiagnosisKey
+      requestInFlight.current = false
+      hasResult.current = false
+      setAiResult(null)
+    }
+
+    const debounceTimer = setTimeout(() => {
+      if (!requestInFlight.current && !hasResult.current) {
+        fetchAIInterpretation()
+      }
+    }, 500)
+
+    return () => {
+      clearTimeout(debounceTimer)
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
+      }
+    }
+  }, [useAI, stableDiagnosisKey])
+
+  const displayInterpretation = useMemo(() => {
+    if (useAI && aiResult?.usedAI && aiResult.aiInterpretation) {
+      const ai = aiResult.aiInterpretation
+
+      return {
+        title: detailedInterpretation.title,
+        summary: ai.summary || detailedInterpretation.summary,
+        summarySimple: ai.summary?.split("\n\n")[0] || detailedInterpretation.summarySimple,
+        healthDetail: `${ai.mechanism}\n\n${ai.symptoms}`,
+        prognosis: ai.timing || detailedInterpretation.prognosis,
+        severity: detailedInterpretation.severity,
+        severityLabel: detailedInterpretation.severityLabel,
+        status: detailedInterpretation.status,
+        immediateAdvice: ai.immediateAdvice?.split("\n") || detailedInterpretation.immediateAdvice,
+        shortTermCare: ai.immediateAdvice?.split("\n").slice(0, 3) || detailedInterpretation.shortTermCare,
+        longTermTreatment: ai.longTermTreatment?.split("\n") || detailedInterpretation.longTermTreatment,
+        preventionTips: detailedInterpretation.preventionTips,
+      }
+    }
+
+    return detailedInterpretation
+  }, [useAI, aiResult, detailedInterpretation])
 
   const getRecommendedPackage = () => {
     const relation = bodyUseAnalysis.relationship
@@ -206,6 +347,8 @@ function DiagnosisContent() {
     setShowPaymentModal(true)
   }
 
+  const shouldShowContent = !useAI || aiCompleted
+
   if (!diagnosis) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -218,22 +361,12 @@ function DiagnosisContent() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 border-b border-border/40 bg-background/95 backdrop-blur-sm">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+      <header className="border-b border-border/50 bg-background/80 backdrop-blur-md sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-bold text-foreground">Kết Quả Chẩn Đoán</h1>
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-3 px-4 py-2 bg-secondary/50 border border-border">
-                <Sparkles className={`w-4 h-4 transition-colors ${useAI ? "text-primary" : "text-muted-foreground"}`} />
-                <Label htmlFor="ai-mode" className="text-sm font-medium cursor-pointer whitespace-nowrap">
-                  AI Nâng cao
-                </Label>
-                <Switch id="ai-mode" checked={useAI} onCheckedChange={setUseAI} />
-                {isLoadingAI && (
-                  <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                )}
-              </div>
               <Button variant="ghost" size="sm" onClick={() => router.push("/")} className="gap-2">
                 <ArrowLeft className="w-4 h-4" />
                 Quay lại
@@ -254,7 +387,36 @@ function DiagnosisContent() {
             minute={minute}
           />
 
-          {useAI && aiInterpretation && (
+          {useAI && isLoadingAI && !aiCompleted && (
+            <div className="flex flex-col items-center gap-4 px-8 py-12 bg-primary/5 border border-primary/20 rounded-xl">
+              <div className="relative">
+                <Sparkles className="w-12 h-12 text-primary animate-pulse" />
+                <div className="absolute inset-0 bg-primary/20 blur-xl animate-pulse" />
+              </div>
+              <div className="text-center space-y-2">
+                <p className="text-lg font-semibold text-primary">Đang phân tích với AI Mai Hoa Dịch Số...</p>
+                <p className="text-sm text-muted-foreground">
+                  Hệ thống đang xử lý thông tin của bạn với tri thức Y Dịch chuẩn xác
+                </p>
+              </div>
+              <div className="flex gap-1">
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]" />
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]" />
+                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" />
+              </div>
+            </div>
+          )}
+
+          {retryAfter > 0 && (
+            <div className="flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+              <AlertCircle className="w-4 h-4 text-yellow-500" />
+              <p className="text-sm text-yellow-600 font-medium">
+                Hệ thống đang bận, vui lòng thử lại sau {retryAfter} giây
+              </p>
+            </div>
+          )}
+
+          {useAI && aiResult?.usedAI && aiCompleted && (
             <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-lg">
               <Sparkles className="w-4 h-4 text-primary" />
               <p className="text-sm text-primary font-medium">
@@ -263,37 +425,52 @@ function DiagnosisContent() {
             </div>
           )}
 
-          <ModernSummaryCard interpretation={displayInterpretation} />
+          {useAI && aiFailed && aiCompleted && (
+            <div className="flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+              <AlertCircle className="w-4 h-4 text-yellow-500" />
+              <p className="text-sm text-yellow-600 font-medium">
+                AI tạm thời không khả dụng, sử dụng logic phân tích cơ bản
+              </p>
+            </div>
+          )}
 
-          <SmartPackageRecommendation
-            severity={displayInterpretation.severity}
-            status={displayInterpretation.status}
-            primaryRecommendation={recommendedPackage.primary}
-            reason={recommendedPackage.reason}
-            onScrollToPackages={scrollToPackages}
-          />
+          {shouldShowContent && (
+            <>
+              <ModernSummaryCard interpretation={displayInterpretation} />
 
-          <ModernElementsDisplay
-            bodyElement={bodyUseAnalysis.bodyElement}
-            useElement={bodyUseAnalysis.useElement}
-            bodyOrganSimple={ELEMENT_TO_ORGAN[bodyUseAnalysis.bodyElement]?.organSimple || bodyUseAnalysis.bodyElement}
-            useOrganSimple={ELEMENT_TO_ORGAN[bodyUseAnalysis.useElement]?.organSimple || bodyUseAnalysis.useElement}
-            relation={bodyUseAnalysis.relationship}
-            relationExplanation={displayInterpretation.summary}
-          />
+              <SmartPackageRecommendation
+                severity={displayInterpretation.severity}
+                status={displayInterpretation.status}
+                primaryRecommendation={recommendedPackage.primary}
+                reason={recommendedPackage.reason}
+                onScrollToPackages={scrollToPackages}
+              />
 
-          <ModernAdviceCard interpretation={displayInterpretation} />
+              <ModernElementsDisplay
+                bodyElement={bodyUseAnalysis.bodyElement}
+                useElement={bodyUseAnalysis.useElement}
+                bodyOrganSimple={
+                  ELEMENT_TO_ORGAN[bodyUseAnalysis.bodyElement]?.organSimple || bodyUseAnalysis.bodyElement
+                }
+                useOrganSimple={ELEMENT_TO_ORGAN[bodyUseAnalysis.useElement]?.organSimple || bodyUseAnalysis.useElement}
+                relation={bodyUseAnalysis.relationship}
+                relationExplanation={displayInterpretation.summary}
+              />
 
-          <SeasonalAnalysis
-            seasonElement={seasonalAnalysis.seasonElement}
-            bodyStrength={seasonalAnalysis.bodyStrength}
-            useStrength={seasonalAnalysis.useStrength}
-            dangerousMonths={seasonalAnalysis.dangerousMonths}
-            safeMonths={seasonalAnalysis.safeMonths}
-            recoveryMonths={seasonalAnalysis.recoveryMonths}
-            currentMonthRisk={seasonalAnalysis.currentMonthRisk}
-            currentMonth={currentMonth}
-          />
+              <ModernAdviceCard interpretation={displayInterpretation} />
+
+              <SeasonalAnalysis
+                seasonElement={seasonalAnalysis.seasonElement}
+                bodyStrength={seasonalAnalysis.bodyStrength}
+                useStrength={seasonalAnalysis.useStrength}
+                dangerousMonths={seasonalAnalysis.dangerousMonths}
+                safeMonths={seasonalAnalysis.safeMonths}
+                recoveryMonths={seasonalAnalysis.recoveryMonths}
+                currentMonthRisk={seasonalAnalysis.currentMonthRisk}
+                currentMonth={currentMonth}
+              />
+            </>
+          )}
 
           <Card className="border border-border/50 shadow-md">
             <CardHeader>
@@ -407,60 +584,94 @@ function DiagnosisContent() {
               <CardHeader className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <Package className="w-6 h-6 text-primary" />
-                  <CardTitle className="text-2xl md:text-3xl">Gói Điều Trị Chi Tiết</CardTitle>
+                  <CardTitle className="text-2xl md:text-3xl">Gói Dịch Vụ Chi Tiết</CardTitle>
                 </div>
                 <p className="text-base text-muted-foreground">
-                  Chọn gói phù hợp để nhận phác đồ điều trị cá nhân hóa từ chuyên gia
+                  Chọn gói phù hợp để nhận phác đồ chăm sóc sức khỏe cá nhân hóa từ chuyên gia
                 </p>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-3 gap-6">
                   <div
-                    className={`border-2 rounded-lg p-6 space-y-4 transition-all hover:shadow-lg cursor-pointer ${recommendedPackage.primary === "nam-duoc" ? "border-primary bg-primary/5" : "border-border"}`}
+                    className={`border-2 rounded-lg overflow-hidden space-y-4 transition-all hover:shadow-lg cursor-pointer ${recommendedPackage.primary === "nam-duoc" ? "border-primary bg-primary/5" : "border-border"}`}
                     onClick={() => handlePackageClick(1)}
                   >
-                    {recommendedPackage.primary === "nam-duoc" && <Badge className="mb-2">Phù hợp với bạn</Badge>}
-                    <h3 className="text-xl font-bold">Gói Nam Dược</h3>
-                    <p className="text-3xl font-bold text-primary">500.000đ</p>
-                    <p className="text-sm text-muted-foreground">Phác đồ thảo dược phù hợp ngũ hành</p>
-                    <Button
-                      className="w-full"
-                      variant={recommendedPackage.primary === "nam-duoc" ? "default" : "outline"}
-                    >
-                      Chọn gói này
-                    </Button>
+                    <div className="relative h-48 bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900/20 dark:to-green-800/10">
+                      <img src="/traditional-herbal-medicine-herbs-natural-remedies.jpg" alt="Gói Nam Dược" className="w-full h-full object-cover" />
+                      {recommendedPackage.primary === "nam-duoc" && (
+                        <Badge className="absolute top-3 right-3">Phù hợp với bạn</Badge>
+                      )}
+                    </div>
+                    <div className="p-6 space-y-4">
+                      <h3 className="text-xl font-bold">Gói Nam Dược</h3>
+                      <p className="text-3xl font-bold text-primary">500.000đ</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        Bài thảo dược thiên nhiên được pha chế riêng theo ngũ hành cá nhân, giúp cân bằng âm dương và
+                        tăng cường sức khỏe toàn diện
+                      </p>
+                      <Button
+                        className="w-full"
+                        variant={recommendedPackage.primary === "nam-duoc" ? "default" : "outline"}
+                      >
+                        Chọn gói này
+                      </Button>
+                    </div>
                   </div>
 
                   <div
-                    className={`border-2 rounded-lg p-6 space-y-4 transition-all hover:shadow-lg cursor-pointer ${recommendedPackage.primary === "khai-huyet" ? "border-primary bg-primary/5" : "border-border"}`}
+                    className={`border-2 rounded-lg overflow-hidden space-y-4 transition-all hover:shadow-lg cursor-pointer ${recommendedPackage.primary === "khai-huyet" ? "border-primary bg-primary/5" : "border-border"}`}
                     onClick={() => handlePackageClick(2)}
                   >
-                    {recommendedPackage.primary === "khai-huyet" && <Badge className="mb-2">Phù hợp với bạn</Badge>}
-                    <h3 className="text-xl font-bold">Gói Khai Huyệt</h3>
-                    <p className="text-3xl font-bold text-primary">800.000đ</p>
-                    <p className="text-sm text-muted-foreground">Khai thông kinh lạc, huyệt đạo</p>
-                    <Button
-                      className="w-full"
-                      variant={recommendedPackage.primary === "khai-huyet" ? "default" : "outline"}
-                    >
-                      Chọn gói này
-                    </Button>
+                    <div className="relative h-48 bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/20 dark:to-blue-800/10">
+                      <img
+                        src="/acupressure-points-meridian-therapy-wellness.jpg"
+                        alt="Gói Khai Huyệt"
+                        className="w-full h-full object-cover"
+                      />
+                      {recommendedPackage.primary === "khai-huyet" && (
+                        <Badge className="absolute top-3 right-3">Phù hợp với bạn</Badge>
+                      )}
+                    </div>
+                    <div className="p-6 space-y-4">
+                      <h3 className="text-xl font-bold">Gói Khai Huyệt</h3>
+                      <p className="text-3xl font-bold text-primary">800.000đ</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        Phương pháp khai thông kinh lạc và huyệt đạo truyền thống, giúp lưu thông khí huyết và phục hồi
+                        năng lượng cơ thể
+                      </p>
+                      <Button
+                        className="w-full"
+                        variant={recommendedPackage.primary === "khai-huyet" ? "default" : "outline"}
+                      >
+                        Chọn gói này
+                      </Button>
+                    </div>
                   </div>
 
                   <div
-                    className={`border-2 rounded-lg p-6 space-y-4 transition-all hover:shadow-lg cursor-pointer ${recommendedPackage.primary === "tuong-so" ? "border-primary bg-primary/5" : "border-border"}`}
+                    className={`border-2 rounded-lg overflow-hidden space-y-4 transition-all hover:shadow-lg cursor-pointer ${recommendedPackage.primary === "tuong-so" ? "border-primary bg-primary/5" : "border-border"}`}
                     onClick={() => handlePackageClick(3)}
                   >
-                    {recommendedPackage.primary === "tuong-so" && <Badge className="mb-2">Phù hợp với bạn</Badge>}
-                    <h3 className="text-xl font-bold">Gói Tượng Số</h3>
-                    <p className="text-3xl font-bold text-primary">1.200.000đ</p>
-                    <p className="text-sm text-muted-foreground">Phân tích sâu Mai Hoa Dịch Số</p>
-                    <Button
-                      className="w-full"
-                      variant={recommendedPackage.primary === "tuong-so" ? "default" : "outline"}
-                    >
-                      Chọn gói này
-                    </Button>
+                    <div className="relative h-48 bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/20 dark:to-purple-800/10">
+                      <img src="/i-ching-hexagram-yijing-divination-ancient-wisdom.jpg" alt="Gói Tượng Số" className="w-full h-full object-cover" />
+                      {recommendedPackage.primary === "tuong-so" && (
+                        <Badge className="absolute top-3 right-3">Phù hợp với bạn</Badge>
+                      )}
+                    </div>
+                    <div className="p-6 space-y-4">
+                      <h3 className="text-xl font-bold">Gói Tượng Số</h3>
+                      <p className="text-3xl font-bold text-primary">1.200.000đ</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        Phân tích chuyên sâu Mai Hoa Dịch Số với lộ trình dài hạn, giúp bạn hiểu rõ vận mệnh và tối ưu
+                        hóa sức khỏe theo quy luật tự nhiên
+                      </p>
+                      <Button
+                        className="w-full"
+                        variant={recommendedPackage.primary === "tuong-so" ? "default" : "outline"}
+                      >
+                        Chọn gói này
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardContent>

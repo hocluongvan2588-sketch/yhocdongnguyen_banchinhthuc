@@ -4,7 +4,7 @@
 
 Hệ thống AI được thiết kế theo mô hình **Hybrid 3 tầng**:
 
-```
+\`\`\`
 ┌─────────────────────────────────────────────────┐
 │ Tầng 1: Logic Tính Toán (TypeScript - Cứng)    │
 │ - Tính quẻ chủ, quẻ hổ, quẻ biến               │
@@ -33,13 +33,13 @@ Hệ thống AI được thiết kế theo mô hình **Hybrid 3 tầng**:
 │ - Nếu API lỗi → dùng logic cũ                  │
 │ - Luôn đảm bảo có kết quả trả về               │
 └─────────────────────────────────────────────────┘
-```
+\`\`\`
 
 ## Cách Sử Dụng AI trong Code
 
 ### Option 1: Sử dụng API Route (Khuyến nghị)
 
-```typescript
+\`\`\`typescript
 // Trong component hoặc server action
 async function getDiagnosisWithAI(params) {
   const response = await fetch('/api/diagnose-ai', {
@@ -59,11 +59,11 @@ async function getDiagnosisWithAI(params) {
   const result = await response.json()
   return result
 }
-```
+\`\`\`
 
 ### Option 2: Gọi trực tiếp hàm (Server Component)
 
-```typescript
+\`\`\`typescript
 import { diagnoseWithAI } from "@/lib/ai/diagnosis-with-ai"
 
 export default async function DiagnosisPage() {
@@ -84,11 +84,11 @@ export default async function DiagnosisPage() {
     </div>
   )
 }
-```
+\`\`\`
 
 ## Cấu Trúc Kết Quả Trả Về
 
-```typescript
+\`\`\`typescript
 {
   rawCalculation: {
     // Toàn bộ dữ liệu tính toán từ logic cứng
@@ -111,7 +111,7 @@ export default async function DiagnosisPage() {
   usedAI: true,  // false nếu fallback
   generatedAt: "2026-01-16T10:30:00.000Z"
 }
-```
+\`\`\`
 
 ## Cách Cập Nhật Kiến Thức (SIÊU ĐƠN GIẢN)
 
@@ -121,7 +121,7 @@ export default async function DiagnosisPage() {
 
 **Bước 2:** Thêm nội dung mới:
 
-```markdown
+\`\`\`markdown
 ## ĐAU LƯNG
 
 ### Nguyên nhân theo Ngũ hành:
@@ -130,27 +130,27 @@ export default async function DiagnosisPage() {
    - Cơ chế: Thận chủ cốt, Thận hư → xương lưng yếu
    - Triệu chứng kèm: đau âm ỉ, tăng khi mệt
    - Xử lý: bổ Thận, ăn đậu đen, óc chó
-```
+\`\`\`
 
 **Bước 3:** Save file
 
 **Bước 4:** Test ngay (không cần restart!)
 
-```bash
+\`\`\`bash
 # User hỏi: "Tôi bị đau lưng"
 # AI sẽ TỰ ĐỘNG đọc nội dung mới và phân tích
-```
+\`\`\`
 
 ### Ví dụ: Thêm quẻ đặc biệt mới
 
 **File:** `lib/ai/knowledge/mai-hoa-core.md`
 
-```markdown
+\`\`\`markdown
 ## TỔ HỢP QUẺ ĐẶC BIỆT
 
 ### 5. Thiên Hỏa Đồng Nhân (Càn trên Ly)
 Bệnh về phổi và tim, ho khan kèm tim đập nhanh, cần bổ cả Phổi và Tim
-```
+\`\`\`
 
 ## Chi Phí & Hiệu Suất
 
@@ -202,10 +202,10 @@ Bệnh về phổi và tim, ho khan kèm tim đập nhanh, cần bổ cả Phổ
 **Nguyên nhân:** File path không đúng
 
 **Giải pháp:**
-```typescript
+\`\`\`typescript
 // Check trong diagnose-with-ai.ts
 const knowledgePath = path.join(process.cwd(), "lib/ai/knowledge")
-```
+\`\`\`
 
 ## Best Practices
 

@@ -27,9 +27,9 @@ export function SmartPackageRecommendation({
       return {
         variant: "destructive" as const,
         icon: <AlertTriangle className="h-6 w-6 flex-shrink-0" />,
-        title: "Tình trạng cần can thiệp ngay",
+        title: "Tình trạng cần quan tâm đặc biệt",
         description:
-          "Dựa trên phân tích Mai Hoa Dịch Số, tình trạng của bạn cần được chú ý và điều trị kịp thời. Chúng tôi khuyến nghị bạn tham khảo gói điều trị chuyên sâu để có phác đồ chi tiết nhất.",
+          "Dựa trên phân tích Mai Hoa Dịch Số, tình trạng của bạn cần được chú ý và chăm sóc kịp thời. Chúng tôi khuyến nghị bạn tham khảo gói tư vấn chuyên sâu để có phác đồ chi tiết nhất.",
         recommendedPackages: [
           {
             name: "Gói Tượng Số",
@@ -38,7 +38,7 @@ export function SmartPackageRecommendation({
           },
           {
             name: "Gói Nam Dược",
-            description: "Bài thuốc riêng theo ngũ hành",
+            description: "Bài thảo dược riêng theo ngũ hành",
             highlight: false,
           },
         ],
@@ -49,7 +49,7 @@ export function SmartPackageRecommendation({
       return {
         variant: "default" as const,
         icon: <Info className="h-6 w-6 flex-shrink-0" />,
-        title: "Nên theo dõi và điều trị",
+        title: "Nên theo dõi và chăm sóc",
         description:
           "Kết quả chẩn đoán cho thấy cơ thể bạn cần được hỗ trợ để tránh tình trạng trở nên nghiêm trọng hơn. Việc can thiệp sớm sẽ giúp phục hồi nhanh chóng.",
         recommendedPackages: [
@@ -60,7 +60,7 @@ export function SmartPackageRecommendation({
           },
           {
             name: "Gói Khai Huyệt",
-            description: "Khai thông kinh lạc",
+            description: "Khai thông kinh lạc bằng huyệt đạo",
             highlight: false,
           },
         ],
@@ -81,7 +81,7 @@ export function SmartPackageRecommendation({
           highlight: true,
         },
         {
-          name: "Gối Khai Huyệt",
+          name: "Gói Khai Huyệt",
           description: "Duy trì sức khỏe phòng ngừa",
           highlight: false,
         },
@@ -146,14 +146,14 @@ export function SmartPackageRecommendation({
         <div className="flex flex-col sm:flex-row items-center gap-4 p-5 bg-primary/10 rounded-lg border border-primary/20">
           <div className="flex-1 space-y-1 min-w-0">
             <p className="font-semibold text-base md:text-lg whitespace-normal">
-              Sẵn sàng bắt đầu hành trình chữa lành?
+              Sẵn sàng bắt đầu hành trình chăm sóc sức khỏe?
             </p>
             <p className="text-sm md:text-base text-muted-foreground whitespace-normal break-words">
-              Xem chi tiết các gói điều trị phù hợp với tình trạng của bạn
+              Xem chi tiết các gói phù hợp với tình trạng của bạn
             </p>
           </div>
           <Button onClick={onScrollToPackages} size="lg" className="gap-2 text-base w-full sm:w-auto flex-shrink-0">
-            Xem gói điều trị
+            Xem gói dịch vụ
             <ArrowRight className="w-5 h-5" />
           </Button>
         </div>
@@ -166,7 +166,7 @@ export function SmartPackageRecommendation({
             </AlertTitle>
             <AlertDescription className="text-sm md:text-base text-amber-700 dark:text-amber-300 leading-relaxed whitespace-normal break-words">
               Kết quả chẩn đoán qua Mai Hoa Dịch Số là công cụ tham khảo. Với các triệu chứng nghiêm trọng, bạn nên đi
-              khám bác sĩ chuyên khoa để có chẩn đoán chính xác và điều trị kịp thời.
+              khám bác sĩ chuyên khoa để có chẩn đoán chính xác và phương pháp chăm sóc kịp thời.
             </AlertDescription>
           </Alert>
         )}

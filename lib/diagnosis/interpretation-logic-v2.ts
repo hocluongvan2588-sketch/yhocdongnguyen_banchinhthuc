@@ -39,6 +39,7 @@ export interface ComprehensiveDiagnosis {
     relationship: string // "Dụng khắc Thể" | "Thể khắc Dụng" | "Dụng sinh Thể" | "Thể sinh Dụng" | "Tỷ hòa"
     severity: "mild" | "moderate" | "severe"
     prognosis: string
+    severityLabel: string // "Nghiêm trọng" | "Trung bình" | "Nhẹ"
   }
 
   // Phân tích cơ quan bị ảnh hưởng
@@ -68,6 +69,13 @@ export interface ComprehensiveDiagnosis {
 
   // Gợi ý gói cước
   recommendedPackage: "basic" | "advanced" | "comprehensive"
+  // Phân tích ảnh hưởng mùa vụ
+  seasonalInfluence: {
+    favorableMonths: number[]
+    unfavorableMonths: number[]
+    currentInfluence: string
+    explanation: string
+  }
 }
 
 export function performComprehensiveDiagnosis(params: {
@@ -153,6 +161,9 @@ export function performComprehensiveDiagnosis(params: {
     seasonalAssessment = `Tháng ${currentMonth}, ${bodyInfo.organSimple} (${bodyElement}) đang ở mức "${bodyStrength.strength}". ${bodyStrength.description}`
   }
 
+  const favorableMonths = calculateFavorableMonths(bodyElement)
+  const unfavorableMonths = calculateUnfavorableMonths(bodyElement)
+
   // Phân tích cụ thể theo triệu chứng
   const specificAnalysis = analyzeSpecificConcern(
     healthConcern,
@@ -200,6 +211,7 @@ export function performComprehensiveDiagnosis(params: {
       relationship,
       severity,
       prognosis,
+      severityLabel: severity === "severe" ? "Nghiêm trọng" : severity === "moderate" ? "Trung bình" : "Nhẹ",
     },
     affectedOrgans: {
       primary: bodyInfo.organs,
@@ -211,6 +223,12 @@ export function performComprehensiveDiagnosis(params: {
       bodyStrength,
       useStrength,
       overallAssessment: seasonalAssessment,
+    },
+    seasonalInfluence: {
+      favorableMonths,
+      unfavorableMonths,
+      currentInfluence: seasonalAssessment,
+      explanation: `Theo năng lượng ngũ hành, ${bodyElement} ${bodyStrength.strength} vào tháng ${currentMonth}.`,
     },
     interpretation: {
       title: specificAnalysis.title,
@@ -463,4 +481,26 @@ function analyzeHeadache(
 ⚠️ **LƯU Ý QUAN TRỌNG**: Đau đầu này không phải do "nóng" hay "viêm", đừng uống thuốc giảm đau mạnh (paracetamol, ibuprofen) liên tục hoặc thuốc hạ nhiệt, sẽ làm suy yếu cơ thể thêm!`,
     additionalSymptoms: ["Chóng mặt", "Mắt mờ", "Cổ vai cứng", "Mất ngủ"],
   }
+}
+
+function calculateFavorableMonths(element: string): number[] {
+  const elementSeasons: Record<string, number[]> = {
+    Mộc: [1, 2, 3], // Spring
+    Hỏa: [4, 5, 6], // Summer
+    Thổ: [3, 6, 9, 12], // Transitions
+    Kim: [7, 8, 9], // Autumn
+    Thủy: [10, 11, 12], // Winter
+  }
+  return elementSeasons[element] || [1, 2, 3]
+}
+
+function calculateUnfavorableMonths(element: string): number[] {
+  const elementWeakSeasons: Record<string, number[]> = {
+    Mộc: [7, 8, 9], // Autumn (Kim khắc Mộc)
+    Hỏa: [10, 11, 12], // Winter (Thủy khắc Hỏa)
+    Thổ: [1, 2, 3], // Spring (Mộc khắc Thổ)
+    Kim: [4, 5, 6], // Summer (Hỏa khắc Kim)
+    Thủy: [4, 5, 6], // Summer (Thổ khắc Thủy)
+  }
+  return elementWeakSeasons[element] || [7, 8, 9]
 }

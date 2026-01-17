@@ -2,7 +2,7 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -15,7 +15,9 @@ import { UserNav } from "@/components/user-nav"
 import { Sparkles, BookOpen, Info, ArrowRight, HelpCircle, CheckCircle2, Clock, Hash } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
-import { TRIGRAMS } from "@/lib/data/trigram-data"
+import { MaiHoaGuardrailModal } from "@/components/mai-hoa-guardrail-modal"
+import { canUserDivine, saveDivinationRecord } from "@/lib/actions/divination-actions"
+import { useAuth } from "@/lib/auth/use-auth" // Import useAuth hook
 
 interface TimeInput {
   year: number
@@ -28,54 +30,6 @@ interface TimeInput {
 interface DivinationRecord {
   timestamp: number
   concern: string
-}
-
-const COOLDOWN_MINUTES = 30 // 30 phút theo nguyên tắc Mai Hoa Dịch Số
-const ENABLE_COOLDOWN = false // Set to true to re-enable cooldown
-
-function getDivinationHistory(): DivinationRecord[] {
-  if (typeof window === "undefined") return []
-  const stored = localStorage.getItem("divination_history")
-  if (!stored) return []
-  try {
-    return JSON.parse(stored)
-  } catch {
-    return []
-  }
-}
-
-function saveDivinationRecord(concern: string) {
-  if (typeof window === "undefined") return
-  const history = getDivinationHistory()
-  history.push({
-    timestamp: Date.now(),
-    concern,
-  })
-  // Keep only last 10 records
-  const recent = history.slice(-10)
-  localStorage.setItem("divination_history", JSON.stringify(recent))
-}
-
-function getTimeSinceLastDivination(): number | null {
-  const history = getDivinationHistory()
-  if (history.length === 0) return null
-  const lastRecord = history[history.length - 1]
-  return Date.now() - lastRecord.timestamp
-}
-
-function canDivineNow(): { canDivine: boolean; minutesRemaining: number } {
-  if (!ENABLE_COOLDOWN) return { canDivine: true, minutesRemaining: 0 }
-
-  const timeSince = getTimeSinceLastDivination()
-  if (timeSince === null) return { canDivine: true, minutesRemaining: 0 }
-
-  const minutesSince = Math.floor(timeSince / 60000)
-  const minutesRemaining = COOLDOWN_MINUTES - minutesSince
-
-  return {
-    canDivine: minutesSince >= COOLDOWN_MINUTES,
-    minutesRemaining: minutesRemaining > 0 ? minutesRemaining : 0,
-  }
 }
 
 function calculateHexagramWithMinute(input: TimeInput) {
@@ -142,8 +96,47 @@ const ZODIAC_HOURS = [
   { label: "Hợi (21:00-23:00)", value: 12 },
 ]
 
-export default function HomePage() {
+function calculateSimilarity(text1: string, text2: string): number {
+  const normalize = (str: string) =>
+    str
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s]/g, "")
+  const s1 = normalize(text1)
+  const s2 = normalize(text2)
+
+  if (s1 === s2) return 1.0
+
+  const words1 = s1.split(/\s+/)
+  const words2 = s2.split(/\s+/)
+  const commonWords = words1.filter((w) => words2.includes(w)).length
+  const similarity = (2 * commonWords) / (words1.length + words2.length)
+
+  return similarity
+}
+
+function findSimilarPreviousQuestion(
+  currentQuestion: string,
+  history: DivinationRecord[],
+): { found: boolean; record?: DivinationRecord; similarity?: number } {
+  if (!currentQuestion || history.length === 0) {
+    return { found: false }
+  }
+
+  for (const record of history.slice().reverse()) {
+    const similarity = calculateSimilarity(currentQuestion, record.concern)
+    if (similarity >= 0.8) {
+      // 80% giống nhau
+      return { found: true, record, similarity }
+    }
+  }
+
+  return { found: false }
+}
+
+export default function MainPage() {
   const router = useRouter()
+  const { user, setShowAuthGateModal, AuthGateModal } = useAuth() // Declare user, setShowAuthGateModal, and AuthGateModal using useAuth hook
 
   const [input, setInput] = useState<TimeInput>({
     year: new Date().getFullYear(),
@@ -166,168 +159,100 @@ export default function HomePage() {
   const [numberInput, setNumberInput] = useState({ upper: "", lower: "", moving: "" })
   const [healthConcern, setHealthConcern] = useState("")
 
-  const [cooldownStatus, setCooldownStatus] = useState<{ canDivine: boolean; minutesRemaining: number }>({
-    canDivine: true,
-    minutesRemaining: 0,
+  const [guardrailModal, setGuardrailModal] = useState<{
+    isOpen: boolean
+    reason: string
+    details?: any
+  }>({
+    isOpen: false,
+    reason: "",
   })
 
-  useEffect(() => {
-    const status = canDivineNow()
-    setCooldownStatus(status)
-  }, [])
+  const currentHourBranch = getHourBranch(input.hour)
+  const currentHourBranchName = getHourBranchName(currentHourBranch)
 
-  const updateTime = () => {
-    const now = new Date()
-    // Vietnam timezone UTC+7
-    const vnTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" }))
-    setInput((prev) => ({
-      ...prev,
-      hour: vnTime.getHours(),
-      minute: vnTime.getMinutes(),
-    }))
-  }
-
-  // Update every minute
-  useEffect(() => {
-    const interval = setInterval(updateTime, 60000)
-    return () => clearInterval(interval)
-  }, [])
-
-  const handleCalculate = () => {
-    const status = canDivineNow()
-    if (!status.canDivine) {
+  async function handleNavigateToDiagnosis() {
+    if (!user) {
+      setShowAuthGateModal(true)
       return
     }
 
-    const calc = calculateHexagramWithMinute(input)
-    const hexagram = getHexagramByTrigrams(calc.upperTrigram, calc.lowerTrigram)
+    // Comprehensive check theo nguyên tắc Mai Hoa
+    const checkResult = await canUserDivine(healthConcern)
 
-    const upperTrig = getTrigramByNumber(calc.upperTrigram)
-    const lowerTrig = getTrigramByNumber(calc.lowerTrigram)
-
-    const { transformedUpper, transformedLower } = calculateTransformedHexagram(upperTrig, lowerTrig, calc.movingLine)
-    const transformedHexagram = getHexagramByTrigrams(transformedUpper, transformedLower)
-    const transformedUpperTrig = getTrigramByNumber(transformedUpper)
-    const transformedLowerTrig = getTrigramByNumber(transformedLower)
-
-    setResult({
-      upperTrigram: calc.upperTrigram,
-      lowerTrigram: calc.lowerTrigram,
-      movingLine: calc.movingLine,
-      hexagramName: hexagram?.vietnamese || `${upperTrig?.vietnamese} ${lowerTrig?.vietnamese}`,
-      transformedUpperTrigram: transformedUpper,
-      transformedLowerTrigram: transformedLower,
-      transformedHexagramName:
-        transformedHexagram?.vietnamese || `${transformedUpperTrig?.vietnamese} ${transformedLowerTrig?.vietnamese}`,
-    })
-
-    saveDivinationRecord(healthConcern || "Không ghi chú")
-  }
-
-  const handleNumberCalculate = () => {
-    const status = canDivineNow()
-    if (!status.canDivine) {
+    if (!checkResult.allowed) {
+      setGuardrailModal({
+        isOpen: true,
+        reason: checkResult.reason || "Không thể gieo quẻ lúc này",
+        details: checkResult.details,
+      })
       return
     }
 
-    const upper = Number.parseInt(numberInput.upper) || 1
-    const lower = Number.parseInt(numberInput.lower) || 1
-    const moving = Number.parseInt(numberInput.moving) || 1
+    // Allowed - proceed with divination
+    if (divinationMethod === "time") {
+      const timeInput: TimeInput = {
+        year: input.year,
+        month: input.month,
+        day: input.day,
+        hour: input.hour,
+        minute: input.minute,
+      }
 
-    const upperMod = ((upper - 1) % 8) + 1
-    const lowerMod = ((lower - 1) % 8) + 1
-    const movingMod = ((moving - 1) % 6) + 1
+      const result = calculateHexagramWithMinute(timeInput)
 
-    const upperTrigram = getTrigramByNumber(upperMod)
-    const lowerTrigram = getTrigramByNumber(lowerMod)
-    const hexagram = getHexagramByTrigrams(upperMod, lowerMod)
+      // Save to database
+      await saveDivinationRecord({
+        year: timeInput.year,
+        month: timeInput.month,
+        day: timeInput.day,
+        hour: timeInput.hour,
+        upperTrigram: result.upperTrigram,
+        lowerTrigram: result.lowerTrigram,
+        movingLine: result.movingLine,
+        hexagramName: result.hexagramName,
+        healthConcern: healthConcern,
+      })
 
-    const { transformedUpper, transformedLower } = calculateTransformedHexagram(upperTrigram, lowerTrigram, movingMod)
-    const transformedHexagram = getHexagramByTrigrams(transformedUpper, transformedLower)
-    const transformedUpperTrig = getTrigramByNumber(transformedUpper)
-    const transformedLowerTrig = getTrigramByNumber(transformedLower)
+      router.push(
+        `/diagnosis?upper=${result.upperTrigram}&lower=${result.lowerTrigram}&moving=${result.movingLine}&healthConcern=${encodeURIComponent(healthConcern)}&year=${timeInput.year}&month=${timeInput.month}&day=${timeInput.day}&hour=${timeInput.hour}&minute=${timeInput.minute}&method=time`,
+      )
+    } else {
+      // Manual method
+      const upper = Number.parseInt(numberInput.upper) || 1
+      const lower = Number.parseInt(numberInput.lower) || 1
+      const moving = Number.parseInt(numberInput.moving) || 1
 
-    setResult({
-      upperTrigram: upperMod,
-      lowerTrigram: lowerMod,
-      movingLine: movingMod,
-      hexagramName: hexagram?.vietnamese || `${upperTrigram?.vietnamese} ${lowerTrigram?.vietnamese}`,
-      transformedUpperTrigram: transformedUpper,
-      transformedLowerTrigram: transformedLower,
-      transformedHexagramName:
-        transformedHexagram?.vietnamese || `${transformedUpperTrig?.vietnamese} ${transformedLowerTrig?.vietnamese}`,
-    })
+      const upperMod = ((upper - 1) % 8) + 1
+      const lowerMod = ((lower - 1) % 8) + 1
+      const movingMod = ((moving - 1) % 6) + 1
 
-    saveDivinationRecord(healthConcern || "Không ghi chú")
-  }
+      const upperTrigram = getTrigramByNumber(upperMod)
+      const lowerTrigram = getTrigramByNumber(lowerMod)
+      const hexagram = getHexagramByTrigrams(upperMod, lowerMod)
 
-  const calculateTransformedHexagram = (
-    upperTrig: any,
-    lowerTrig: any,
-    movingLine: number,
-  ): { transformedUpper: number; transformedLower: number } => {
-    if (!upperTrig || !lowerTrig) {
-      return { transformedUpper: 1, transformedLower: 1 }
+      // Save to database
+      await saveDivinationRecord({
+        year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1,
+        day: new Date().getDate(),
+        hour: new Date().getHours(),
+        upperTrigram: upperMod,
+        lowerTrigram: lowerMod,
+        movingLine: movingMod,
+        hexagramName: hexagram?.vietnamese || `${upperTrigram?.vietnamese} ${lowerTrigram?.vietnamese}`,
+        healthConcern: healthConcern,
+      })
+
+      router.push(
+        `/diagnosis?upper=${upperMod}&lower=${lowerMod}&moving=${movingMod}&healthConcern=${encodeURIComponent(healthConcern)}&method=number`,
+      )
     }
-
-    // Clone the trigram lines
-    const newUpperLines = [...(upperTrig.lines || [true, true, true])]
-    const newLowerLines = [...(lowerTrig.lines || [true, true, true])]
-
-    // Flip the moving line (1=bottom, 6=top)
-    // Lines 1-3 are in lower trigram, lines 4-6 are in upper trigram
-    if (movingLine >= 1 && movingLine <= 3) {
-      // Lower trigram: line 1 is index 0, line 2 is index 1, line 3 is index 2
-      const lineIndex = movingLine - 1
-      newLowerLines[lineIndex] = !newLowerLines[lineIndex]
-    } else if (movingLine >= 4 && movingLine <= 6) {
-      // Upper trigram: line 4 is index 0, line 5 is index 1, line 6 is index 2
-      const lineIndex = movingLine - 4
-      newUpperLines[lineIndex] = !newUpperLines[lineIndex]
-    }
-
-    // Find the new trigrams based on the flipped lines
-    const newUpperTrigram = findTrigramByLines(newUpperLines)
-    const newLowerTrigram = findTrigramByLines(newLowerLines)
-
-    return {
-      transformedUpper: newUpperTrigram?.number || upperTrig.number,
-      transformedLower: newLowerTrigram?.number || lowerTrig.number,
-    }
-  }
-
-  const findTrigramByLines = (lines: boolean[]) => {
-    const trigrams = Object.values(TRIGRAMS)
-    return trigrams.find(
-      (t) => t.lines && t.lines[0] === lines[0] && t.lines[1] === lines[1] && t.lines[2] === lines[2],
-    )
   }
 
   const upperTrigram = result ? getTrigramByNumber(result.upperTrigram) : null
   const lowerTrigram = result ? getTrigramByNumber(result.lowerTrigram) : null
   const hexagramData = result ? getHexagramByTrigrams(result.upperTrigram, result.lowerTrigram) : null
-
-  const currentHourBranch = getHourBranch(input.hour)
-  const currentHourBranchName = getHourBranchName(currentHourBranch)
-
-  const handleViewDiagnosis = () => {
-    if (!result) return
-
-    const params = new URLSearchParams({
-      upper: result.upperTrigram.toString(),
-      lower: result.lowerTrigram.toString(),
-      moving: result.movingLine.toString(),
-      healthConcern: healthConcern || "",
-      year: input.year.toString(),
-      month: input.month.toString(),
-      day: input.day.toString(),
-      hour: input.hour.toString(),
-      minute: input.minute.toString(),
-      method: divinationMethod,
-    })
-
-    router.push(`/diagnosis?${params.toString()}`)
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-secondary/5 to-background">
@@ -370,19 +295,9 @@ export default function HomePage() {
                   size="lg"
                   onClick={() => document.getElementById("divination-form")?.scrollIntoView({ behavior: "smooth" })}
                   className="gap-2"
-                  disabled={!cooldownStatus.canDivine}
                 >
-                  {cooldownStatus.canDivine ? (
-                    <>
-                      Bắt đầu khởi quẻ
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  ) : (
-                    <>
-                      <Clock className="w-4 h-4" />
-                      Chờ {cooldownStatus.minutesRemaining} phút nữa
-                    </>
-                  )}
+                  Bắt đầu khởi quẻ
+                  <ArrowRight className="w-4 h-4" />
                 </Button>
                 <Button size="lg" variant="outline" onClick={() => router.push("/learn")}>
                   Tìm hiểu thêm
@@ -414,8 +329,7 @@ export default function HomePage() {
               <Info className="h-4 w-4 text-primary" />
               <AlertDescription className="text-sm">
                 <strong>Nguyên tắc quan trọng:</strong> Một người chỉ nên khởi quẻ cho một việc duy nhất trong mỗi thời
-                khắc (cách nhau tối thiểu {COOLDOWN_MINUTES} phút). Tâm chí phải tập trung, chân thành thì quẻ mới linh
-                ứng.
+                khắc (cách nhau tối thiểu 1 ngày). Tâm chí phải tập trung, chân thành thì quẻ mới linh ứng.
               </AlertDescription>
             </Alert>
           </div>
@@ -582,16 +496,9 @@ export default function HomePage() {
                       </p>
                     </div>
 
-                    <Button
-                      onClick={handleCalculate}
-                      className="w-full mt-6"
-                      size="lg"
-                      disabled={!cooldownStatus.canDivine}
-                    >
+                    <Button onClick={handleNavigateToDiagnosis} className="w-full mt-6" size="lg">
                       <Sparkles className="w-4 h-4 mr-2" />
-                      {!cooldownStatus.canDivine
-                        ? `Chờ ${cooldownStatus.minutesRemaining} phút nữa`
-                        : "Khởi Quẻ Theo Thời Gian"}
+                      Khởi Quẻ Theo Thời Gian
                     </Button>
                   </TabsContent>
 
@@ -654,16 +561,9 @@ export default function HomePage() {
                         </p>
                       </div>
 
-                      <Button
-                        onClick={handleNumberCalculate}
-                        className="w-full mt-6"
-                        size="lg"
-                        disabled={!cooldownStatus.canDivine}
-                      >
+                      <Button onClick={handleNavigateToDiagnosis} className="w-full mt-6" size="lg">
                         <Hash className="w-4 h-4 mr-2" />
-                        {!cooldownStatus.canDivine
-                          ? `Chờ ${cooldownStatus.minutesRemaining} phút nữa`
-                          : "Khởi Quẻ Theo Số"}
+                        Khởi Quẻ Theo Số
                       </Button>
                     </div>
                   </TabsContent>
@@ -770,7 +670,7 @@ export default function HomePage() {
                       </p>
                     </div>
 
-                    <Button onClick={handleViewDiagnosis} className="w-full" size="lg">
+                    <Button onClick={handleNavigateToDiagnosis} className="w-full" size="lg">
                       Xem Kết Quả Chẩn Đoán Chi Tiết
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
@@ -865,6 +765,17 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* AuthGateModal component */}
+      <AuthGateModal />
+
+      {/* MaiHoaGuardrailModal */}
+      <MaiHoaGuardrailModal
+        isOpen={guardrailModal.isOpen}
+        onClose={() => setGuardrailModal({ isOpen: false, reason: "" })}
+        reason={guardrailModal.reason}
+        details={guardrailModal.details}
+      />
     </div>
   )
 }

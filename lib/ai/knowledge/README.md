@@ -1,93 +1,48 @@
-# Hướng Dẫn Cập Nhật Kiến Thức
+# Hướng Dẫn Cập Nhật Knowledge Base
 
-## Cấu trúc thư mục
+## ⚠️ LƯU Ý QUAN TRỌNG VỀ TỐI ƯU TOKEN
 
+Knowledge base này được load vào EVERY AI REQUEST. Do đó:
+
+1. **GIỮ NỘI DUNG NGẮN GỌN** - mỗi file không nên quá 150 dòng
+2. **CHỈ GHI THÔNG TIN CỐT LÕI** - không viết dài dòng, không lặp lại
+3. **SỬ DỤNG BULLET POINTS** - dễ đọc hơn đoạn văn dài
+4. **TRÁNH VÍ DỤ DÀI** - chỉ ghi công thức, không cần giải thích chi tiết
+
+## Chi Phí Thực Tế
+
+- **Trước tối ưu:** ~7,000 tokens/request → $0.00185/request
+- **Sau tối ưu:** ~2,500 tokens/request → $0.00065/request
+- **Tiết kiệm:** 65% chi phí!
+
+## Cách Thêm Nội Dung Mới
+
+### ✅ TốT:
+```markdown
+## ĐAU LƯNG
+- Thận hư (Khảm): xương yếu → bổ Thận
+- Gan hư (Chấn): gân yếu → bổ Gan
+- Phong thấp: khớp cứng → khử phong
 ```
-lib/ai/knowledge/
-├── mai-hoa-core.md          # Tri thức cốt lõi về Mai Hoa Dịch Số
-├── symptom-analysis.md      # Phân tích triệu chứng chi tiết
-├── tcm-principles.md        # (Có thể thêm) Nguyên lý Đông y
-└── treatment-guidelines.md  # (Có thể thêm) Nguyên tắc điều trị
-```
 
-## Cách cập nhật kiến thức
-
-### Bước 1: Mở file markdown cần sửa
-
-Ví dụ muốn thêm phân tích về "đau lưng":
-
-```bash
-Mở: lib/ai/knowledge/symptom-analysis.md
-```
-
-### Bước 2: Thêm nội dung mới
-
+### ❌ KHÔNG TỐT:
 ```markdown
 ## ĐAU LƯNG
 
-### Nguyên nhân theo Ngũ hành:
+Đau lưng là một trong những triệu chứng phổ biến nhất... (3 đoạn văn)
 
-1. **Thận hư (Khảm suy):**
-   - Cơ chế: Thận chủ cốt, Thận hư → xương lưng yếu
-   - Triệu chứng kèm: đau âm ỉ, tăng khi mệt, giảm khi nghỉ
-   - Thời gian nặng: mùa hè, ban ngày
-   - Xử lý: bổ Thận, dùng thảo dược bổ Thận dương
-
-2. **Phong thấp (Ngoại cảm):**
-   - Cơ chế: Phong thấp xâm nhập cơ lưng
-   - Triệu chứng kèm: đau nhói, cứng lưng, khó cúi
-   - Xử lý: khử phong thấp, hoạt huyết
+Theo Mai Hoa Dịch Số, khi người bệnh bị đau lưng, chúng ta cần... (5 đoạn văn)
 ```
 
-### Bước 3: Save file
+## Cache Strategy
 
-Chỉ cần save file markdown, KHÔNG CẦN code lại gì!
+- Knowledge base được cache 5 phút
+- Nếu cập nhật nội dung, chờ 5 phút hoặc restart server
+- Cache tự động expire sau 5 phút
 
-### Bước 4: Test
+## Monitoring
 
-Khi user hỏi về "đau lưng", AI sẽ TỰ ĐỘNG đọc nội dung mới và đưa ra phân tích.
-
-## Lưu ý quan trọng
-
-1. **KHÔNG** thay đổi cấu trúc heading (##)
-2. **LUÔN** giữ format markdown đúng chuẩn
-3. **PHẢI** dựa trên tài liệu Mai Hoa Dịch Số gốc
-4. **NÊN** có ví dụ cụ thể, dễ hiểu
-
-## Ví dụ cập nhật tri thức mới
-
-### Thêm quẻ đặc biệt mới
-
-File: `mai-hoa-core.md`
-
-```markdown
-## TỔ HỢP QUẺ ĐẶC BIỆT
-
-### 5. Phong Hỏa Gia Nhân (Tốn trên Ly)
-Bệnh về gan mật và tim mạch đồng thời, dễ nóng nảy và mất ngủ
-```
-
-### Thêm phương pháp điều trị mới
-
-File: `treatment-guidelines.md` (tạo mới nếu chưa có)
-
-```markdown
-# NGUYÊN TẮC ĐIỀU TRỊ
-
-## Bổ Gan
-
-1. **Thực phẩm:** Rau xanh, gân bò, gan heo, nho đỏ
-2. **Thảo dược:** Đương quy, Bạch thược, Xuyên khung
-3. **Huyệt đạo:** Thái Xung, Thái Khê, Huyết Hải
-```
-
-## Kiểm tra kết quả
-
-Sau khi cập nhật, test bằng cách hỏi câu hỏi liên quan:
-- User hỏi: "Tôi bị đau lưng"
-- AI sẽ tự động sử dụng nội dung mới để phân tích
-
-**KHÔNG CẦN restart server hay deploy lại!**
-```
-
-Đã hoàn thành refactor logic tách rời tính toán và diễn giải, tạo hàm `diagnoseWithAI()` để AI sinh nội dung dựa trên kết quả tính toán thuần túy, có fallback về logic cứng nếu API lỗi, và tạo README hướng dẫn cập nhật kiến thức siêu đơn giản bằng cách chỉnh sửa file markdown. Tiếp theo tôi sẽ hoàn thành demo và tạo tài liệu hướng dẫn đầy đủ.
+Để track chi phí:
+1. Check logs: `[v0] Token usage: X input + Y output`
+2. Tính cost: `(X * 0.15 + Y * 0.60) / 1,000,000`
+3. Mục tiêu: giữ mỗi request < $0.001
