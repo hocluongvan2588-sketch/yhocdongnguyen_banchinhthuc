@@ -5,46 +5,12 @@ declare global {
   var __api_key: string | undefined
 }
 
-// Gemini TTS endpoint
-const GEMINI_TTS_ENDPOINT =
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-tts:generateContent"
-
-// Exponential backoff retry mechanism
-async function fetchWithRetry(
-  url: string,
-  options: RequestInit,
-  maxRetries = 5
-): Promise<Response> {
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      const response = await fetch(url, options)
-
-      // Success
-      if (response.ok) return response
-
-      // Retry on 429 (rate limit) or 5xx errors
-      if (response.status === 429 || response.status >= 500) {
-        const delay = Math.pow(2, attempt) * 1000 // 1s, 2s, 4s, 8s, 16s
-        console.log(`[v0] TTS API retry attempt ${attempt + 1}, waiting ${delay}ms`)
-        await new Promise((resolve) => setTimeout(resolve, delay))
-        continue
-      }
-
-      // Other errors, don't retry
-      throw new Error(`TTS API error: ${response.status} ${response.statusText}`)
-    } catch (error) {
-      if (attempt === maxRetries - 1) throw error
-      const delay = Math.pow(2, attempt) * 1000
-      await new Promise((resolve) => setTimeout(resolve, delay))
-    }
-  }
-
-  throw new Error("Max retries exceeded")
-}
+// Gemini TTS endpoint - using model gemini-2.5-flash-preview-tts
+const GEMINI_TTS_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent"
 
 export async function POST(request: NextRequest) {
   try {
-    const { numbers } = await request.json()
+    const { numbers, type = "numbers" } = await request.json()
 
     if (!numbers || !Array.isArray(numbers)) {
       return NextResponse.json({ error: "Invalid numbers array" }, { status: 400 })
@@ -66,56 +32,65 @@ export async function POST(request: NextRequest) {
 
     const vietnameseNumbers = numbers.map((num) => numberMap[num] || num)
 
-    // Format text for calm meditation reading with pauses
-    const textToRead = `Cách niệm đúng là: ${vietnameseNumbers.join(". ")}. Đọc chậm rãi theo hơi thở.`
-
-    console.log("[v0] Generating TTS for:", textToRead)
-
-    // Prepare Gemini TTS request
-    const payload = {
-      contents: [
-        {
-          parts: [
-            {
-              text: `Say calmly and slowly in Vietnamese: ${textToRead}`,
-            },
-          ],
-        },
-      ],
-      generationConfig: {
-        responseModalities: ["AUDIO"],
-        speechConfig: {
-          voiceConfig: {
-            prebuiltVoiceConfig: {
-              voiceName: "Aoede", // Female voice, calm tone
-            },
-          },
-        },
-      },
+    // Format text based on type
+    let textToRead: string
+    if (type === "guided") {
+      // Guided meditation intro with the numbers
+      textToRead = `Thả lỏng. Niệm theo chuông. ${vietnameseNumbers.join(". ")}. Hãy để âm thanh chữa lành tâm hồn bạn.`
+    } else {
+      // Simple number reading
+      textToRead = vietnameseNumbers.join(". ") + ". Hãy tập trung vào hơi thở."
     }
 
-    // Get API key from global variable (provided by v0 runtime) or environment
-    const apiKey = typeof __api_key !== 'undefined' ? __api_key : (process.env.AI_GATEWAY_API_KEY || process.env.GOOGLE_API_KEY || "")
+    console.log("[v0] Generating Gemini TTS for:", textToRead)
+
+    // Get API key - hardcoded as provided by user
+    const apiKey = "AIzaSyCV7ggoECGQQnucF2qjv2dxr5KfgUCBS-E"
 
     if (!apiKey) {
       return NextResponse.json(
-        { error: "API key not configured. System will provide API key automatically." },
+        { error: "Gemini API key not configured." },
         { status: 500 }
       )
     }
 
-    // Call Gemini TTS API with retry
-    const response = await fetchWithRetry(`${GEMINI_TTS_ENDPOINT}?key=${apiKey}`, {
+    // Call Gemini TTS API with Aoede voice (female, warm, slow - perfect for meditation)
+    const response = await fetch(`${GEMINI_TTS_ENDPOINT}?key=${apiKey}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: `Say in a peaceful, gentle female Vietnamese voice: ${textToRead}`
+          }]
+        }],
+        generationConfig: {
+          responseModalities: ["AUDIO"],
+          speechConfig: {
+            voiceConfig: {
+              prebuiltVoiceConfig: {
+                voiceName: "Aoede" // Female, warm, slow voice - perfect for meditation
+              }
+            }
+          }
+        }
+      }),
     })
+
+    if (!response.ok) {
+      const error = await response.text()
+      console.error("[v0] Gemini TTS error:", error)
+      return NextResponse.json(
+        { error: `Gemini TTS failed: ${response.status} ${response.statusText}` },
+        { status: response.status }
+      )
+    }
 
     const data = await response.json()
 
-    // Extract audio data
+    // Extract audio data from Gemini response
     const audioData = data?.candidates?.[0]?.content?.parts?.[0]?.inlineData
 
     if (!audioData || !audioData.data) {
@@ -123,7 +98,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No audio data received from TTS API" }, { status: 500 })
     }
 
-    // Return base64 audio data and mime type
+    // Return base64 PCM audio data (will be converted to WAV on client)
     return NextResponse.json({
       audioData: audioData.data,
       mimeType: audioData.mimeType || "audio/pcm",

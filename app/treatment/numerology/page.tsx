@@ -11,6 +11,7 @@ import { getTrigramByNumber } from "@/lib/data/trigram-data"
 import { getNumerologyTreatment } from "@/lib/numerology-data"
 import { GatedContentWrapper } from "@/components/gated-content-wrapper"
 import { PaymentModal } from "@/components/payment-modal"
+import { MeditationCircle } from "./components/meditation-circle"
 
 function NumerologyContent() {
   const searchParams = useSearchParams()
@@ -60,31 +61,32 @@ function NumerologyContent() {
 
       const { audioData, mimeType } = await response.json()
 
-      // Import audio converter utilities
+      // Gemini returns PCM 16-bit, need to convert to WAV
       const { pcmToWav, playAudio } = await import("@/lib/utils/audio-converter")
-
-      // Convert PCM to WAV if needed
+      
       let audioBlob: Blob
-      if (mimeType === "audio/pcm" || !mimeType.includes("wav")) {
+      
+      if (mimeType === "audio/pcm" || mimeType.includes("L16")) {
+        // Convert PCM to WAV
         audioBlob = pcmToWav(audioData)
       } else {
-        // Already in correct format
+        // Already in playable format
         const binaryData = Uint8Array.from(atob(audioData), (c) => c.charCodeAt(0))
         audioBlob = new Blob([binaryData], { type: mimeType })
       }
 
-      // Play audio
+      // Play audio with auto cleanup
       await playAudio(audioBlob)
+      setIsPlaying(false)
       
     } catch (error) {
       console.error("[v0] TTS error:", error)
+      setIsPlaying(false)
       alert(
         error instanceof Error 
           ? `Không thể phát âm thanh: ${error.message}` 
           : "Không thể phát âm thanh. Vui lòng thử lại."
       )
-    } finally {
-      setIsPlaying(false)
     }
   }
 
@@ -264,6 +266,29 @@ function NumerologyContent() {
                       Niệm vào các khung giờ này sẽ tăng hiệu quả điều trị
                     </p>
                   </div>
+                </CardContent>
+              </Card>
+
+              {/* Interactive Meditation */}
+              <Card className="border-border/50 shadow-lg bg-gradient-to-br from-secondary/30 to-transparent">
+                <CardHeader>
+                  <CardTitle className="text-foreground flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                    Meditation Tương Tác
+                  </CardTitle>
+                  <CardDescription>
+                    Thực hành niệm số với hướng dẫn AI và tiếng chuông thiền định
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <MeditationCircle
+                    numbers={sequence.sequence.split(" ")}
+                    color={treatment.wallpaperColors.primary}
+                    targetCount={49}
+                    onComplete={() => {
+                      console.log("[v0] Meditation completed!")
+                    }}
+                  />
                 </CardContent>
               </Card>
 
