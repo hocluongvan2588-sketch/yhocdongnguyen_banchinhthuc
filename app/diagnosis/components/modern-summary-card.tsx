@@ -14,6 +14,8 @@ export function ModernSummaryCard({ interpretation }: ModernSummaryCardProps) {
     switch (interpretation.status) {
       case "good":
         return <CheckCircle2 className="w-6 h-6 text-jade flex-shrink-0" />
+      case "neutral":
+        return <CheckCircle2 className="w-6 h-6 text-blue-600 flex-shrink-0" />
       case "warning":
         return <AlertTriangle className="w-6 h-6 text-accent flex-shrink-0" />
       case "bad":
@@ -27,6 +29,8 @@ export function ModernSummaryCard({ interpretation }: ModernSummaryCardProps) {
     switch (interpretation.status) {
       case "good":
         return "bg-jade/10 border-jade/30"
+      case "neutral":
+        return "bg-blue-50 border-blue-300"
       case "warning":
         return "bg-accent/10 border-accent/30"
       case "bad":
@@ -41,7 +45,7 @@ export function ModernSummaryCard({ interpretation }: ModernSummaryCardProps) {
     const severityLabel = interpretation.severityLabel || "Nhẹ"
 
     const variants: Record<string, { bg: string; text: string; label: string }> = {
-      mild: { bg: "bg-jade/15", text: "text-jade", label: severityLabel },
+      mild: { bg: "bg-blue-100", text: "text-blue-700", label: severityLabel },
       moderate: { bg: "bg-accent/15", text: "text-accent", label: severityLabel },
       severe: { bg: "bg-destructive/15", text: "text-destructive", label: severityLabel },
     }

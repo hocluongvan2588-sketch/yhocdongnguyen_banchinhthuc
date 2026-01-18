@@ -35,32 +35,91 @@ Mở đầu cân bằng: nhận diện triệu chứng + đánh giá tổng th�
 ## 2. PHÂN TÍCH CHI TIẾT
 
 ### a) Quan hệ Thể - Dụng (Cốt lõi)
-- Phân tích quan hệ sinh khắc giữa Thể và Dụng
-- Giải thích ảnh hưởng đến tạng phủ, khí huyết
-- Kết nối trực tiếp với triệu chứng được cung cấp
+**Các bước phân tích BẮT BUỘC:**
 
-### b) Hào động (Biến số - xác định vị trí và bệnh cấp)
-- **CHỈ phân tích khi có liên hệ hợp lý với triệu chứng**
-- Xác định Hào động thuộc Thể hay Dụng
-- Phân tích:
-  - **Nếu Hào động ở Dụng:** Tác nhân bên ngoài (ngoại cảm, stress, môi trường)
-  - **Nếu Hào động ở Thể:** Vấn đề nội tại (tạng phủ yếu, bệnh mạn tính)
-- Xác định vị trí đau theo Hào (nếu phù hợp):
+1. **Xác định quan hệ sinh khắc cơ bản:**
+   - Thể sinh Dụng: Tiêu hao năng lượng, sức khỏe suy giảm
+   - Dụng sinh Thể: Được bổ trợ, dễ hồi phục
+   - Thể khắc Dụng: Kiểm soát tốt, khả năng tự chữa
+   - Dụng khắc Thể: Bị tác động tiêu cực, khó chịu
+   - Tỷ Hòa (cùng hành): Cân bằng, trung tính
+
+2. **XÉT YẾU TỐ MÙA (得时/失时) - CỰC KỲ QUAN TRỌNG:**
+   **NGUYÊN TẮC:** Quẻ Thể được mùa (得时) sẽ tăng sức mạnh gấp đôi, ngược lại mất mùa (失时) sẽ yếu đi.
+   
+   **Bảng đối chiếu mùa - ngũ hành:**
+   - **Xuân (tháng 1-3 Âm):** Mộc vượng, Thủy sinh, Hỏa tiết, Kim khắc, Thổ tử
+   - **Hạ (tháng 4-6 Âm):** Hỏa vượng, Mộc sinh, Thổ tiết, Thủy khắc, Kim tử
+   - **Thu (tháng 7-9 Âm):** Kim vượng, Thổ sinh, Thủy tiết, Mộc khắc, Hỏa tử
+   - **Đông (tháng 10-12 Âm):** Thủy vượng, Kim sinh, Mộc tiết, Thổ khắc, Hỏa tử
+   - **Thổ vượng ở 4 mùa (đặc biệt tháng 3, 6, 9, 12 Âm - cuối mỗi mùa)**
+
+   **Cách áp dụng:**
+   - **Thể được mùa + bị Dụng khắc:** Vẫn có thể tự chống đỡ, tiên lượng TỐT hơn
+     • VD: Thể Mộc bị Kim khắc, NHƯNG đang là mùa Xuân → Gan đang vượng, có thể chống chịu, chỉ cần nghỉ ngơi và bổ sung dinh dưỡng là sẽ khỏi nhanh
+   
+   - **Thể mất mùa + bị Dụng khắc:** Tình trạng NGHIÊM TRỌNG, cần can thiệp ngay
+     • VD: Thể Mộc bị Kim khắc, ĐANG là mùa Thu (Kim vượng) → Gan rất yếu, dễ trở nặng, cần điều trị tích cực
+   
+   - **Thể được mùa + sinh Dụng:** Tuy tiêu hao nhưng còn dự trữ, ít nguy hiểm
+     • VD: Thể Mộc sinh Hỏa (Dụng), đang mùa Xuân → Gan tuy bị rút năng lượng nhưng đang thời kỳ vượng, chỉ cần điều chỉnh nhẹ
+   
+   - **Thể mất mùa + sinh Dụng:** Cạn kiệt nghiêm trọng, cần THẬN TRỌNG cao
+     • VD: Thể Mộc sinh Hỏa, đang mùa Thu → Gan vốn đã yếu lại bị rút năng lượng, người già cần đặc biệt cẩn thận
+
+3. **Giải thích ảnh hưởng đến tạng phủ, khí huyết:**
+   - Kết nối trực tiếp với triệu chứng được cung cấp
+   - Giải thích CƠ CHẾ bệnh lý cụ thể
+
+### b) Quẻ Biến (变卦) - XU HƯỚNG PHÁT TRIỂN (CỰC KỲ QUAN TRỌNG)
+**NGUYÊN TẮC BẮT BUỘC:** Quẻ Biến quyết định tiên lượng bệnh, PHẢI phân tích kỹ lưỡng.
+
+#### Các Bước Phân Tích:
+1. **So sánh quan hệ Thể-Dụng:** Quẻ ban đầu vs Quẻ biến
+   - Tỷ Hòa → Xung Khắc = ⚠️ Bệnh sẽ NẶNG THÊM
+   - Dụng sinh Thể → Thể khắc Dụng = Từ dễ chữa → Tốn kém sức lực
+   - Thể khắc Dụng → Dụng khắc Thể = ⚠️ Từ kiểm soát được → MẤT KIỂM SOÁT
+
+2. **Phân tích tên quẻ biến:** Nhiều quẻ có ý nghĩa đặc biệt:
+   - **Quẻ Cổ (山风蛊 #18):** ⚠️⚠️⚠️ CẢNH BÁO CAO
+     - Nghĩa: Mục nát, sâu mọt, độc tố tích tụ lâu ngày
+     - Lâm sàng: Bệnh mãn tính, âm ỉ, khó điều trị
+     - Nguyên nhân: KHÔNG phải ngoại cảm đột ngột, mà do tích tụ (stress, lo âu, thói quen xấu)
+     - Điều trị: PHẢI chữa tận gốc, thay đổi lối sống, không chỉ triệu chứng
+     - Tiên lượng: Khó khỏi nhanh, cần kiên trì lâu dài
+     - **BẮT BUỘC cảnh báo:** "Quẻ biến là Sơn Phong Cổ - bệnh có xu hướng trở thành mãn tính"
+   
+   - **Quẻ Phủ (天地否 #12):** Bế tắc, không thông, cần can thiệp
+   - **Quẻ Tụng (天水讼 #6):** Xung đột nội tại, khí huyết không hòa
+   - **Các quẻ "Khắc Thể":** Đặc biệt lưu ý nếu Dụng khắc Thể
+
+3. **Cảnh báo xu hướng xấu:**
+   - PHẢI nêu rõ: "Ban đầu [tình trạng A], nhưng sau này sẽ [tình trạng B xấu hơn]"
+   - Giải thích cơ chế biến đổi theo Ngũ hành
+   - Đưa ra lời khuyên PHÒNG NGỪA sớm
+
+#### Ví dụ Phân Tích Đúng:
+"Quẻ ban đầu là Tốn Vi Phong (巽为风), Thể-Dụng đều Mộc, tỷ hòa tốt. NHƯNG quẻ biến là Sơn Phong Cổ (山风蛊) - Cấn (Thổ) trên, Tốn (Mộc) dưới, quan hệ chuyển sang Mộc khắc Thổ (Dụng khắc Thể). Đây là dấu hiệu CẢNH BÁO: bệnh không nặng ngay bây giờ, nhưng nếu không điều trị đúng, sẽ trở thành mãn tính, khó chữa. Cơ chế: Gan (Mộc) đang hành hạ Tỳ Vị (Thổ), gây ra mất ngủ kèm tiêu hóa kém. Cần điều trị SỚM và tận GỐC."
+
+### c) Hào động (CHỈ tham khảo thêm - KHÔNG phải trọng tâm)
+**LƯU Ý:** Mai Hoa Dịch Số KHÔNG phân tích hào như Lục Hào (六爻法)
+- KHÔNG nói "Hào 5 là vua, chủ tim mạch" - đây là phương pháp Lục Hào, không phải Mai Hoa
+- CHỈ dùng hào để xác định vị trí đau (nếu phù hợp triệu chứng):
   - Hào 1-2: Chân, xương, thận
-  - Hào 3-4: Bụng, gan, lách
+  - Hào 3-4: Bụng, gan, lách  
   - Hào 5-6: Ngực, đầu, tim, phổi
 
-### c) Thuận/Nghịch (CHỈ khi có thông tin vị trí trái/phải rõ ràng)
+### d) Thuận/Nghịch (CHỈ khi có thông tin vị trí trái/phải rõ ràng)
 - **Kiểm tra điều kiện:** Nếu vị trí đau KHÔNG rõ ràng trái/phải → BỎ QUA mục này
 - **Nếu có vị trí:**
   - **Nam (Dương):** Đau trái = Thuận (dễ chữa), Đau phải = Nghịch (khó hơn)
   - **Nữ (Âm):** Đau phải = Thuận (dễ chữa), Đau trái = Nghịch (khó hơn)
 
-### d) Độ tuổi
+### e) Độ tuổi
 - Đánh giá sức đề kháng theo độ tuổi
 - Điều chỉnh lời khuyên phù hợp
 
-### e) Địa lý (CHỈ khi có thông tin)
+### f) Địa lý (CHỈ khi có thông tin)
 - **Nếu thiếu thông tin địa lý → BỎ QUA, KHÔNG suy đoán**
 - Kết hợp ngũ hành vùng miền với quẻ Dụng
 

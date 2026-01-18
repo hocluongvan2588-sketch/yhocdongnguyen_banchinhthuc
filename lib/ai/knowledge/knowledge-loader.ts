@@ -86,6 +86,8 @@ export function parseKnowledgeBase(): KnowledgeChunk[] {
     const symptomAnalysis = fs.readFileSync(path.join(knowledgePath, "symptom-analysis.md"), "utf-8")
     const anthropometricRules = fs.readFileSync(path.join(knowledgePath, "anthropometric-rules.md"), "utf-8")
     const namDuocThanHieu = fs.readFileSync(path.join(knowledgePath, "nam-duoc-than-hieu.md"), "utf-8")
+    const batTrachMinhCanh = fs.readFileSync(path.join(knowledgePath, "bat-trach-minh-canh.md"), "utf-8")
+    const khaiHuyetCamNang = fs.readFileSync(path.join(knowledgePath, "khai-huyet-cam-nang.md"), "utf-8")
 
     const chunks: KnowledgeChunk[] = []
 
@@ -186,11 +188,33 @@ export function parseKnowledgeBase(): KnowledgeChunk[] {
       }
     })
 
+    // Chunk: Bát Trạch Minh Cảnh knowledge for numerology
+    const batTrachCore = extractSection(batTrachMinhCanh, "LOGIC BÁT TRẠCH", "MA TRẬN 8x8")
+    if (batTrachCore) {
+      chunks.push({
+        id: "bat-trach-core",
+        content: batTrachCore,
+        type: "treatment",
+        servicePackage: "numerology" as any,
+      })
+    }
+
+    // Chunk: Khai Huyệt knowledge for acupressure
+    const khaiHuyetCore = extractSection(khaiHuyetCamNang, "LOGIC CHỌN HUYỆT", "MA TRẬN ÁNH XẠ")
+    if (khaiHuyetCore) {
+      chunks.push({
+        id: "khai-huyet-core",
+        content: khaiHuyetCore,
+        type: "treatment",
+        servicePackage: "khai-huyet" as any,
+      })
+    }
+
     knowledgeChunksCache = chunks
     knowledgeCacheTime = now
 
     console.log(
-      `[v0] Knowledge base parsed: ${chunks.length} chunks (${chunks.filter((c) => c.servicePackage === "nam-duoc").length} Nam Dược chunks)`,
+      `[v0] Knowledge base parsed: ${chunks.length} chunks (${chunks.filter((c) => c.servicePackage === "nam-duoc").length} Nam Dược, ${chunks.filter((c) => (c as any).servicePackage === "numerology").length} Bát Trạch, ${chunks.filter((c) => (c as any).servicePackage === "khai-huyet").length} Khai Huyệt)`,
     )
 
     return chunks
@@ -200,26 +224,77 @@ export function parseKnowledgeBase(): KnowledgeChunk[] {
   }
 }
 
+/**
+ * Smart Reranking với keyword matching
+ */
+function calculateRelevanceScore(chunk: KnowledgeChunk, keywords: string[], affectedOrgans: string[]): number {
+  let score = 0
+  const content = chunk.content.toLowerCase()
+
+  // +10 điểm cho mỗi keyword match
+  keywords.forEach((kw) => {
+    if (content.includes(kw)) score += 10
+  })
+
+  // +5 điểm cho mỗi organ match
+  if (chunk.relevantOrgans) {
+    chunk.relevantOrgans.forEach((organ) => {
+      if (affectedOrgans.some((a) => a.includes(organ))) {
+        score += 5
+      }
+    })
+  }
+
+  // +15 điểm nếu là symptom analysis chunk và match với triệu chứng
+  if (chunk.type === "symptom" && chunk.relevantSymptoms) {
+    chunk.relevantSymptoms.forEach((symptom) => {
+      if (keywords.some((kw) => symptom.includes(kw))) {
+        score += 15
+      }
+    })
+  }
+
+  return score
+}
+
 export function selectRelevantChunks(
   healthConcern: string,
   affectedOrgans: string[],
   hasAnthropometricData = false,
-  maxTokens = 2000,
-  servicePackage: "mai-hoa" | "nam-duoc" | "both" = "mai-hoa",
+  maxTokens = 1000,
+  servicePackage: "mai-hoa" | "nam-duoc" | "khai-huyet" | "both" = "mai-hoa",
 ): string {
   const chunks = parseKnowledgeBase()
   const selected: KnowledgeChunk[] = []
+
+  // Extract keywords từ healthConcern
+  const concernLower = healthConcern.toLowerCase()
+  const keywords = Object.keys(SYMPTOM_TO_ORGANS).filter((keyword) => concernLower.includes(keyword))
 
   const filteredChunks = chunks.filter((c) => {
     if (servicePackage === "both") return true
     return !c.servicePackage || c.servicePackage === servicePackage
   })
 
+  // === SMART RERANKING: Tính điểm relevance cho tất cả chunks ===
+  const scoredChunks = filteredChunks
+    .map((chunk) => ({
+      chunk,
+      score: calculateRelevanceScore(chunk, keywords, affectedOrgans),
+    }))
+    .sort((a, b) => b.score - a.score) // Sắp xếp theo điểm cao xuống thấp
+
+  console.log(
+    `[v0] Reranking: Top 5 chunks - ${scoredChunks
+      .slice(0, 5)
+      .map((s) => `${s.chunk.id}:${s.score}`)
+      .join(", ")}`,
+  )
+
   if (servicePackage === "nam-duoc" || servicePackage === "both") {
-    // Thêm catalog tóm tắt (chỉ có tên thuốc, công dụng chính)
+    // Luôn thêm catalog (không cần rerank)
     const catalogChunk = filteredChunks.find((c) => c.id === "nam-duoc-catalog")
     if (catalogChunk) {
-      // Rút gọn catalog - chỉ lấy tên thuốc và công dụng chính
       const summarizedCatalog = summarizeHerbCatalog(catalogChunk.content)
       selected.push({
         ...catalogChunk,
@@ -227,27 +302,15 @@ export function selectRelevantChunks(
       })
     }
 
-    // Tìm các hành (elements) liên quan đến cơ quan bị ảnh hưởng
-    const relevantWuXingChunks = filteredChunks
-      .filter(
-        (c) =>
-          c.type === "nam-duoc" &&
-          c.id !== "nam-duoc-catalog" &&
-          c.relevantOrgans?.some((organ) => affectedOrgans.some((a) => a.includes(organ))),
-      )
-      .sort((a, b) => {
-        // Ưu tiên chunk có nhiều cơ quan liên quan nhất
-        const aScore = a.relevantOrgans?.filter((organ) => affectedOrgans.some((a) => a.includes(organ))).length || 0
-        const bScore = b.relevantOrgans?.filter((organ) => affectedOrgans.some((a) => a.includes(organ))).length || 0
-        return bScore - aScore
-      })
-
-    // Chỉ lấy tối đa 2 hành để tiết kiệm token
-    relevantWuXingChunks.slice(0, 2).forEach((c) => selected.push(c))
+    // Chỉ lấy top 2 chunks có điểm cao nhất cho Nam Dược
+    scoredChunks
+      .filter((s) => s.chunk.type === "nam-duoc" && s.chunk.id !== "nam-duoc-catalog" && s.score > 0)
+      .slice(0, 2)
+      .forEach((s) => selected.push(s.chunk))
   }
 
   if (servicePackage === "mai-hoa" || servicePackage === "both") {
-    // Luôn thêm core logic cho Mai Hoa
+    // Luôn thêm core logic
     const coreChunk = filteredChunks.find((c) => c.id === "core-logic")
     if (coreChunk) selected.push(coreChunk)
 
@@ -256,32 +319,37 @@ export function selectRelevantChunks(
       if (anthropometricChunk) selected.push(anthropometricChunk)
     }
 
-    // Thêm chunks liên quan đến triệu chứng
-    const concernLower = healthConcern.toLowerCase()
-    const relevantSymptomKeywords = Object.keys(SYMPTOM_TO_ORGANS).filter((keyword) => concernLower.includes(keyword))
-
-    // Thêm symptom analysis cho triệu chứng cụ thể
-    filteredChunks
+    // Lấy top 3 chunks có điểm cao nhất (symptom + trigram)
+    scoredChunks
       .filter(
-        (c) =>
-          c.type === "symptom" && c.relevantSymptoms?.some((s) => relevantSymptomKeywords.some((k) => s.includes(k))),
+        (s) =>
+          s.chunk.servicePackage === "mai-hoa" &&
+          s.chunk.id !== "core-logic" &&
+          s.chunk.id !== "anthropometric-rules" &&
+          s.score > 0,
       )
-      .forEach((c) => selected.push(c))
-
-    // Thêm trigram chunks liên quan đến cơ quan bị ảnh hưởng
-    filteredChunks
-      .filter(
-        (c) => c.type === "core" && c.relevantOrgans?.some((organ) => affectedOrgans.some((a) => a.includes(organ))),
-      )
-      .forEach((c) => {
-        if (!selected.includes(c)) selected.push(c)
+      .slice(0, 3)
+      .forEach((s) => {
+        if (!selected.includes(s.chunk)) {
+          selected.push(s.chunk)
+        }
       })
 
-    // Thêm timing nếu còn chỗ
-    const timingChunk = filteredChunks.find((c) => c.type === "timing")
-    if (timingChunk && !selected.includes(timingChunk)) {
-      selected.push(timingChunk)
+    // Thêm timing nếu còn chỗ và chưa có 5 chunks
+    if (selected.length < 5) {
+      const timingChunk = filteredChunks.find((c) => c.type === "timing")
+      if (timingChunk && !selected.includes(timingChunk)) {
+        selected.push(timingChunk)
+      }
     }
+  }
+
+  if (servicePackage === "khai-huyet") {
+    // Lấy top 3 chunks có điểm cao nhất cho Khai Huyệt
+    scoredChunks
+      .filter((s) => s.chunk.servicePackage === "khai-huyet" && s.score > 0)
+      .slice(0, 3)
+      .forEach((s) => selected.push(s.chunk))
   }
 
   let combined = selected.map((c) => c.content).join("\n\n")

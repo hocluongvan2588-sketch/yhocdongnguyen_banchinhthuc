@@ -60,6 +60,10 @@ CREATE INDEX IF NOT EXISTS idx_bank_transactions_deposit_id ON bank_transactions
 CREATE INDEX IF NOT EXISTS idx_bank_transactions_transaction_id ON bank_transactions(transaction_id);
 CREATE INDEX IF NOT EXISTS idx_bank_transactions_status ON bank_transactions(status);
 
+-- Drop existing triggers before recreating to avoid "already exists" error
+DROP TRIGGER IF EXISTS update_payment_methods_updated_at ON payment_methods;
+DROP TRIGGER IF EXISTS update_deposits_updated_at ON deposits;
+
 -- Add triggers for updated_at
 CREATE TRIGGER update_payment_methods_updated_at
   BEFORE UPDATE ON payment_methods
@@ -84,8 +88,8 @@ INSERT INTO payment_methods (
   'Chuyển khoản Timo',
   'bank_transfer',
   'vietqr',
-  '1055116973', -- TODO: Thay bằng số tài khoản Timo thật
-  'NGUYEN VAN A', -- TODO: Thay bằng tên chủ tài khoản thật
+  '9021032711378', 
+  'LUONG VAN HOC', 
   'VCCB',
   true
 ) ON CONFLICT DO NOTHING;

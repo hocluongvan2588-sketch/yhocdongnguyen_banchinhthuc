@@ -42,13 +42,14 @@ export function SmartPackageRecommendation({
             highlight: false,
           },
         ],
+        alertClass: "bg-red-50 border-red-300 text-red-900",
       }
     }
 
     if (severity === "moderate") {
       return {
         variant: "default" as const,
-        icon: <Info className="h-6 w-6 flex-shrink-0" />,
+        icon: <Info className="h-6 w-6 flex-shrink-0 text-amber-600" />,
         title: "Nên theo dõi và chăm sóc",
         description:
           "Kết quả chẩn đoán cho thấy cơ thể bạn cần được hỗ trợ để tránh tình trạng trở nên nghiêm trọng hơn. Việc can thiệp sớm sẽ giúp phục hồi nhanh chóng.",
@@ -64,13 +65,14 @@ export function SmartPackageRecommendation({
             highlight: false,
           },
         ],
+        alertClass: "bg-amber-50 border-amber-300 text-amber-900",
       }
     }
 
     // mild severity
     return {
       variant: "default" as const,
-      icon: <CheckCircle2 className="h-6 w-6 flex-shrink-0" />,
+      icon: <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-blue-600" />,
       title: "Tình trạng ổn định - Có thể tối ưu",
       description:
         "Cơ thể bạn đang trong trạng thái cân bằng tốt. Để duy trì và tối ưu hóa sức khỏe, bạn có thể tham khảo các gói tư vấn để hiểu sâu hơn về cách chăm sóc bản thân.",
@@ -86,6 +88,7 @@ export function SmartPackageRecommendation({
           highlight: false,
         },
       ],
+      alertClass: "bg-blue-50 border-blue-300 text-blue-900",
     }
   }
 
@@ -99,7 +102,7 @@ export function SmartPackageRecommendation({
   return (
     <Card className="border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10">
       <CardContent className="pt-6 space-y-6">
-        <Alert variant={content.variant} className="border-2">
+        <Alert variant={content.variant} className={`border-2 ${content.alertClass || ""}`}>
           {content.icon}
           <AlertTitle className="text-xl md:text-2xl font-bold mb-3 whitespace-normal">{content.title}</AlertTitle>
           <AlertDescription className="text-base md:text-lg leading-relaxed whitespace-normal break-words">

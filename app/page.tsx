@@ -1,45 +1,40 @@
 "use client"
 
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
-import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Badge } from "@/components/ui/badge"
 import { getTrigramByNumber } from "@/lib/data/trigram-data"
 import { getHexagramByTrigrams } from "@/lib/data/hexagram-data"
 import { HexagramSVG } from "@/components/hexagram-svg"
-import { useRouter } from "next/navigation"
 import { UserNav } from "@/components/user-nav"
-import {
-  Sparkles,
-  BookOpen,
-  Info,
-  ArrowRight,
-  HelpCircle,
-  CheckCircle2,
-  Clock,
-  Hash,
-  Target,
-  Zap,
-  User,
-} from "lucide-react"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
 import { QuickAuthModal } from "@/components/quick-auth-modal"
+import { MaiHoaGuardrailModal } from "@/components/mai-hoa-guardrail-modal"
+import { PersonalInfoFields } from "@/components/divination/personal-info-fields"
+import { TimeInputFields } from "@/components/divination/time-input-fields"
+import { NumberInputFields } from "@/components/divination/number-input-fields"
 import { canUserDivine, saveDivinationRecord } from "@/lib/actions/divination-actions"
 import { useAuth } from "@/lib/auth/use-auth"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { getCurrentUser } from "@/lib/actions/auth-actions"
-
-interface TimeInput {
-  year: number
-  month: number
-  day: number
-  hour: number
-  minute: number
-}
+import type { TimeInput } from "@/lib/types"
+import {
+	Sparkles,
+	BookOpen,
+	Info,
+	ArrowRight,
+	HelpCircle,
+	CheckCircle2,
+	Clock,
+	Hash,
+	Target,
+	Zap,
+	User, // Import User icon
+} from "lucide-react"
 
 interface DivinationRecord {
   timestamp: number
@@ -180,44 +175,16 @@ export default function MainPage() {
   const router = useRouter()
   const { user } = useAuth()
   const [authModalOpen, setAuthModalOpen] = useState(false)
+  const [isNavigating, setIsNavigating] = useState(false)
 
-  const handleAuthModalClose = async (open: boolean) => {
-    setAuthModalOpen(open)
-
-    if (!open) {
-      // Check if there's pending navigation data in sessionStorage
-      const pendingNav = sessionStorage.getItem("pendingNavigation")
-
-      if (pendingNav) {
-        const navData = JSON.parse(pendingNav)
-        sessionStorage.removeItem("pendingNavigation")
-
-        // Wait a bit for auth state to update
-        await new Promise((resolve) => setTimeout(resolve, 500))
-
-        // Check if user is now logged in (reload auth)
-        const currentUser = await getCurrentUser()
-
-        if (currentUser) {
-          // User is logged in, navigate with saved data
-          router.push(navData.url)
-        } else {
-          // User cancelled login, just reload to refresh state
-          window.location.reload()
-        }
-      } else {
-        // No pending navigation, just reload
-        window.location.reload()
-      }
-    }
-  }
-
-  const [input, setInput] = useState<TimeInput>({
-    year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1,
-    day: new Date().getDate(),
-    hour: new Date().getHours(),
-    minute: new Date().getMinutes(),
+  const [guardrailModal, setGuardrailModal] = useState<{
+    isOpen: boolean
+    reason: string
+    details?: any
+  }>({
+    isOpen: false,
+    reason: "",
+    details: null,
   })
 
   const [result, setResult] = useState<{
@@ -235,17 +202,19 @@ export default function MainPage() {
 
   // Anthropometric data states
   const [gender, setGender] = useState<string>("")
-  const [age, setAge] = useState<string>("") // Changed age state from number to string to allow empty input
+  const [age, setAge] = useState<string>("")
+  const [birthYear, setBirthYear] = useState<string>("") // Năm sinh (dương lịch)
+  const [birthMonth, setBirthMonth] = useState<string>("") // Tháng sinh (dương lịch)
+  const [birthDay, setBirthDay] = useState<string>("") // Ngày sinh (dương lịch)
   const [painLocation, setPainLocation] = useState<string>("")
   const [userLocation, setUserLocation] = useState<string>("")
 
-  const [guardrailModal, setGuardrailModal] = useState<{
-    isOpen: boolean
-    reason: string
-    details?: any
-  }>({
-    isOpen: false,
-    reason: "",
+  const [input, setInput] = useState<TimeInput>({
+    year: new Date().getFullYear(),
+    month: new Date().getMonth() + 1,
+    day: new Date().getDate(),
+    hour: new Date().getHours(),
+    minute: new Date().getMinutes(),
   })
 
   const currentHourBranch = getHourBranch(input.hour)
@@ -340,107 +309,117 @@ export default function MainPage() {
   }
 
   async function handleNavigateToDiagnosis() {
+    setIsNavigating(true)
     console.log("[v0] Navigation button clicked")
     console.log("[v0] User:", user ? "logged in" : "not logged in")
     console.log("[v0] Result:", result)
 
-    if (!user) {
-      console.log("[v0] Opening auth modal")
-      if (result) {
-        const navigationData = {
-          url:
-            divinationMethod === "time"
-              ? `/diagnosis?upper=${result.upperTrigram}&lower=${result.lowerTrigram}&moving=${result.movingLine}&healthConcern=${encodeURIComponent(healthConcern)}&year=${input.year}&month=${input.month}&day=${input.day}&hour=${input.hour}&minute=${input.minute}&method=time&gender=${gender}&age=${age}&painLocation=${painLocation}&location=${userLocation}`
-              : `/diagnosis?upper=${result.upperTrigram}&lower=${result.lowerTrigram}&moving=${result.movingLine}&healthConcern=${encodeURIComponent(healthConcern)}&method=manual&gender=${gender}&age=${age}&painLocation=${painLocation}&location=${userLocation}`,
-          formData: {
-            healthConcern,
-            gender,
-            age,
-            painLocation,
-            userLocation,
-            result,
-            divinationMethod,
-            input,
-          },
+    try {
+      // Auto convert birthdate to Can Chi if provided
+      let canChiParams = ""
+      if (birthYear && Number.parseInt(birthYear) >= 1900) {
+        const { convertBirthYear } = await import("@/lib/birth-year-converter")
+        const canChiInfo = convertBirthYear(
+          Number.parseInt(birthYear),
+          Number.parseInt(birthMonth) || 6,
+          Number.parseInt(birthDay) || 15,
+        )
+        canChiParams = `&canNam=${encodeURIComponent(canChiInfo.canNam)}&chiNam=${encodeURIComponent(canChiInfo.chiNam)}&canNgay=${encodeURIComponent(canChiInfo.canNgay)}&chiNgay=${encodeURIComponent(canChiInfo.chiNgay)}&element=${encodeURIComponent(canChiInfo.element)}&lunarYear=${canChiInfo.lunarYear}&age=${canChiInfo.age}`
+        console.log("[v0] Auto-converted Can Chi:", canChiInfo)
+      }
+
+      if (!user) {
+        console.log("[v0] Opening auth modal")
+        if (result) {
+          const navigationData = {
+            url:
+              divinationMethod === "time"
+                ? `/diagnosis?upper=${result.upperTrigram}&lower=${result.lowerTrigram}&moving=${result.movingLine}&healthConcern=${encodeURIComponent(healthConcern)}&year=${input.year}&month=${input.month}&day=${input.day}&hour=${input.hour}&minute=${input.minute}&method=time&gender=${gender}&birthYear=${birthYear}&birthMonth=${birthMonth}&birthDay=${birthDay}&painLocation=${painLocation}&location=${userLocation}${canChiParams}`
+                : `/diagnosis?upper=${result.upperTrigram}&lower=${result.lowerTrigram}&moving=${result.movingLine}&healthConcern=${encodeURIComponent(healthConcern)}&method=manual&gender=${gender}&birthYear=${birthYear}&birthMonth=${birthMonth}&birthDay=${birthDay}&painLocation=${painLocation}&location=${userLocation}${canChiParams}`,
+            formData: {
+              healthConcern,
+              gender,
+              age,
+              painLocation,
+              userLocation,
+              result,
+              divinationMethod,
+              input,
+            },
+          }
+          sessionStorage.setItem("pendingNavigation", JSON.stringify(navigationData))
         }
-        sessionStorage.setItem("pendingNavigation", JSON.stringify(navigationData))
-      }
-      setAuthModalOpen(true)
-      return
-    }
-
-    // Comprehensive check theo nguyên tắc Mai Hoa
-    const checkResult = await canUserDivine(healthConcern)
-    console.log("[v0] Permission check result:", checkResult)
-
-    if (!checkResult.allowed) {
-      console.log("[v0] Not allowed - opening guardrail modal")
-      setGuardrailModal({
-        isOpen: true,
-        reason: checkResult.reason || "Không thể gieo quẻ lúc này",
-        details: checkResult.details,
-      })
-      return
-    }
-
-    console.log("[v0] Permission granted - proceeding with navigation")
-    // Allowed - proceed with navigation
-    if (divinationMethod === "time") {
-      const timeInput: TimeInput = {
-        year: input.year,
-        month: input.month,
-        day: input.day,
-        hour: input.hour,
-        minute: input.minute,
+        setAuthModalOpen(true)
+        setIsNavigating(false)
+        return
       }
 
-      // Save to database
-      await saveDivinationRecord({
-        year: timeInput.year,
-        month: timeInput.month,
-        day: timeInput.day,
-        hour: timeInput.hour,
-        upperTrigram: result.upperTrigram,
-        lowerTrigram: result.lowerTrigram,
-        movingLine: result.movingLine,
-        hexagramName: result.hexagramName,
-        healthConcern: healthConcern,
-        gender: gender,
-        age: Number.parseInt(age) || 0, // Parse age string to number when saving
-        painLocation: painLocation,
-        location: userLocation,
-      })
+      console.log("[v0] User authenticated - proceeding with navigation")
+      // User is logged in, proceed with navigation directly
+      if (divinationMethod === "time") {
+        const timeInput: TimeInput = {
+          year: input.year,
+          month: input.month,
+          day: input.day,
+          hour: input.hour,
+          minute: input.minute,
+        }
 
-      router.push(
-        `/diagnosis?upper=${result.upperTrigram}&lower=${result.lowerTrigram}&moving=${result.movingLine}&healthConcern=${encodeURIComponent(healthConcern)}&year=${timeInput.year}&month=${timeInput.month}&day=${timeInput.day}&hour=${timeInput.hour}&minute=${timeInput.minute}&method=time&gender=${gender}&age=${age}&painLocation=${painLocation}&location=${userLocation}`,
-      )
-    } else {
-      // Manual method
-      await saveDivinationRecord({
-        year: new Date().getFullYear(),
-        month: new Date().getMonth() + 1,
-        day: new Date().getDate(),
-        hour: new Date().getHours(),
-        upperTrigram: result.upperTrigram,
-        lowerTrigram: result.lowerTrigram,
-        movingLine: result.movingLine,
-        hexagramName: result.hexagramName,
-        healthConcern: healthConcern,
-        gender: gender,
-        age: Number.parseInt(age) || 0, // Parse age string to number when saving
-        painLocation: painLocation,
-        location: userLocation,
-      })
+        // Save to database
+        await saveDivinationRecord({
+          year: timeInput.year,
+          month: timeInput.month,
+          day: timeInput.day,
+          hour: timeInput.hour,
+          upperTrigram: result.upperTrigram,
+          lowerTrigram: result.lowerTrigram,
+          movingLine: result.movingLine,
+          hexagramName: result.hexagramName,
+          healthConcern: healthConcern,
+          gender: gender,
+          age: birthYear ? new Date().getFullYear() - Number.parseInt(birthYear) : 0,
+          painLocation: painLocation,
+          location: userLocation,
+        })
 
-      router.push(
-        `/diagnosis?upper=${result.upperTrigram}&lower=${result.lowerTrigram}&moving=${result.movingLine}&healthConcern=${encodeURIComponent(healthConcern)}&method=number&gender=${gender}&age=${age}&painLocation=${painLocation}&location=${userLocation}`,
-      )
+        router.push(
+          `/diagnosis?upper=${result.upperTrigram}&lower=${result.lowerTrigram}&moving=${result.movingLine}&healthConcern=${encodeURIComponent(healthConcern)}&year=${timeInput.year}&month=${timeInput.month}&day=${timeInput.day}&hour=${timeInput.hour}&minute=${timeInput.minute}&method=time&gender=${gender}&birthYear=${birthYear}&birthMonth=${birthMonth}&birthDay=${birthDay}&painLocation=${painLocation}&location=${userLocation}${canChiParams}`,
+        )
+      } else {
+        // Manual method
+        await saveDivinationRecord({
+          year: new Date().getFullYear(),
+          month: new Date().getMonth() + 1,
+          day: new Date().getDate(),
+          hour: new Date().getHours(),
+          upperTrigram: result.upperTrigram,
+          lowerTrigram: result.lowerTrigram,
+          movingLine: result.movingLine,
+          hexagramName: result.hexagramName,
+          healthConcern: healthConcern,
+          gender: gender,
+          age: birthYear ? new Date().getFullYear() - Number.parseInt(birthYear) : 0,
+          painLocation: painLocation,
+          location: userLocation,
+        })
+
+        router.push(
+          `/diagnosis?upper=${result.upperTrigram}&lower=${result.lowerTrigram}&moving=${result.movingLine}&healthConcern=${encodeURIComponent(healthConcern)}&method=number&gender=${gender}&birthYear=${birthYear}&birthMonth=${birthMonth}&birthDay=${birthDay}&painLocation=${painLocation}&location=${userLocation}${canChiParams}`,
+        )
+      }
+    } catch (error) {
+      console.error("[v0] Navigation error:", error)
+      setIsNavigating(false)
     }
   }
 
   const upperTrigram = result ? getTrigramByNumber(result.upperTrigram) : null
   const lowerTrigram = result ? getTrigramByNumber(result.lowerTrigram) : null
   const hexagramData = result ? getHexagramByTrigrams(result.upperTrigram, result.lowerTrigram) : null
+
+  const handleAuthModalClose = () => {
+    setAuthModalOpen(false)
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-secondary/5 to-background">
@@ -695,142 +674,6 @@ export default function MainPage() {
                     </TabsTrigger>
                   </TabsList>
 
-                  <div className="mb-6 p-4 bg-secondary/30 rounded-lg border space-y-4">
-                    <div className="flex items-center gap-2 mb-3">
-                      <User className="w-4 h-4 text-primary" />
-                      <Label className="text-sm font-semibold">Thông tin bổ sung (Giúp chẩn đoán chính xác hơn)</Label>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label className="text-sm">Giới tính</Label>
-                        <Select value={gender} onValueChange={setGender}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Chọn giới tính" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="male">Nam</SelectItem>
-                            <SelectItem value="female">Nữ</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label className="text-sm">Tuổi</Label>
-                        <Input
-                          type="number"
-                          min="1"
-                          max="120"
-                          value={age}
-                          onChange={(e) => setAge(e.target.value)} // Allow empty string, no longer forces 0
-                          placeholder="Nhập tuổi"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label className="text-sm">Vị trí đau/khó chịu</Label>
-                      <Select value={painLocation} onValueChange={setPainLocation}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Chọn vị trí" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="left">Bên trái cơ thể</SelectItem>
-                          <SelectItem value="right">Bên phải cơ thể</SelectItem>
-                          <SelectItem value="center">Bên trong/Nội tâm</SelectItem>
-                          <SelectItem value="whole">Toàn thân</SelectItem>
-                          <SelectItem value="unknown">Không rõ ràng</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label className="text-sm">Tỉnh/Thành phố bạn đang sinh sống</Label>
-                      <Select value={userLocation} onValueChange={setUserLocation}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Chọn tỉnh/thành" />
-                        </SelectTrigger>
-                        <SelectContent className="max-h-[300px]">
-                          <SelectItem value="hanoi">Hà Nội</SelectItem>
-                          <SelectItem value="hochiminh">TP. Hồ Chí Minh</SelectItem>
-                          <SelectItem value="danang">Đà Nẵng</SelectItem>
-                          <SelectItem value="haiphong">Hải Phòng</SelectItem>
-                          <SelectItem value="cantho">Cần Thơ</SelectItem>
-                          <SelectItem value="halong">Hạ Long (Quảng Ninh)</SelectItem>
-                          <SelectItem value="vungtau">Vũng Tàu</SelectItem>
-                          <SelectItem value="nhatrang">Nha Trang</SelectItem>
-                          <SelectItem value="dalat">Đà Lạt</SelectItem>
-                          <SelectItem value="hue">Huế</SelectItem>
-                          <SelectItem value="angiang">An Giang</SelectItem>
-                          <SelectItem value="baria">Bà Rịa - Vũng Tàu</SelectItem>
-                          <SelectItem value="baclieu">Bạc Liêu</SelectItem>
-                          <SelectItem value="backan">Bắc Kạn</SelectItem>
-                          <SelectItem value="bacgiang">Bắc Giang</SelectItem>
-                          <SelectItem value="bacninh">Bắc Ninh</SelectItem>
-                          <SelectItem value="bentre">Bến Tre</SelectItem>
-                          <SelectItem value="binhdinh">Bình Định</SelectItem>
-                          <SelectItem value="binhduong">Bình Dương</SelectItem>
-                          <SelectItem value="binhphuoc">Bình Phước</SelectItem>
-                          <SelectItem value="binhthuan">Bình Thuận</SelectItem>
-                          <SelectItem value="camau">Cà Mau</SelectItem>
-                          <SelectItem value="caobang">Cao Bằng</SelectItem>
-                          <SelectItem value="daklak">Đắk Lắk</SelectItem>
-                          <SelectItem value="daknong">Đắk Nông</SelectItem>
-                          <SelectItem value="dienbien">Điện Biên</SelectItem>
-                          <SelectItem value="dongnai">Đồng Nai</SelectItem>
-                          <SelectItem value="dongthap">Đồng Tháp</SelectItem>
-                          <SelectItem value="gialai">Gia Lai</SelectItem>
-                          <SelectItem value="hagiang">Hà Giang</SelectItem>
-                          <SelectItem value="hanam">Hà Nam</SelectItem>
-                          <SelectItem value="hatinh">Hà Tĩnh</SelectItem>
-                          <SelectItem value="haugiang">Hậu Giang</SelectItem>
-                          <SelectItem value="hoabinh">Hòa Bình</SelectItem>
-                          <SelectItem value="hungyen">Hưng Yên</SelectItem>
-                          <SelectItem value="khanhhoa">Khánh Hòa</SelectItem>
-                          <SelectItem value="kiengiang">Kiên Giang</SelectItem>
-                          <SelectItem value="kontum">Kon Tum</SelectItem>
-                          <SelectItem value="laichau">Lai Châu</SelectItem>
-                          <SelectItem value="lamdong">Lâm Đồng</SelectItem>
-                          <SelectItem value="langson">Lạng Sơn</SelectItem>
-                          <SelectItem value="laocai">Lào Cai</SelectItem>
-                          <SelectItem value="longan">Long An</SelectItem>
-                          <SelectItem value="namdinh">Nam Định</SelectItem>
-                          <SelectItem value="nghean">Nghệ An</SelectItem>
-                          <SelectItem value="ninhbinh">Ninh Bình</SelectItem>
-                          <SelectItem value="ninhthuan">Ninh Thuận</SelectItem>
-                          <SelectItem value="phutho">Phú Thọ</SelectItem>
-                          <SelectItem value="phuyen">Phú Yên</SelectItem>
-                          <SelectItem value="quangbinh">Quảng Bình</SelectItem>
-                          <SelectItem value="quangnam">Quảng Nam</SelectItem>
-                          <SelectItem value="quangngai">Quảng Ngãi</SelectItem>
-                          <SelectItem value="quangninh">Quảng Ninh</SelectItem>
-                          <SelectItem value="quangtri">Quảng Trị</SelectItem>
-                          <SelectItem value="soctrang">Sóc Trăng</SelectItem>
-                          <SelectItem value="sonla">Sơn La</SelectItem>
-                          <SelectItem value="tayninh">Tây Ninh</SelectItem>
-                          <SelectItem value="thaibinh">Thái Bình</SelectItem>
-                          <SelectItem value="thainguyen">Thái Nguyên</SelectItem>
-                          <SelectItem value="thanhhoa">Thanh Hóa</SelectItem>
-                          <SelectItem value="tiengiang">Tiền Giang</SelectItem>
-                          <SelectItem value="travinh">Trà Vinh</SelectItem>
-                          <SelectItem value="tuyenquang">Tuyên Quang</SelectItem>
-                          <SelectItem value="vinhlong">Vĩnh Long</SelectItem>
-                          <SelectItem value="vinhphuc">Vĩnh Phúc</SelectItem>
-                          <SelectItem value="yenbai">Yên Bái</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <Alert className="bg-blue-50/50 border-blue-200/50">
-                      <Info className="h-4 w-4 text-blue-600" />
-                      <AlertDescription className="text-xs text-blue-900/70">
-                        Thông tin này giúp phân tích theo nguyên lý <strong>Âm-Dương, Tả-Hữu</strong> và{" "}
-                        <strong>ảnh hưởng địa lý</strong> trong Mai Hoa Dịch Số, từ đó đưa ra lời khuyên phù hợp hơn với
-                        thể trạng của bạn.
-                      </AlertDescription>
-                    </Alert>
-                  </div>
-
                   <TabsContent value="time" className="space-y-4">
                     <Alert className="bg-primary/5 border-primary/20">
                       <Info className="h-4 w-4 text-primary" />
@@ -838,97 +681,27 @@ export default function MainPage() {
                         <strong>Phương pháp Niên Nguyệt Nhật Thời</strong> (年月日时起卦)
                         <br />
                         <span className="text-xs text-muted-foreground mt-1 block">
-                          Dựa trên nguyên lý "Thiên Nhân Hợp Nhất" - thời điểm hỏi quẻ phản ánh trạng thái năng lượng
-                          của người hỏi. Phương pháp này được Thiệu Ung (邵雍) phát triển và ghi chép trong Mai Hoa Dịch
-                          Số.
+                          Dựa trên nguyên lý "Thiên Nhân Hợp Nhất" - thời điểm hỏi quẻ phản ánh trạng thái năng lượng của người hỏi.
                         </span>
                       </AlertDescription>
                     </Alert>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label className="flex items-center gap-1.5">
-                          Năm
-                          <span className="text-xs text-muted-foreground">(Dương lịch)</span>
-                        </Label>
-                        <Input
-                          type="number"
-                          value={input.year}
-                          onChange={(e) => setInput({ ...input, year: Number.parseInt(e.target.value) || 0 })}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="flex items-center gap-1.5">
-                          Tháng
-                          <span className="text-xs text-muted-foreground">(Âm lịch)</span>
-                        </Label>
-                        <Input
-                          type="number"
-                          min="1"
-                          max="12"
-                          value={input.month}
-                          onChange={(e) => setInput({ ...input, month: Number.parseInt(e.target.value) || 0 })}
-                        />
-                      </div>
-                    </div>
+                    <PersonalInfoFields
+                      gender={gender}
+                      setGender={setGender}
+                      birthYear={birthYear}
+                      setBirthYear={setBirthYear}
+                      birthMonth={birthMonth}
+                      setBirthMonth={setBirthMonth}
+                      birthDay={birthDay}
+                      setBirthDay={setBirthDay}
+                      painLocation={painLocation}
+                      setPainLocation={setPainLocation}
+                      userLocation={userLocation}
+                      setUserLocation={setUserLocation}
+                    />
 
-                    <div className="space-y-2">
-                      <Label className="flex items-center gap-1.5">
-                        Ngày
-                        <span className="text-xs text-muted-foreground">(Âm lịch)</span>
-                      </Label>
-                      <Input
-                        type="number"
-                        min="1"
-                        max="31"
-                        value={input.day}
-                        onChange={(e) => setInput({ ...input, day: Number.parseInt(e.target.value) || 0 })}
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label className="flex items-center gap-1.5">
-                          Giờ
-                          <span className="text-xs text-muted-foreground">(0-23)</span>
-                        </Label>
-                        <Input
-                          type="number"
-                          min="0"
-                          max="23"
-                          value={input.hour}
-                          onChange={(e) => setInput({ ...input, hour: Number.parseInt(e.target.value) || 0 })}
-                          placeholder="VD: 14"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="flex items-center gap-1.5">
-                          Phút
-                          <span className="text-xs text-muted-foreground">(0-59)</span>
-                        </Label>
-                        <Input
-                          type="number"
-                          min="0"
-                          max="59"
-                          value={input.minute}
-                          onChange={(e) => setInput({ ...input, minute: Number.parseInt(e.target.value) || 0 })}
-                          placeholder="VD: 30"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="p-3 bg-accent/10 border border-accent/20 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Địa Chi tương ứng:</span>
-                        <Badge variant="outline" className="font-semibold">
-                          Giờ {currentHourBranchName} ({currentHourBranch}/12)
-                        </Badge>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        Giờ và phút được tự động cập nhật theo thời gian thực (múi giờ Việt Nam +7). Bạn có thể tự nhập
-                        nếu muốn xem quẻ cho thời điểm khác.
-                      </p>
-                    </div>
+                    <TimeInputFields input={input} setInput={setInput} currentHourBranchName={currentHourBranchName} />
 
                     <Button onClick={handleCalculateResult} className="w-full mt-6" size="lg">
                       <Sparkles className="w-4 h-4 mr-2" />
@@ -943,63 +716,32 @@ export default function MainPage() {
                         <strong>Phương pháp Trực Tiếp Số Tự Nhiên</strong> (直接数字起卦)
                         <br />
                         <span className="text-xs text-muted-foreground mt-1 block">
-                          Sử dụng số ngẫu nhiên hoặc số có ý nghĩa với bạn (số điện thoại, ngày sinh, số nhà...). Nguyên
-                          lý "Vạn vật giai số" - mọi sự vật đều có thể biểu thị bằng số.
+                          Sử dụng số ngẫu nhiên hoặc số có ý nghĩa với bạn. Nguyên lý "Vạn vật giai số".
                         </span>
                       </AlertDescription>
                     </Alert>
 
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label className="flex items-center gap-1.5">
-                          Số Thượng Quẻ
-                          <span className="text-xs text-muted-foreground">(Quẻ trên)</span>
-                        </Label>
-                        <Input
-                          type="number"
-                          placeholder="Nhập số bất kỳ (VD: 15, 88, 123...)"
-                          value={numberInput.upper}
-                          onChange={(e) => setNumberInput({ ...numberInput, upper: e.target.value })}
-                        />
-                        <p className="text-xs text-muted-foreground">
-                          Số ÷ 8 lấy dư → xác định 1 trong 8 quẻ cơ bản (Càn, Đoài, Ly, Chấn, Tốn, Khảm, Cấn, Khôn)
-                        </p>
-                      </div>
+                    <PersonalInfoFields
+                      gender={gender}
+                      setGender={setGender}
+                      birthYear={birthYear}
+                      setBirthYear={setBirthYear}
+                      birthMonth={birthMonth}
+                      setBirthMonth={setBirthMonth}
+                      birthDay={birthDay}
+                      setBirthDay={setBirthDay}
+                      painLocation={painLocation}
+                      setPainLocation={setPainLocation}
+                      userLocation={userLocation}
+                      setUserLocation={setUserLocation}
+                    />
 
-                      <div className="space-y-2">
-                        <Label className="flex items-center gap-1.5">
-                          Số Hạ Quẻ
-                          <span className="text-xs text-muted-foreground">(Quẻ dưới)</span>
-                        </Label>
-                        <Input
-                          type="number"
-                          placeholder="Nhập số bất kỳ"
-                          value={numberInput.lower}
-                          onChange={(e) => setNumberInput({ ...numberInput, lower: e.target.value })}
-                        />
-                      </div>
+                    <NumberInputFields numberInput={numberInput} setNumberInput={setNumberInput} />
 
-                      <div className="space-y-2">
-                        <Label className="flex items-center gap-1.5">
-                          Số Động Hào
-                          <span className="text-xs text-muted-foreground">(Hào biến đổi)</span>
-                        </Label>
-                        <Input
-                          type="number"
-                          placeholder="Nhập số bất kỳ"
-                          value={numberInput.moving}
-                          onChange={(e) => setNumberInput({ ...numberInput, moving: e.target.value })}
-                        />
-                        <p className="text-xs text-muted-foreground">
-                          Số ÷ 6 lấy dư → xác định hào động từ 1-6 (đếm từ dưới lên)
-                        </p>
-                      </div>
-
-                      <Button onClick={handleCalculateResult} className="w-full mt-6" size="lg">
-                        <Hash className="w-4 h-4 mr-2" />
-                        Khởi Quẻ Theo Số
-                      </Button>
-                    </div>
+                    <Button onClick={handleCalculateResult} className="w-full mt-6" size="lg">
+                      <Hash className="w-4 h-4 mr-2" />
+                      Khởi Quẻ Theo Số
+                    </Button>
                   </TabsContent>
                 </Tabs>
               </CardContent>
@@ -1104,10 +846,19 @@ export default function MainPage() {
                       </p>
                     </div>
 
-                    <Button onClick={handleNavigateToDiagnosis} className="w-full" size="lg">
-                      Xem Kết Quả Chẩn Đoán Chi Tiết
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
+                  <Button onClick={handleNavigateToDiagnosis} className="w-full" size="lg" disabled={isNavigating}>
+                    {isNavigating ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+                        Đang tải...
+                      </>
+                    ) : (
+                      <>
+                        Xem Kết Quả Chẩn Đoán Chi Tiết
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </>
+                    )}
+                  </Button>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-16 text-center">
@@ -1185,7 +936,7 @@ export default function MainPage() {
               {
                 title: "Xác Thực Người Dùng",
                 subtitle: "用户认证",
-                description: "Tracking cross-device để đảm bảo nguyên tắc được tuân thủ",
+                description: "Tracking cross-device to đảm bảo nguyên tắc được tuân thủ",
                 icon: <User className="w-5 h-5" />,
               },
               {
@@ -1266,6 +1017,12 @@ export default function MainPage() {
       </section>
 
       <QuickAuthModal open={authModalOpen} onOpenChange={handleAuthModalClose} />
+      <MaiHoaGuardrailModal
+        open={guardrailModal.isOpen}
+        onOpenChange={(open) => setGuardrailModal({ ...guardrailModal, isOpen: open })}
+        reason={guardrailModal.reason}
+        details={guardrailModal.details}
+      />
     </div>
   )
 }

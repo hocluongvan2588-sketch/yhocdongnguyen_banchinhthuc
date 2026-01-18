@@ -68,6 +68,15 @@ function DiagnosisContent() {
   const age = searchParams.get("age") || ""
   const painLocation = searchParams.get("painLocation") || ""
   const userLocation = searchParams.get("location") || ""
+  
+  // Can Chi information from URL params
+  const canNam = searchParams.get("canNam") || ""
+  const chiNam = searchParams.get("chiNam") || ""
+  const canNgay = searchParams.get("canNgay") || ""
+  const chiNgay = searchParams.get("chiNgay") || ""
+  const element = searchParams.get("element") || ""
+  const lunarYear = searchParams.get("lunarYear") || ""
+  const calculatedAge = searchParams.get("age") || ""
 
   const currentMonth = month ? Number.parseInt(month) : new Date().getMonth() + 1
 
@@ -201,6 +210,12 @@ function DiagnosisContent() {
         age: age ? Number.parseInt(age) : undefined,
         painLocation: painLocation || undefined,
         userLocation: userLocation || undefined,
+        canNam: canNam || undefined,
+        chiNam: chiNam || undefined,
+        canNgay: canNgay || undefined,
+        chiNgay: chiNgay || undefined,
+        element: element || undefined,
+        lunarYear: lunarYear || undefined,
       }
 
       console.log("[v0] Request body:", requestBody)
@@ -446,44 +461,6 @@ function DiagnosisContent() {
             </div>
           )}
 
-          {shouldShowContent && (
-            <>
-              <ModernSummaryCard interpretation={displayInterpretation} />
-
-              <SmartPackageRecommendation
-                severity={displayInterpretation.severity}
-                status={displayInterpretation.status}
-                primaryRecommendation={recommendedPackage.primary}
-                reason={recommendedPackage.reason}
-                onScrollToPackages={scrollToPackages}
-              />
-
-              <ModernElementsDisplay
-                bodyElement={bodyUseAnalysis.bodyElement}
-                useElement={bodyUseAnalysis.useElement}
-                bodyOrganSimple={
-                  ELEMENT_TO_ORGAN[bodyUseAnalysis.bodyElement]?.organSimple || bodyUseAnalysis.bodyElement
-                }
-                useOrganSimple={ELEMENT_TO_ORGAN[bodyUseAnalysis.useElement]?.organSimple || bodyUseAnalysis.useElement}
-                relation={bodyUseAnalysis.relationship}
-                relationExplanation={displayInterpretation.summary}
-              />
-
-              <ModernAdviceCard interpretation={displayInterpretation} />
-
-              <SeasonalAnalysis
-                seasonElement={seasonalAnalysis.seasonElement}
-                bodyStrength={seasonalAnalysis.bodyStrength}
-                useStrength={seasonalAnalysis.useStrength}
-                dangerousMonths={seasonalAnalysis.dangerousMonths}
-                safeMonths={seasonalAnalysis.safeMonths}
-                recoveryMonths={seasonalAnalysis.recoveryMonths}
-                currentMonthRisk={seasonalAnalysis.currentMonthRisk}
-                currentMonth={currentMonth}
-              />
-            </>
-          )}
-
           <Card className="border border-border/50 shadow-md">
             <CardHeader>
               <CardTitle className="text-xl md:text-2xl">Quẻ Hình và Biến Hóa</CardTitle>
@@ -590,6 +567,44 @@ function DiagnosisContent() {
               </Tabs>
             </CardContent>
           </Card>
+
+          {shouldShowContent && (
+            <>
+              <ModernSummaryCard interpretation={displayInterpretation} />
+
+              <SmartPackageRecommendation
+                severity={displayInterpretation.severity}
+                status={displayInterpretation.status}
+                primaryRecommendation={recommendedPackage.primary}
+                reason={recommendedPackage.reason}
+                onScrollToPackages={scrollToPackages}
+              />
+
+              <ModernElementsDisplay
+                bodyElement={bodyUseAnalysis.bodyElement}
+                useElement={bodyUseAnalysis.useElement}
+                bodyOrganSimple={
+                  ELEMENT_TO_ORGAN[bodyUseAnalysis.bodyElement]?.organSimple || bodyUseAnalysis.bodyElement
+                }
+                useOrganSimple={ELEMENT_TO_ORGAN[bodyUseAnalysis.useElement]?.organSimple || bodyUseAnalysis.useElement}
+                relation={bodyUseAnalysis.relationship}
+                relationExplanation={displayInterpretation.summary}
+              />
+
+              <ModernAdviceCard interpretation={displayInterpretation} />
+
+              <SeasonalAnalysis
+                seasonElement={seasonalAnalysis.seasonElement}
+                bodyStrength={seasonalAnalysis.bodyStrength}
+                useStrength={seasonalAnalysis.useStrength}
+                dangerousMonths={seasonalAnalysis.dangerousMonths}
+                safeMonths={seasonalAnalysis.safeMonths}
+                recoveryMonths={seasonalAnalysis.recoveryMonths}
+                currentMonthRisk={seasonalAnalysis.currentMonthRisk}
+                currentMonth={currentMonth}
+              />
+            </>
+          )}
 
           <div id="treatment-packages" className="scroll-mt-20">
             <Card className="border-2 border-primary/20 shadow-lg">

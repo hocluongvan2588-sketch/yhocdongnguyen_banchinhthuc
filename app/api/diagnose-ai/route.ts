@@ -52,13 +52,22 @@ function constructPrompt(
   age?: number,
   painLocation?: string,
   userLocation?: string,
+  canNam?: string,
+  chiNam?: string,
+  canNgay?: string,
+  chiNgay?: string,
+  element?: string,
+  lunarYear?: string,
 ): string {
   const anthropometricContext =
-    gender || age || painLocation || userLocation
+    gender || age || painLocation || userLocation || canNam
       ? `
 **Thông tin bệnh nhân:**
 ${gender ? `- Giới tính: ${gender === "male" ? "Nam" : gender === "female" ? "Nữ" : "Không rõ"}` : ""}
 ${age ? `- Tuổi: ${age} tuổi` : ""}
+${canNam && chiNam ? `- Can Chi Năm: ${canNam} ${chiNam}${lunarYear ? ` (Năm âm lịch: ${lunarYear})` : ""}` : ""}
+${canNgay && chiNgay ? `- Can Chi Ngày: ${canNgay} ${chiNgay}` : ""}
+${element ? `- Mệnh ngũ hành: ${element}` : ""}
 ${painLocation && painLocation !== "unknown" ? `- Vị trí đau: ${painLocation === "left" ? "Bên trái" : painLocation === "right" ? "Bên phải" : painLocation === "center" ? "Ở giữa" : painLocation === "whole" ? "Toàn thân" : "Không rõ"}` : ""}
 ${userLocation ? `- Địa lý: ${userLocation}` : ""}
 `
@@ -71,7 +80,13 @@ ${anthropometricContext}
 **Cơ quan:** ${rawData.affectedOrgans.primary}, ${rawData.affectedOrgans.secondary}
 **Tháng:** ${currentMonth}
 
-Phân tích theo 7 phần (Nhân trắc + 6 phần chính), mỗi phần ≤100 từ.`
+Phân tích ngắn gọn theo 6 phần, mỗi phần 50-80 từ:
+1. TỔNG QUAN - Kết luận chính 
+2. CƠ CHẾ - Nguyên nhân từ quẻ
+3. TRIỆU CHỨNG - Biểu hiện cụ thể
+4. THỜI ĐIỂM - Tháng nào tốt/xấu
+5. XỬ LÝ NGAY - 3 điều cần làm
+6. PHÁC ĐỒ - Hướng điều trị dài hạn`
 }
 
 async function generateTextWithOpenAI(systemPrompt: string, userPrompt: string): Promise<string> {
@@ -87,8 +102,8 @@ async function generateTextWithOpenAI(systemPrompt: string, userPrompt: string):
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ],
-      temperature: 0.7,
-      max_tokens: 800,
+      temperature: 0.5, // Giảm từ 0.7 -> 0.5 để response nhanh hơn, ít sáng tạo hơn
+      max_tokens: 500, // Giảm từ 800 -> 500 để tiết kiệm thời gian
     }),
   })
 
@@ -191,6 +206,12 @@ export async function POST(request: NextRequest) {
       age,
       painLocation,
       userLocation,
+      canNam,
+      chiNam,
+      canNgay,
+      chiNgay,
+      element,
+      lunarYear,
     } = body
 
     if (
@@ -258,6 +279,9 @@ export async function POST(request: NextRequest) {
       age,
       painLocation,
       userLocation,
+      canNam,
+      chiNam,
+      element,
     })
 
     const cachedResult = getCachedResponse(cacheKey)
@@ -281,10 +305,11 @@ export async function POST(request: NextRequest) {
     })
 
     try {
+      // Giảm max tokens từ 1500 -> 1000 để tăng tốc độ
       const relevantKnowledge = selectRelevantChunks(
         healthConcern || "",
         [rawCalculation.affectedOrgans.primary, rawCalculation.affectedOrgans.secondary],
-        1500,
+        1000,
       )
 
       const userPrompt = constructPrompt(
@@ -295,6 +320,12 @@ export async function POST(request: NextRequest) {
         age,
         painLocation,
         userLocation,
+        canNam,
+        chiNam,
+        canNgay,
+        chiNgay,
+        element,
+        lunarYear,
       )
 
       const systemPrompt = `${SYSTEM_INSTRUCTION}
@@ -308,7 +339,11 @@ ${userLocation ? GEOGRAPHY_KNOWLEDGE : ""}
 KIẾN THỨC LIÊN QUAN:
 ${relevantKnowledge}`
 
+      console.log("[v0] Starting AI generation...")
+      const startTime = Date.now()
       const text = await generateTextWithOpenAI(systemPrompt, userPrompt)
+      const endTime = Date.now()
+      console.log(`[v0] AI generation completed in ${endTime - startTime}ms`)
       const aiInterpretation = parseAIResponse(text)
 
       const result = {
