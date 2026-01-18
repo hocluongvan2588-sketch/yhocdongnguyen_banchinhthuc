@@ -8,6 +8,11 @@ export async function proxy(request: NextRequest) {
     },
   })
 
+  // Prevent caching for auth-sensitive pages
+  response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate")
+  response.headers.set("Pragma", "no-cache")
+  response.headers.set("Expires", "0")
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

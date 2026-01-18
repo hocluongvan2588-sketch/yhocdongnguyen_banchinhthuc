@@ -34,9 +34,15 @@ export function UserNav() {
   }, [])
 
   const handleSignOut = async () => {
-    await signOut()
-    router.push("/")
-    router.refresh()
+    try {
+      await signOut()
+      // Force hard reload to clear all caches
+      window.location.href = "/"
+    } catch (error) {
+      console.error("[v0] Logout error:", error)
+      // Still force reload even on error
+      window.location.href = "/"
+    }
   }
 
   const handleAuthSuccess = async () => {

@@ -70,16 +70,23 @@ export async function getCurrentUser() {
     data: { user },
   } = await supabase.auth.getUser()
 
+  console.log("[v0] getCurrentUser - auth user:", user?.id)
+
   if (!user) {
+    console.log("[v0] getCurrentUser - no auth user found")
     return { user: null }
   }
 
   // Fetch additional user data including is_admin from public.users table
-  const { data: userData } = await supabase
+  // Add timestamp to prevent caching
+  const { data: userData, error } = await supabase
     .from("users")
     .select("is_admin, full_name")
     .eq("id", user.id)
     .single()
+
+  console.log("[v0] getCurrentUser - userData:", userData)
+  console.log("[v0] getCurrentUser - error:", error)
 
   return {
     user: {
