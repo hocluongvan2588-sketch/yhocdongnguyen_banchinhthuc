@@ -38,50 +38,54 @@ function NumerologyContent() {
 
   const sequence = treatment.primarySequence
 
-  const handlePlayAudio = () => {
-    if (!('speechSynthesis' in window)) {
-      alert('Trình duyệt của bạn không hỗ trợ tính năng đọc văn bản')
-      return
-    }
-
+  const handlePlayAudio = async () => {
     setIsPlaying(true)
-    
-    // Get the number sequence
-    const numbers = sequence.sequence.split(" ")
-    const numberWords = numbers.map(num => {
-      const map: Record<string, string> = {
-        '0': 'không',
-        '1': 'một',
-        '2': 'hai',
-        '3': 'ba',
-        '4': 'bốn',
-        '5': 'năm',
-        '6': 'sáu',
-        '7': 'bảy',
-        '8': 'tám',
-        '9': 'chín'
+
+    try {
+      const numbers = sequence.sequence.split(" ")
+      
+      // Call our TTS API
+      const response = await fetch("/api/tts/vietnamese", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ numbers }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || "Failed to generate audio")
       }
-      return map[num] || num
-    })
 
-    // Create speech
-    const utterance = new SpeechSynthesisUtterance(numberWords.join('... ') + '...')
-    utterance.lang = 'vi-VN'
-    utterance.rate = 0.7 // Slower for meditation
-    utterance.pitch = 1.0
-    utterance.volume = 1.0
+      const { audioData, mimeType } = await response.json()
 
-    utterance.onend = () => {
+      // Import audio converter utilities
+      const { pcmToWav, playAudio } = await import("@/lib/utils/audio-converter")
+
+      // Convert PCM to WAV if needed
+      let audioBlob: Blob
+      if (mimeType === "audio/pcm" || !mimeType.includes("wav")) {
+        audioBlob = pcmToWav(audioData)
+      } else {
+        // Already in correct format
+        const binaryData = Uint8Array.from(atob(audioData), (c) => c.charCodeAt(0))
+        audioBlob = new Blob([binaryData], { type: mimeType })
+      }
+
+      // Play audio
+      await playAudio(audioBlob)
+      
+    } catch (error) {
+      console.error("[v0] TTS error:", error)
+      alert(
+        error instanceof Error 
+          ? `Không thể phát âm thanh: ${error.message}` 
+          : "Không thể phát âm thanh. Vui lòng thử lại."
+      )
+    } finally {
       setIsPlaying(false)
     }
-
-    utterance.onerror = () => {
-      setIsPlaying(false)
-      alert('Không thể phát âm thanh. Vui lòng thử lại.')
-    }
-
-    window.speechSynthesis.cancel() // Cancel any ongoing speech
-    window.speechSynthesis.speak(utterance)
   }
 
   return (
@@ -157,11 +161,11 @@ function NumerologyContent() {
                     }}
                   >
                     <div className="text-center space-y-4">
-                      <div className="flex items-center justify-center gap-6">
+                      <div className="flex items-center justify-center gap-3 sm:gap-6">
                         {sequence.sequence.split(" ").map((num, idx) => (
                           <div key={idx} className="relative group">
                             <div
-                              className="w-24 h-24 rounded-2xl flex items-center justify-center text-5xl font-bold shadow-2xl transition-transform group-hover:scale-110"
+                              className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl sm:rounded-2xl flex items-center justify-center text-3xl sm:text-4xl md:text-5xl font-bold shadow-2xl transition-transform group-hover:scale-110"
                               style={{
                                 background: treatment.wallpaperColors.primary,
                                 color: '#ffffff', // Always use white text for maximum contrast
@@ -169,21 +173,40 @@ function NumerologyContent() {
                             >
                               {num}
                             </div>
-                            <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-primary/20 animate-ping"></div>
+                            <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 w-4 h-4 sm:w-6 sm:h-6 rounded-full bg-primary/20 animate-ping"></div>
                           </div>
                         ))}
                       </div>
 
-                      <Button
-                        onClick={handlePlayAudio}
-                        variant="outline"
-                        size="lg"
-                        className="gap-2 mt-6 bg-transparent"
-                        disabled={isPlaying}
-                      >
-                        <Volume2 className={`w-5 h-5 ${isPlaying ? "animate-pulse" : ""}`} />
-                        {isPlaying ? "Đang phát..." : "Nghe cách niệm"}
-                      </Button>
+                      <div className="flex flex-col items-center gap-3 mt-6">
+                        {/* Waveform animation when playing */}
+                        {isPlaying && (
+                          <div className="flex items-center gap-1 h-8">
+                            {[...Array(5)].map((_, i) => (
+                              <div
+                                key={i}
+                                className="w-1 bg-primary rounded-full animate-pulse"
+                                style={{
+                                  height: "100%",
+                                  animationDelay: `${i * 0.15}s`,
+                                  animationDuration: "0.8s",
+                                }}
+                              />
+                            ))}
+                          </div>
+                        )}
+                        
+                        <Button
+                          onClick={handlePlayAudio}
+                          variant="outline"
+                          size="lg"
+                          className="gap-2 bg-transparent"
+                          disabled={isPlaying}
+                        >
+                          <Volume2 className={`w-5 h-5 ${isPlaying ? "animate-pulse" : ""}`} />
+                          {isPlaying ? "Đang phát..." : "Nghe cách niệm"}
+                        </Button>
+                      </div>
                     </div>
                   </div>
 
