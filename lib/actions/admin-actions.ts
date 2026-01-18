@@ -82,3 +82,57 @@ export async function updatePaymentMethod(
   revalidatePath("/admin/payments")
   return { success: true }
 }
+
+/**
+ * Get all solutions (for admin management)
+ */
+export async function getAllSolutions() {
+  const adminCheck = await checkAdminAccess()
+  if (!adminCheck.isAdmin) {
+    return { error: adminCheck.error }
+  }
+
+  const supabase = await getSupabaseServerClient()
+
+  const { data: solutions, error } = await supabase
+    .from("solutions")
+    .select("*")
+    .order("hexagram_key")
+
+  if (error) {
+    console.error("[v0] Error fetching solutions:", error)
+    return { error: "Không thể tải danh sách gói dịch vụ" }
+  }
+
+  return { solutions }
+}
+
+/**
+ * Update solution metadata (admin only)
+ */
+export async function updateSolution(
+  solutionId: string,
+  data: {
+    title?: string
+    description?: string
+    unlock_cost?: number
+    reference_source?: string
+  },
+) {
+  const adminCheck = await checkAdminAccess()
+  if (!adminCheck.isAdmin) {
+    return { error: adminCheck.error }
+  }
+
+  const supabase = await getSupabaseServerClient()
+
+  const { error } = await supabase.from("solutions").update(data).eq("id", solutionId)
+
+  if (error) {
+    console.error("[v0] Error updating solution:", error)
+    return { error: "Không thể cập nhật gói dịch vụ" }
+  }
+
+  revalidatePath("/admin/solutions")
+  return { success: true }
+}

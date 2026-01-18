@@ -152,7 +152,11 @@ export function UserNav() {
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => router.push("/admin/payments")}>
               <Shield className="mr-2 h-4 w-4" />
-              <span>Quản trị</span>
+              <span>Quản trị Thanh toán</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/admin/solutions")}>
+              <Shield className="mr-2 h-4 w-4" />
+              <span>Quản trị Gói dịch vụ</span>
             </DropdownMenuItem>
           </>
         )}
