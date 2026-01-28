@@ -629,10 +629,10 @@ export default function MainPage() {
                     </Badge>
                   </div>
                   <Textarea
-                    placeholder="Mô tả tình trạng sức khỏe hoặc vấn đề bạn muốn hỏi. Ví dụ: Đau đầu thường xuyên, mất ngủ, đau dạ dày..."
+                    placeholder="Ví dụ: Đau đầu, mất ngủ, đau dạ dày..."
                     value={healthConcern}
                     onChange={(e) => setHealthConcern(e.target.value)}
-                    className="min-h-[100px] resize-none"
+                    className="min-h-[100px] resize-none placeholder:text-xs placeholder:text-muted-foreground/50"
                   />
                   <p className="text-xs text-muted-foreground flex items-start gap-1.5">
                     <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
