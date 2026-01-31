@@ -870,8 +870,17 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="mt-8 border-t border-border/40 pt-6 text-center text-sm text-muted-foreground">
-            <p>© 2025 Mai Hoa Tâm Pháp. Phát triển bởi AI & Dịch học.</p>
+          <div className="mt-8 border-t border-border/40 pt-6">
+            <div className="mb-4 flex flex-wrap items-center justify-center gap-4 text-sm">
+              <a href="/privacy" className="text-foreground font-medium underline hover:text-primary transition-colors">
+                Chính sách bảo mật
+              </a>
+              <span className="text-muted-foreground">•</span>
+              <a href="/terms" className="text-foreground font-medium underline hover:text-primary transition-colors">
+                Điều khoản dịch vụ
+              </a>
+            </div>
+            <p className="text-center text-sm text-muted-foreground">© 2025 Mai Hoa Tâm Pháp. Phát triển bởi AI & Dịch học.</p>
           </div>
         </div>
       </footer>
