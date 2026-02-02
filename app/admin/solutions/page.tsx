@@ -1,13 +1,14 @@
 import { Suspense } from "react"
-import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SolutionsTable } from "./components/solutions-table"
 import { PurchaseHistory } from "./components/purchase-history"
 import { SolutionsStats } from "./components/solutions-stats"
+import { getSupabaseServerClient } from "@/lib/supabase/server" // Declare the variable before using it
 
 export default async function AdminSolutionsPage() {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   // Check if user is authenticated and admin
   const {

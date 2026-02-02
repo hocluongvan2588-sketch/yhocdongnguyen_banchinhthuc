@@ -1,10 +1,10 @@
 "use server"
 
-import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { createClient, getSupabaseServerClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 
 async function checkAdminAccess() {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const {
     data: { user },
@@ -40,7 +40,7 @@ export async function updateSolutionPricing(
     return { error: adminCheck.error }
   }
 
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   // Update all solutions of this type
   const { error } = await supabase.from("solutions").update({ unlock_cost: newPrice }).eq("solution_type", solutionType)
@@ -70,7 +70,7 @@ export async function updatePaymentMethod(
     return { error: adminCheck.error }
   }
 
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const { error } = await supabase.from("payment_methods").update(data).eq("id", methodId)
 
@@ -92,7 +92,7 @@ export async function getAllSolutions() {
     return { error: adminCheck.error }
   }
 
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const { data: solutions, error } = await supabase
     .from("solutions")
@@ -124,7 +124,7 @@ export async function updateSolution(
     return { error: adminCheck.error }
   }
 
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const { error } = await supabase.from("solutions").update(data).eq("id", solutionId)
 

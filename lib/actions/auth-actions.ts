@@ -1,11 +1,12 @@
 "use server"
 
-import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import { getSupabaseServerClient } from "@/lib/supabase/server" // Declare the variable before using it
 
 export async function signUp(email: string, password: string, fullName?: string) {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -33,7 +34,7 @@ export async function signUp(email: string, password: string, fullName?: string)
 }
 
 export async function signIn(email: string, password: string) {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -50,7 +51,7 @@ export async function signIn(email: string, password: string) {
 }
 
 export async function signOut() {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const { error } = await supabase.auth.signOut()
 
@@ -64,7 +65,7 @@ export async function signOut() {
 }
 
 export async function getCurrentUser() {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const {
     data: { user },

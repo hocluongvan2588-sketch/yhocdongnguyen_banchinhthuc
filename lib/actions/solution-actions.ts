@@ -1,9 +1,9 @@
 "use server"
 
-import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { createClient, getSupabaseServerClient } from "@/lib/supabase/server"
 
 export async function getSolutionsByHexagram(hexagram: string) {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const { data: solutions, error } = await supabase
     .from("solutions")
@@ -20,7 +20,7 @@ export async function getSolutionsByHexagram(hexagram: string) {
 }
 
 export async function getSolutionsByHexagramKey(hexagramKey: string) {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const { data: solutions, error } = await supabase
     .from("solutions")
@@ -37,7 +37,7 @@ export async function getSolutionsByHexagramKey(hexagramKey: string) {
 }
 
 export async function checkUserAccess(solutionId: string) {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const {
     data: { user },
@@ -85,7 +85,7 @@ export async function checkUserAccess(solutionId: string) {
 }
 
 export async function getUserAccessibleSolutions() {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const {
     data: { user },

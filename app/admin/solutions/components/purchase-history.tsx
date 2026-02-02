@@ -1,12 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { formatDistanceToNow } from "date-fns"
 import { vi } from "date-fns/locale"
+import { getSupabaseServerClient } from "@/lib/supabase/server" // Declare the variable before using it
 
 export async function PurchaseHistory() {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   // Get user_access records for prescription solutions with user and solution details
   const { data: purchases } = await supabase

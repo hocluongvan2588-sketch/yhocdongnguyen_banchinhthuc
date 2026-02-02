@@ -1,6 +1,8 @@
 "use client"
 
 import type React from "react"
+import { getSupabaseBrowserClient } from "@/lib/supabase/client" // Declare the variable before using it
+import { createClient } from "@/lib/supabase/client" // Import the createClient function
 
 import { useState } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -8,7 +10,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Lock, Mail, User, Chrome } from "lucide-react"
-import { getSupabaseBrowserClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
@@ -36,7 +37,7 @@ export function QuickAuthModal({ open, onOpenChange }: QuickAuthModalProps) {
     setError("")
 
     try {
-      const supabase = getSupabaseBrowserClient()
+      const supabase = createClient()
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
@@ -57,7 +58,7 @@ export function QuickAuthModal({ open, onOpenChange }: QuickAuthModalProps) {
     setError("")
 
     try {
-      const supabase = getSupabaseBrowserClient()
+      const supabase = createClient()
       const { error } = await supabase.auth.signInWithPassword({
         email: loginEmail,
         password: loginPassword,
@@ -80,7 +81,7 @@ export function QuickAuthModal({ open, onOpenChange }: QuickAuthModalProps) {
     setError("")
 
     try {
-      const supabase = getSupabaseBrowserClient()
+      const supabase = createClient()
       const { data, error } = await supabase.auth.signUp({
         email: registerEmail,
         password: registerPassword,
