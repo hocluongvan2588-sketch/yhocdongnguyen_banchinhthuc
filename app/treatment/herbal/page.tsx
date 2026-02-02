@@ -20,9 +20,9 @@ function HerbalContent() {
   const [prescription, setPrescription] = useState<NamDuocPrescription | null>(null)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
 
-  const upper = Number.parseInt(searchParams.get("upper") || "1")
-  const lower = Number.parseInt(searchParams.get("lower") || "1")
-  const moving = Number.parseInt(searchParams.get("moving") || "1")
+  const upper = Number.parseInt(searchParams.get("upper") ?? "1", 10) || 1
+  const lower = Number.parseInt(searchParams.get("lower") ?? "1", 10) || 1
+  const moving = Number.parseInt(searchParams.get("moving") ?? "1", 10) || 1
 
   useEffect(() => {
     const result = generateNamDuocPrescription(upper, lower, moving)
@@ -1000,7 +1000,7 @@ function HerbalContent() {
       <PaymentModal
         isOpen={showPaymentModal}
         onClose={() => setShowPaymentModal(false)}
-        packageNumber={2}
+        packageNumber={1}
         upper={upper}
         lower={lower}
         moving={moving}

@@ -738,7 +738,7 @@ export default function ResultsPage() {
                                 <Button
                                   size="sm"
                                   className="mt-3 w-full"
-                                  onClick={() => router.push('/checkout/tuong-so-bat-quai')}
+                                  onClick={() => router.push(`/treatment/numerology?upper=${maihua.mainHexagram.upperTrigram}&lower=${maihua.mainHexagram.lowerTrigram}&moving=${maihua.movingLine}`)}
                                 >
                                   <Sparkles className="mr-1.5 h-3.5 w-3.5" />
                                   Xem chi tiết công thức

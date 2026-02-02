@@ -19,9 +19,9 @@ function NumerologyContent() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
 
-  const upper = Number.parseInt(searchParams.get("upper") || "1")
-  const lower = Number.parseInt(searchParams.get("lower") || "1")
-  const moving = Number.parseInt(searchParams.get("moving") || "1")
+  const upper = Number.parseInt(searchParams.get("upper") ?? "1", 10) || 1
+  const lower = Number.parseInt(searchParams.get("lower") ?? "1", 10) || 1
+  const moving = Number.parseInt(searchParams.get("moving") ?? "1", 10) || 1
 
   useEffect(() => {
     const result = getNumerologyTreatment(upper, lower, moving)
