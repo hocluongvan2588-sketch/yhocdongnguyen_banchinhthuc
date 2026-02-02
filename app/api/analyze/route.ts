@@ -1,28 +1,8 @@
 import { generateText } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 import { createGroq } from '@ai-sdk/groq';
-import {
-  buildUnifiedMedicalPrompt,
-  UNIFIED_MEDICAL_CONFIG,
-} from '@/lib/prompts/unified-medical.prompt';
-
-// ═══════════════════════════════════════════════════════════
-// HYBRID AI ARCHITECTURE: OpenAI Direct + Groq
-// ═══════════════════════════════════════════════════════════
-// Layer 1: GPT-4o (OpenAI Direct) - Phân tích y học chuyên sâu
-//          Bỏ qua Vercel AI Gateway để giảm latency ~100-200ms
-// Layer 2: Groq Llama-3.3-70B - Format JSON (nhanh 6-10x)
-// ═══════════════════════════════════════════════════════════
-
-// OpenAI client trực tiếp - không qua Vercel Gateway
-const openai = createOpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-// Groq client cho Layer 2
-const groq = createGroq({
-  apiKey: process.env.GROQ_API_KEY,
-});
+import { SYSTEM_INSTRUCTION } from '@/lib/ai/prompts/system-instruction';
+import { buildUnifiedMedicalPrompt, UNIFIED_MEDICAL_CONFIG } from '@/lib/prompts/unified-medical.prompt';
 import {
   buildJsonFormatterPrompt,
   JSON_FORMATTER_CONFIG,
@@ -31,6 +11,8 @@ import {
   getSeasonInfo,
   analyzeSeasonRelation,
 } from '@/lib/utils/lunar-calendar';
+
+const openai = createOpenAI();
 
 /**
  * Tạo fallback response dựa trên dữ liệu đã tính toán
@@ -229,25 +211,49 @@ export async function POST(req: Request) {
     // Output: Text có cấu trúc rõ ràng với tiêu đề 【】
     // ═══════════════════════════════════════════════════════════
     const layer1Start = Date.now();
-    console.log('[v0] Layer 1: Unified Medical Analysis...');
-    const unifiedPrompt = buildUnifiedMedicalPrompt({
-      patientContext,
-      maihua,
-      diagnostic,
-      seasonInfo, // Truyền thông tin tiết khí từ hệ thống
-    });
+    console.log('[v0] Layer 1: Medical Analysis with NEW UX-focused prompt...');
+    
+    // Build user prompt với context đầy đủ
+    const userPrompt = `
+# THÔNG TIN BỆNH NHÂN
+- Giới tính: ${patientContext.gender === 'nam' ? 'Nam' : 'Nữ'}
+- Tuổi: ${patientContext.age}
+- Câu hỏi: ${patientContext.question || 'Chẩn đoán tổng quát'}
+
+# KẾT QUẢ GIEO QUẺ
+- Quẻ chính: ${maihua.mainHexagram?.name || 'N/A'}
+- Quẻ biến: ${maihua.changedHexagram?.name || 'N/A'}
+- Hào động: Hào ${maihua.movingLine || 1}
+- Vị trí cơ thể: ${diagnostic.mapping?.movingYao?.anatomy?.join(', ') || 'N/A'}
+
+# PHÂN TÍCH NGŨ HÀNH
+- Tạng Thể (cơ thể): ${diagnostic.expertAnalysis?.tiDung?.ti?.element || 'N/A'}
+- Tạng Dụng (bệnh): ${diagnostic.expertAnalysis?.tiDung?.dung?.element || 'N/A'}
+- Quan hệ: ${diagnostic.expertAnalysis?.tiDung?.relation || 'N/A'}
+- Mức độ: ${diagnostic.expertAnalysis?.tiDung?.severity || 'trung bình'}
+
+# TIẾT KHÍ HIỆN TẠI
+- Tiết khí: ${seasonInfo.tietKhi.name}
+- Mùa: ${seasonInfo.tietKhi.season}
+- Ngũ hành mùa: ${seasonInfo.tietKhi.element}
+- Quan hệ với bệnh: ${seasonInfo.seasonAnalysis.relation}
+
+Hãy phân tích theo cấu trúc UX-friendly đã được hướng dẫn.`;
 
     let layer1Result;
     const MAX_RETRIES = 2;
     
     for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
       try {
-        console.log(`[v0] Layer 1 attempt ${attempt}/${MAX_RETRIES} (OpenAI Direct)...`);
+        console.log(`[v0] Layer 1 attempt ${attempt}/${MAX_RETRIES} (OpenAI Direct with NEW prompt)...`);
         layer1Result = await generateText({
-          model: openai('gpt-4o'), // OpenAI trực tiếp, không qua Vercel Gateway
-          prompt: unifiedPrompt,
-          temperature: UNIFIED_MEDICAL_CONFIG.temperature,
-          maxTokens: UNIFIED_MEDICAL_CONFIG.maxTokens,
+          model: openai('gpt-4o'),
+          messages: [
+            { role: 'system', content: SYSTEM_INSTRUCTION },
+            { role: 'user', content: userPrompt }
+          ],
+          temperature: 0.5,
+          maxTokens: 2000, // Tăng lên để đủ cho format UX mới
         });
         
         // Kiểm tra response có đủ dài không
@@ -318,7 +324,7 @@ export async function POST(req: Request) {
     const jsonFormatterPrompt = buildJsonFormatterPrompt(unifiedContent);
 
     const layer2Result = await generateText({
-      model: groq('llama-3.3-70b-versatile'),
+      model: 'llama-3.3-70b-versatile',
       prompt: jsonFormatterPrompt,
       temperature: 0.05, // Cực thấp để tăng tính deterministic
       maxTokens: 2000, // Đủ cho JSON output
