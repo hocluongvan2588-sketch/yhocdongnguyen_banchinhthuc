@@ -602,12 +602,13 @@ export default function HomePage() {
                       <Alert className="mt-4 border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950">
                         <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                         <AlertDescription className="text-blue-800 dark:text-blue-200">
+                          Bạn có thể gieo quẻ mà không cần đăng nhập (còn {queriesRemaining} lượt hôm nay). 
                           <button 
                             onClick={() => setShowLoginModal(true)}
                             className="ml-1 font-semibold underline hover:no-underline"
                           >
                             Đăng nhập
-                          </button> để lưu lịch sử và mở nhiều tính năng hơn.
+                          </button> để lưu lịch sử và không bị giới hạn.
                         </AlertDescription>
                       </Alert>
                     )}
@@ -625,7 +626,7 @@ export default function HomePage() {
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Đang xử lý...
                     </>
-                  ) : user ? 'Lập quẻ chẩn đoán' : 'Lập quẻ chẩn đoán'}
+                  ) : user ? 'Lập quẻ chẩn đoán' : 'Lập quẻ (không cần đăng nhập)'}
                 </Button>
               </CardContent>
             </Card>
@@ -917,7 +918,7 @@ export default function HomePage() {
               <AccordionContent className="text-muted-foreground">
                 <strong>Quẻ Chủ (Bản quái):</strong> Phản ánh tình trạng hiện tại của người hỏi. 
                 <strong> Quẻ Biến:</strong> Cho thấy xu hướng phát triển trong tương lai. 
-                <strong> Quẻ Hổ (Hỗ quái):</strong> Thể hiện những yếu tố tiềm ẩn bên trong, 
+                <strong> Quẻ Hõ (Hỗ quái):</strong> Thể hiện những yếu tố tiềm ẩn bên trong, 
                 giúp phân tích sâu hơn về nguyên nhân gốc rễ của vấn đề.
               </AccordionContent>
             </AccordionItem>

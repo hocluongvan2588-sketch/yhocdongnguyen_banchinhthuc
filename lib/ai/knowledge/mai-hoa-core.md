@@ -1,274 +1,390 @@
-# TRI THỨC MAI HOA DỊCH SỐ - CHẨN ĐOÁN BỆNH TẬT
-
-## LOGIC CHẨN ĐOÁN CỐT LÕI
-
-### Quy trình 3 bước phân tích quẻ bệnh:
-
-1. **Xác định Thể - Dụng:**
-   - Thể: Đại diện cho cơ thể người bệnh
-   - Dụng: Đại diện cho căn nguyên gây bệnh hoặc tác động ngoại cảnh
-
-2. **Xét Ngũ Hành Tương Tác:**
-   - **Dụng khắc Thể (Hung)**: Bệnh nặng, khó khỏi, có biến chứng
-   - **Thể khắc Dụng (Thứ cát)**: Bệnh kéo dài nhưng người bệnh đủ sức chống chọi
-   - **Thể sinh Dụng (Tiết khí)**: Sức khỏe suy kiệt, tốn kém tiền bạc điều trị
-   - **Dụng sinh Thể (Đại cát)**: Bệnh mau khỏi, gặp thầy gặp thuốc
-   - **Thể Dụng tỷ hòa (Bình hòa)**: Bệnh nhẹ, ổn định
-
-3. **Xét Quẻ Hổ & Quẻ Biến:**
-   - **Quẻ Hổ**: Quá trình biến chuyển của bệnh (nặng lên hay nhẹ đi)
-   - **Quẻ Biến**: Kết quả cuối cùng (Khỏi bệnh hay không phục hồi)
-
-## 8 QUẺ THUẦN VÀ BỘ PHẬN CƠ THỂ
-
-### 1. Quẻ Càn (☰ - Kim)
-
-**Bộ phận cơ thể:**
-- Ngoại: Đầu, xương, mặt, da
-- Nội: Phổi, đại tràng
-
-**Triệu chứng phổ biến:**
-- Đau đầu, chóng mặt
-- Bệnh về xương khớp, xương cứng
-- Bệnh hô hấp: ho khan, hen suyễn, viêm phế quản
-- Táo bón, đại tràng kém hoạt động
-
-**Tính chất:**
-- Kim cứng, khô, lạnh
-- Thể khỏe, cứng cáp như kim loại
-- Dễ bị tổn thương từ Hỏa (lửa khắc kim)
-- Cần bổ Thủy để sinh Kim
-
-**Thời vượng/suy:**
-- Vượng: Mùa thu (tháng 7-9 âm lịch)
-- Suy: Mùa hè (bị Hỏa khắc)
-
-### 2. Quẻ Đoài (☱ - Kim)
-
-**Bộ phận cơ thể:**
-- Ngoại: Miệng, lưỡi, răng, họng
-- Nội: Phổi
-
-**Triệu chứng phổ biến:**
-- Viêm họng, đau họng, loét miệng
-- Bệnh răng miệng: sâu răng, viêm nướu
-- Viêm phế quản, ho có đờm
-- Bệnh về lưỡi: lưỡi đỏ, loét lưỡi
-
-**Tính chất:**
-- Kim mềm, ẩm, vui vẻ
-- Liên quan đến ngôn ngữ, giao tiếp
-- Dễ bị Hỏa khắc (viêm họng, loét miệng)
-
-**Thời vượng/suy:**
-- Vượng: Mùa thu
-- Suy: Mùa hè
-
-### 3. Quẻ Ly (☲ - Hỏa)
-
-**Bộ phận cơ thể:**
-- Ngoại: Mắt, tim, da mặt
-- Nội: Tim, ruột non, huyết mạch
-
-**Triệu chứng phổ biến:**
-- Sốt cao, nóng trong người
-- Bệnh tim mạch: tim đập nhanh, huyết áp cao
-- Bệnh về mắt: đỏ mắt, mờ mắt, viêm kết mạc
-- Viêm ruột non, tiêu chảy cấp
-- Chảy máu cam, chảy máu dưới da
-
-**Tính chất:**
-- Hỏa nóng, khô, sáng
-- Dễ bị Thủy khắc (làm lạnh tim, huyết áp thấp)
-- Cần Mộc sinh để duy trì lửa
-
-**Thời vượng/suy:**
-- Vượng: Mùa hè (tháng 4-6 âm lịch)
-- Suy: Mùa đông (bị Thủy khắc)
-
-### 4. Quẻ Chấn (☳ - Mộc)
-
-**Bộ phận cơ thể:**
-- Ngoại: Chân, bàn chân, gân cốt
-- Nội: Gan, mật
-
-**Triệu chứng phổ biến:**
-- Đau chân, co quắp chân
-- Bệnh gan: gan nhiễm mỡ, viêm gan, suy gan
-- Bệnh mật: sỏi mật, viêm túi mật
-- Nóng nảy, dễ nổi giận
-- Suy nhược thần kinh, lo âu, trầm cảm
-
-**Tính chất:**
-- Mộc cứng, động, nổi
-- Gan chủ gân, nếu Gan yếu → chân yếu, co quắp
-- Dễ bị Kim khắc (đau chân, gãy xương)
-- Cần Thủy sinh để nuôi Mộc
-
-**Thời vượng/suy:**
-- Vượng: Mùa xuân (tháng 1-3 âm lịch)
-- Suy: Mùa thu (bị Kim khắc)
-
-### 5. Quẻ Tốn (☴ - Mộc)
-
-**Bộ phận cơ thể:**
-- Ngoại: Đùi, cánh tay, tóc
-- Nội: Gan, mật, đường ruột
-
-**Triệu chứng phổ biến:**
-- Phong thấp, đau nhức tay chân
-- Bệnh đường ruột: tiêu chảy, viêm ruột
-- Tóc rụng, tóc bạc sớm
-- Bệnh về da: mụn nhọt, ngứa ngáy
-- Bệnh phụ khoa ở nữ
-
-**Tính chất:**
-- Mộc mềm, uốn, vào
-- Liên quan đến gió, thấp khí
-- Dễ bị Kim khắc (đau tay chân)
-
-**Thời vượng/suy:**
-- Vượng: Mùa xuân
-- Suy: Mùa thu
-
-### 6. Quẻ Khảm (☵ - Thủy)
-
-**Bộ phận cơ thể:**
-- Ngoại: Tai, máu, cơ quan sinh dục
-- Nội: Thận, bàng quang, hệ tiết niệu
-
-**Triệu chứng phổ biến:**
-- Thận hư: mệt mỏi, ù tai, chóng mặt
-- Mất ngủ, nhiều mộng, sợ hãi
-- Bệnh đường tiết niệu: viêm bàng quang, sỏi thận
-- Đau lưng, yếu gối
-- Bệnh về tai: ù tai, điếc
-- Rối loạn sinh lý
-
-**Tính chất:**
-- Thủy lạnh, âm, hiểm
-- Thận chủ cốt, sinh tủy, nuôi não
-- Dễ bị Thổ khắc (tắc nghẽn, sỏi)
-- Cần Kim sinh để bổ Thủy
-
-**Thời vượng/suy:**
-- Vượng: Mùa đông (tháng 10-12 âm lịch)
-- Suy: Mùa hè (bị Hỏa khắc) và tháng 3,6,9,12 (bị Thổ khắc)
-
-### 7. Quẻ Cấn (☶ - Thổ)
-
-**Bộ phận cơ thể:**
-- Ngoại: Tay, ngón tay, mũi, lưng
-- Nội: Tỳ (lá lách), vị, cơ bắp
-
-**Triệu chứng phổ biến:**
-- Ăn uống kém, chán ăn
-- Đau dạ dày, viêm dạ dày
-- Sưng tấy, phù nề
-- U cục, khối bướu
-- Cơ bắp yếu, mệt mỏi
-
-**Tính chất:**
-- Thổ cứng, dừng, núi
-- Tỳ chủ vận hóa, nếu Tỳ yếu → không tiêu hóa được
-- Dễ bị Mộc khắc (đầy bụng, khó tiêu)
-
-**Thời vượng/suy:**
-- Vượng: Cuối các mùa (tháng 3,6,9,12 âm lịch)
-- Suy: Mùa xuân (bị Mộc khắc)
-
-### 8. Quẻ Khôn (☷ - Thổ)
-
-**Bộ phận cơ thể:**
-- Ngoại: Bụng, da thịt, cơ thể
-- Nội: Tỳ, dạ dày, ruột già
-
-**Triệu chứng phổ biến:**
-- Tiêu hóa kém, đầy hơi
-- Đau dạ dày, loét dạ dày
-- Cơ bắp yếu, mệt mỏi toàn thân
-- Da vàng, sạm da
-- Béo phì hoặc gầy yếu
-
-**Tính chất:**
-- Thổ mềm, thuận, đất
-- Tỳ vị là hậu thiên chi bản, nếu Tỳ vị yếu → toàn thân yếu
-- Dễ bị Mộc khắc
-
-**Thời vượng/suy:**
-- Vượng: Cuối các mùa
-- Suy: Mùa xuân
-
-## TỔ HỢP QUẺ ĐẶC BIỆT
-
-### 1. Thiên Trạch Lý (Càn trên Đoài)
-Cẩn thận chấn thương do kim loại hoặc té ngã, dễ bị gãy xương, chảy máu
-
-### 2. Địa Thủy Sư (Khôn trên Khảm)
-Bệnh về đường tiêu hóa và thận (Thổ khắc Thủy), tiêu chảy, viêm thận
-
-### 3. Hỏa Lôi Phệ Hạp (Ly trên Chấn)
-Sốt cao, co giật, động kinh
-
-### 4. Địa Sơn Khiêm (Khôn trên Cấn)
-Khối u trong bụng, tiêu hóa tắc nghẽn
-
-## PHÂN TÍCH THEO MÙA (KHÍ QUẺ VƯỢNG SUY)
-
-### Mùa xuân (tháng 1-3 âm lịch):
-- **Vượng**: Chấn, Tốn (Mộc)
-- **Suy**: Khôn, Cấn (Thổ bị Mộc khắc)
-- **Lưu ý**: Bệnh về gan mật dễ phát, bệnh tỳ vị khó khỏi
-
-### Mùa hè (tháng 4-6 âm lịch):
-- **Vượng**: Ly (Hỏa)
-- **Suy**: Càn, Đoài (Kim bị Hỏa khắc)
-- **Lưu ý**: Bệnh tim mạch dễ phát, bệnh phổi hô hấp khó khỏi
-
-### Mùa thu (tháng 7-9 âm lịch):
-- **Vượng**: Càn, Đoài (Kim)
-- **Suy**: Chấn, Tốn (Mộc bị Kim khắc)
-- **Lưu ý**: Bệnh phổi hô hấp dễ phát, bệnh gan mật khó khỏi
-
-### Mùa đông (tháng 10-12 âm lịch):
-- **Vượng**: Khảm (Thủy)
-- **Suy**: Ly (Hỏa bị Thủy khắc)
-- **Lưu ý**: Bệnh thận tiết niệu dễ phát, bệnh tim mạch khó khỏi
-
-### Cuối mùa (tháng 3,6,9,12 âm lịch):
-- **Vượng**: Khôn, Cấn (Thổ)
-- **Suy**: Khảm (Thủy bị Thổ khắc)
-- **Lưu ý**: Bệnh tỳ vị dễ phát, bệnh thận tiết niệu khó khỏi
-
-## THỜI ĐIỂM HỒI PHỤC/NGUY HIỂM
-
-### Thời điểm khỏi bệnh:
-Là ngày/giờ thuộc hành **Sinh** cho quẻ Thể hoặc ngày/giờ **Tỷ hòa** với quẻ Thể
-
-Ví dụ:
-- Thể là Ly (Hỏa) → khỏi vào ngày Mộc (sinh Hỏa) hoặc ngày Hỏa (tỷ hòa)
-- Thể là Càn (Kim) → khỏi vào ngày Thổ (sinh Kim) hoặc ngày Kim (tỷ hòa)
-
-### Thời điểm nguy hiểm:
-Là ngày/giờ thuộc hành **Khắc** quẻ Thể hoặc ngày/giờ quẻ Thể phải **Xuất khí** (Thể sinh Dụng)
-
-Ví dụ:
-- Thể là Càn (Kim) → nguy hiểm vào ngày Hỏa (Hỏa khắc Kim)
-- Thể là Ly (Hỏa) → nguy hiểm vào ngày Thủy (Thủy khắc Hỏa)
-
-## TRIỆU CHỨNG THEO NGŨ HÀNH
-
-### Mộc (Gan, Mật):
-đau đầu gối, đau chân, co quắp, nóng nảy, mất ngủ, lo âu, mắt mờ, đau mắt
-
-### Hỏa (Tim, Ruột non):
-sốt cao, tim đập nhanh, huyết áp cao, mất ngủ, đỏ mặt, loét miệng, đau ngực
-
-### Thổ (Tỳ, Vị):
-đau dạ dày, đầy hơi, chán ăn, mệt mỏi, cơ bắp yếu, phù nề, da vàng
-
-### Kim (Phổi, Đại tràng):
-ho khan, khó thở, hen suyễn, táo bón, đau đầu, da khô, xương yếu
-
-### Thủy (Thận, Bàng quang):
-đau lưng, yếu gối, ù tai, mất ngủ nhiều mộng, đi tiểu nhiều, rối loạn sinh lý
+/**
+ * Engine lập quẻ Mai Hoa Dịch Số theo phương pháp Thiệu Khang Tiết
+ * Module 2: Hexagram Generation Engine
+ */
+
+import { convertSolar2Lunar, getHourChi } from './lunar-calendar';
+
+/**
+ * Tên 8 quẻ đơn (Bát Quái)
+ */
+export const BAGUA_NAMES = [
+  "Khôn", // 0 (nhưng trong công thức khi dư 0 => 8)
+  "Càn",  // 1
+  "Đoài", // 2
+  "Ly",   // 3
+  "Chấn", // 4
+  "Tốn",  // 5
+  "Khảm", // 6
+  "Cấn",  // 7
+  "Khôn"  // 8
+];
+
+/**
+ * Ký hiệu quẻ (3 hào)
+ */
+export const BAGUA_SYMBOLS = [
+  "☷", // Khôn 
+  "☰", // Càn
+  "☱", // Đoài
+  "☲", // Ly
+  "☳", // Chấn
+  "☴", // Tốn
+  "☵", // Khảm
+  "☶", // Cấn
+  "☷"  // Khôn (index 8)
+];
+
+/**
+ * Cấu trúc hào của 8 quẻ đơn (true = dương, false = âm)
+ * Đọc từ dưới lên
+ */
+export const BAGUA_LINES: Record<number, [boolean, boolean, boolean]> = {
+  1: [true, true, true],      // Càn ☰
+  2: [true, true, false],     // Đoài ☱
+  3: [true, false, true],     // Ly ☲
+  4: [true, false, false],    // Chấn ☳
+  5: [false, true, true],     // Tốn ☴
+  6: [false, true, false],    // Khảm ☵
+  7: [false, false, true],    // Cấn ☶
+  8: [false, false, false]    // Khôn ☷
+};
+
+/**
+ * Bảng 64 quẻ theo công thức: upper * 10 + lower
+ * Ví dụ: Càn (1) + Đoài (2) = 12 = Thiên Trạch Lý
+ */
+export const HEXAGRAM_64: Record<number, { name: string; chinese: string; meaning: string }> = {
+  // Nhóm 1: Càn Thượng (1)
+  11: { name: "Thuần Càn", chinese: "乾", meaning: "Đầu, phổi, xương - Năng lượng dương cực thịnh" },
+  12: { name: "Thiên Trạch Lý", chinese: "天澤履", meaning: "Tranh chấp, viêm nhiễm" },
+  13: { name: "Thiên Hỏa Đồng Nhân", chinese: "天火同人", meaning: "Cộng đồng, tim phế" },
+  14: { name: "Thiên Lôi Vô Vọng", chinese: "天雷无妄", meaning: "Không vọng, gan phổi" },
+  15: { name: "Thiên Phong Cấu", chinese: "天風姤", meaning: "Gặp gỡ, phong hàn" },
+  16: { name: "Thiên Thủy Tụng", chinese: "天水訟", meaning: "Tranh tụng, phổi thận" },
+  17: { name: "Thiên Sơn Độn", chinese: "天山遯", meaning: "Ẩn náu, phổi tỳ" },
+  18: { name: "Thiên Địa Bĩ", chinese: "天地否", meaning: "Tắc nghẽn, phế tỳ" },
+  
+  // Nhóm 2: Đoài Thượng (2)
+  21: { name: "Trạch Thiên Quải", chinese: "澤天夬", meaning: "Quyết đoán, đột phá" },
+  22: { name: "Thuần Đoài", chinese: "兌", meaning: "Phổi, miệng - Kim thuộc tính" },
+  23: { name: "Trạch Hỏa Cách", chinese: "澤火革", meaning: "Cách mạng, biến đổi đột ngột" },
+  24: { name: "Trạch Lôi Tuỳ", chinese: "澤雷隨", meaning: "Theo đuổi, mất máu" },
+  25: { name: "Trạch Phong Đại Quá", chinese: "澤風大過", meaning: "Quá độ, suy yếu nghiêm trọng" },
+  26: { name: "Trạch Thủy Khốn", chinese: "澤水困", meaning: "Khốn đốn, thận hư" },
+  27: { name: "Trạch Sơn Hàm", chinese: "澤山咸", meaning: "Nhai, dạ dày" },
+  28: { name: "Trạch Địa Tụy", chinese: "澤地萃", meaning: "Tụ tập, u bướu" },
+  
+  // Nhóm 3: Ly Thượng (3)
+  31: { name: "Hỏa Thiên Đại Hữu", chinese: "火天大有", meaning: "Đại hữu, phổi tim" },
+  32: { name: "Hỏa Trạch Khuê", chinese: "火澤睽", meaning: "Xa cách, bất đồng" },
+  33: { name: "Thuần Ly", chinese: "離", meaning: "Hỏa - Tim, mắt" },
+  34: { name: "Hỏa Lôi Phệ Hạp", chinese: "火雷噬嗑", meaning: "Nhai cắn, dạ dày gan" },
+  35: { name: "Hỏa Phong Đỉnh", chinese: "火風鼎", meaning: "Cái vạc, tỳ gan" },
+  36: { name: "Hỏa Thủy Vị Tế", chinese: "火水未濟", meaning: "Chưa hoàn thành, tim thận" },
+  37: { name: "Hỏa Sơn Lữ", chinese: "火山旅", meaning: "Du lịch, tỳ tim" },
+  38: { name: "Hỏa Địa Tấn", chinese: "火地晉", meaning: "Tiến lên, tiêu hóa kém" },
+  
+  // Nhóm 4: Chấn Thượng (4)
+  41: { name: "Lôi Thiên Đại Tráng", chinese: "雷天大壯", meaning: "Đại tráng, gan phổi" },
+  42: { name: "Lôi Trạch Quy Muội", chinese: "雷澤歸妹", meaning: "Về nhà, hôn nhân - phụ khoa" },
+  43: { name: "Lôi Hỏa Phong", chinese: "雷火豐", meaning: "Phong phú, huyết khí tốt" },
+  44: { name: "Thuần Chấn", chinese: "震", meaning: "Lôi - Gan, chấn động" },
+  45: { name: "Lôi Phong Hằng", chinese: "雷風恒", meaning: "Thường hằng, gan mật ổn định" },
+  46: { name: "Lôi Thủy Giải", chinese: "雷水解", meaning: "Giải thoát, gan thận" },
+  47: { name: "Lôi Sơn Tiểu Quá", chinese: "雷山小過", meaning: "Nhỏ vượt, gan tỳ" },
+  48: { name: "Lôi Địa Dự", chinese: "雷地豫", meaning: "An nhàn, lạc quan - Khí huyết thông suốt" },
+  
+  // Nhóm 5: Tốn Thượng (5)
+  51: { name: "Phong Thiên Tiểu Súc", chinese: "風天小畜", meaning: "Tiểu súc, phong hàn" },
+  52: { name: "Phong Trạch Trung Phu", chinese: "風澤中孚", meaning: "Trung thành, phổi gan" },
+  53: { name: "Phong Hỏa Gia Nhân", chinese: "風火家人", meaning: "Gia đình, nội tạng" },
+  54: { name: "Phong Lôi Ích", chinese: "風雷益", meaning: "Lợi ích, tăng cường" },
+  55: { name: "Thuần Tốn", chinese: "巽", meaning: "Phong - Gan mật, gió" },
+  56: { name: "Phong Thủy Hoán", chinese: "風水渙", meaning: "Tán loạn, khí huyết rối" },
+  57: { name: "Phong Sơn Tiệm", chinese: "風山漸", meaning: "Tiệm tiến, từ từ cải thiện" },
+  58: { name: "Phong Địa Quán", chinese: "風地觀", meaning: "Quan sát, chậm tiến triển" },
+  
+  // Nhóm 6: Khảm Thượng (6)
+  61: { name: "Thủy Thiên Nhu", chinese: "水天需", meaning: "Chờ đợi, phổi thận" },
+  62: { name: "Thủy Trạch Tiết", chinese: "水澤節", meaning: "Tiết chế, thận phế" },
+  63: { name: "Thủy Hỏa Ký Tế", chinese: "水火既濟", meaning: "Đã hoàn thành, thận tim cân bằng" },
+  64: { name: "Thủy Lôi Truân", chinese: "水雷屯", meaning: "Gian nan, thận gan" },
+  65: { name: "Thủy Phong Tỉnh", chinese: "水風井", meaning: "Giếng nước, thận gan" },
+  66: { name: "Thuần Khảm", chinese: "坎", meaning: "Thủy - Thận, tiết niệu" },
+  67: { name: "Thủy Sơn Kiển", chinese: "水山蹇", meaning: "Khập khiễng, thận tỳ" },
+  68: { name: "Thủy Địa Tỷ", chinese: "水地比", meaning: "So sánh, phù thũng" },
+  
+  // Nhóm 7: Cấn Thượng (7)
+  71: { name: "Sơn Thiên Đại Súc", chinese: "山天大畜", meaning: "Đại súc, tỳ phổi" },
+  72: { name: "Sơn Trạch Tổn", chinese: "山澤損", meaning: "Tổn thất, tỳ phế" },
+  73: { name: "Sơn Hỏa Bí", chinese: "山火賁", meaning: "Trang trí, tỳ tim" },
+  74: { name: "Sơn Lôi Di", chinese: "山雷頤", meaning: "Nuôi dưỡng, dạ dày gan" },
+  75: { name: "Sơn Phong Cổ", chinese: "山風蠱", meaning: "Rối loạn, tỳ gan" },
+  76: { name: "Sơn Thủy Mông", chinese: "山水蒙", meaning: "Mù mờ, tỳ thận" },
+  77: { name: "Cấn", chinese: "艮", meaning: "Sơn - Dạ dày, lưng" },
+  78: { name: "Sơn Địa Bác", chinese: "山地剝", meaning: "Bóc lột, tiêu hóa kém" },
+  
+  // Nhóm 8: Khôn Thượng (8)
+  81: { name: "Địa Thiên Thái", chinese: "地天泰", meaning: "Thái hòa, tỳ phổi cân bằng" },
+  82: { name: "Địa Trạch Lâm", chinese: "地澤臨", meaning: "Đến gần, tỳ phế" },
+  83: { name: "Địa Hỏa Minh Di", chinese: "地火明夷", meaning: "Ánh sáng bị tổn, tỳ tim" },
+  84: { name: "Địa Lôi Phục", chinese: "地雷復", meaning: "Phục hồi, tỳ gan" },
+  85: { name: "Địa Phong Thăng", chinese: "地風升", meaning: "Thăng tiến, tỳ gan tốt" },
+  86: { name: "Địa Thủy Sư", chinese: "地水師", meaning: "Quân đội, tỳ thận" },
+  87: { name: "Địa Sơn Khiêm", chinese: "地山謙", meaning: "Khiêm tốn, tỳ vị" },
+  88: { name: "Thuần Khôn", chinese: "坤", meaning: "Địa - Lá lách, bụng, tiêu hóa" }
+};
+
+/**
+ * Interface kết quả lập quẻ
+ */
+export interface MaiHuaResult {
+  // Input đã chuẩn hóa
+  solarDate: { day: number; month: number; year: number; hour: number };
+  lunarDate: { day: number; month: number; year: number; hour: number; isLeap: boolean };
+  
+  // Quẻ
+  upperTrigram: number;      // Quẻ Thượng (1-8)
+  lowerTrigram: number;      // Quẻ Hạ (1-8)
+  movingLine: number;        // Hào động (1-6)
+  
+  // Quẻ Chủ (Bản quái)
+  mainHexagram: {
+    upper: number;
+    lower: number;
+    name: string;
+    symbol: string;
+    lines: boolean[];        // 6 hào từ dưới lên
+  };
+  
+  // Quẻ Biến
+  changedHexagram: {
+    upper: number;
+    lower: number;
+    name: string;
+    symbol: string;
+    lines: boolean[];
+  };
+  
+  // Quẻ Hổ (Mutual/Intermediate)
+  mutualHexagram: {
+    upper: number;
+    lower: number;
+    name: string;
+    symbol: string;
+    lines: boolean[];
+  };
+  
+  // Diễn giải y lý
+  interpretation: {
+    mainMeaning: string;
+    changedMeaning: string;
+    health: string;
+  };
+}
+
+/**
+ * Lấy 6 hào của một quẻ hoàn chỉnh
+ */
+function getHexagramLines(upper: number, lower: number): boolean[] {
+  const lowerLines = BAGUA_LINES[lower];
+  const upperLines = BAGUA_LINES[upper];
+  return [...lowerLines, ...upperLines];
+}
+
+/**
+ * Đổi một hào (dương <-> âm)
+ */
+function flipLine(lines: boolean[], position: number): boolean[] {
+  const newLines = [...lines];
+  newLines[position - 1] = !newLines[position - 1];
+  return newLines;
+}
+
+/**
+ * Chuyển 6 hào thành 2 quẻ đơn
+ */
+function linesToTrigrams(lines: boolean[]): { upper: number; lower: number } {
+  const lowerLines: [boolean, boolean, boolean] = [lines[0], lines[1], lines[2]];
+  const upperLines: [boolean, boolean, boolean] = [lines[3], lines[4], lines[5]];
+  
+  let lower = 0;
+  let upper = 0;
+  
+  // Tìm quẻ khớp
+  for (let i = 1; i <= 8; i++) {
+    const l = BAGUA_LINES[i];
+    if (l[0] === lowerLines[0] && l[1] === lowerLines[1] && l[2] === lowerLines[2]) {
+      lower = i;
+    }
+    if (l[0] === upperLines[0] && l[1] === upperLines[1] && l[2] === upperLines[2]) {
+      upper = i;
+    }
+  }
+  
+  return { upper, lower };
+}
+
+/**
+ * Lấy tên và ý nghĩa quẻ
+ */
+function getHexagramInfo(upper: number, lower: number): { name: string; chinese: string; meaning: string } {
+  const key = upper * 10 + lower;
+  const info = HEXAGRAM_64[key];
+  if (!info) {
+    return { name: "Không xác định", chinese: "", meaning: "" };
+  }
+  return info;
+}
+
+/**
+ * Tính Quẻ Hổ (Mutual Hexagram)
+ * Lấy hào 2,3,4 làm Hổ Hạ và hào 3,4,5 làm Hổ Thượng
+ */
+function getMutualHexagram(lines: boolean[]): { upper: number; lower: number } {
+  const mutualLower: [boolean, boolean, boolean] = [lines[1], lines[2], lines[3]];
+  const mutualUpper: [boolean, boolean, boolean] = [lines[2], lines[3], lines[4]];
+  
+  let lower = 0;
+  let upper = 0;
+  
+  for (let i = 1; i <= 8; i++) {
+    const l = BAGUA_LINES[i];
+    if (l[0] === mutualLower[0] && l[1] === mutualLower[1] && l[2] === mutualLower[2]) {
+      lower = i;
+    }
+    if (l[0] === mutualUpper[0] && l[1] === mutualUpper[1] && l[2] === mutualUpper[2]) {
+      upper = i;
+    }
+  }
+  
+  return { upper, lower };
+}
+
+/**
+ * Hàm chính: Lập quẻ Mai Hoa từ ngày dương lịch
+ * 
+ * @param day - Ngày (1-31)
+ * @param month - Tháng (1-12)
+ * @param year - Năm
+ * @param hour - Giờ (0-23)
+ * @returns Kết quả lập quẻ đầy đủ
+ */
+export function calculateMaiHua(
+  day: number,
+  month: number,
+  year: number,
+  hour: number
+): MaiHuaResult {
+  // Module 1: Chuẩn hóa dữ liệu đầu vào
+  let lunar = convertSolar2Lunar(day, month, year);
+  const hourChi = getHourChi(hour);
+  
+  // QUY TẮC QUAN TRỌNG: Sau 23h đêm (Giờ Tý) được tính là ngày hôm sau
+  // Giờ Tý (23h-01h sáng) thuộc về ngày mới trong Dịch học
+  if (hour >= 23) {
+    // Chuyển sang ngày hôm sau
+    const nextDay = new Date(year, month - 1, day);
+    nextDay.setDate(nextDay.getDate() + 1);
+    lunar = convertSolar2Lunar(nextDay.getDate(), nextDay.getMonth() + 1, nextDay.getFullYear());
+    
+    console.log('[v0] Hour >= 23, advancing to next lunar day:', {
+      originalDay: day,
+      newDay: lunar.day,
+      hour,
+      hourChi: 'Tý'
+    });
+  }
+  
+  // Công thức lấy số năm: (năm + 8) % 12 => Địa chi năm
+  // Ất Tỵ: Chi = Tỵ = 5 (Tý=0,Sửu=1,Dần=2,Mão=3,Thìn=4,Tỵ=5...)
+  // Cộng thêm 1 để có 1-12: 5+1=6 ✓
+  const yearChi = (lunar.year + 8) % 12; // 0-11: Tý đến Hợi
+  const Y = yearChi + 1; // 1-12 (nhưng sẽ dùng để tính mod 8)
+  const M = lunar.month;
+  const D = lunar.day;
+  const H = hourChi + 1; // Chi giờ (1-12)
+  
+  console.log('[v0] Mai Hoa Calculation Input:', { Y, M, D, H, lunarYear: lunar.year, yearChi });
+  
+  // Module 2: Engine lập quẻ
+  
+  // 2.1: Xác định Quẻ Thượng và Quẻ Hạ
+  let upperValue = (Y + M + D) % 8;
+  if (upperValue === 0) upperValue = 8;
+  
+  let lowerValue = (Y + M + D + H) % 8;
+  if (lowerValue === 0) lowerValue = 8;
+  
+  // 2.2: Xác định Hào động
+  let movingLineValue = (Y + M + D + H) % 6;
+  if (movingLineValue === 0) movingLineValue = 6;
+  
+  console.log('[v0] Mai Hoa Trigrams:', { 
+    sum1: Y + M + D, 
+    upperValue, 
+    upperName: BAGUA_NAMES[upperValue],
+    sum2: Y + M + D + H, 
+    lowerValue,
+    lowerName: BAGUA_NAMES[lowerValue],
+    movingLineValue 
+  });
+  
+  // Tạo Quẻ Chủ
+  const mainLines = getHexagramLines(upperValue, lowerValue);
+  const mainInfo = getHexagramInfo(upperValue, lowerValue);
+  
+  // Tạo Quẻ Biến (đổi hào động)
+  const changedLines = flipLine(mainLines, movingLineValue);
+  const changedTrigrams = linesToTrigrams(changedLines);
+  const changedInfo = getHexagramInfo(changedTrigrams.upper, changedTrigrams.lower);
+  
+  // 2.3: Tính Quẻ Hổ
+  const mutualTrigrams = getMutualHexagram(mainLines);
+  const mutualLines = getHexagramLines(mutualTrigrams.upper, mutualTrigrams.lower);
+  const mutualInfo = getHexagramInfo(mutualTrigrams.upper, mutualTrigrams.lower);
+  
+  // Diễn giải y lý cơ bản
+  const interpretation = {
+    mainMeaning: mainInfo.meaning || "Trạng thái hiện tại của cơ thể",
+    changedMeaning: changedInfo.meaning || "Xu hướng diễn biến của bệnh",
+    health: `Quẻ chủ ${mainInfo.name} cho thấy tình trạng sức khỏe liên quan đến ${mainInfo.meaning}. Hào động ở vị trí ${movingLineValue} và quẻ biến ${changedInfo.name} cho thấy xu hướng ${changedInfo.meaning}.`
+  };
+  
+  return {
+    solarDate: { day, month, year, hour },
+    lunarDate: {
+      day: lunar.day,
+      month: lunar.month,
+      year: lunar.year,
+      hour: hourChi,
+      isLeap: lunar.isLeap
+    },
+    upperTrigram: upperValue,
+    lowerTrigram: lowerValue,
+    movingLine: movingLineValue,
+    mainHexagram: {
+      upper: upperValue,
+      lower: lowerValue,
+      name: mainInfo.name,
+      symbol: `${BAGUA_SYMBOLS[upperValue]}${BAGUA_SYMBOLS[lowerValue]}`,
+      lines: mainLines
+    },
+    changedHexagram: {
+      upper: changedTrigrams.upper,
+      lower: changedTrigrams.lower,
+      name: changedInfo.name,
+      symbol: `${BAGUA_SYMBOLS[changedTrigrams.upper]}${BAGUA_SYMBOLS[changedTrigrams.lower]}`,
+      lines: changedLines
+    },
+    mutualHexagram: {
+      upper: mutualTrigrams.upper,
+      lower: mutualTrigrams.lower,
+      name: mutualInfo.name,
+      symbol: `${BAGUA_SYMBOLS[mutualTrigrams.upper]}${BAGUA_SYMBOLS[mutualTrigrams.lower]}`,
+      lines: mutualLines
+    },
+    interpretation
+  };
+}

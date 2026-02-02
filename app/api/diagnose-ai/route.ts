@@ -107,7 +107,7 @@ async function generateTextWithOpenAI(systemPrompt: string, userPrompt: string):
           { role: "user", content: userPrompt },
         ],
         temperature: 0.5,
-        max_tokens: 500,
+        max_tokens: 1500, // Tăng lên để đủ cho format UX mới
       }),
       signal: controller.signal,
     })
