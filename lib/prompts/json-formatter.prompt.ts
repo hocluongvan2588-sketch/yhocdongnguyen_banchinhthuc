@@ -91,9 +91,14 @@ QUY TẮC CHUYỂN ĐỔI:
 6. "lifestyle": Trích xuất từ mục 【LỜI KHUYÊN SINH HOẠT】
 7. "prognosis": Trích xuất từ mục 【TIÊN LƯỢNG & HỒI PHỤC】
 8. "treatmentOrigin": Trích xuất từ mục 【KẾT LUẬN: BỆNH TỪ TẠNG NÀO PHÁT SINH】
-   - Bao gồm: Tạng bệnh, Tạng mẹ, Giải thích chi tiết, Hướng điều trị
+   - affectedOrgan: Từ dòng "TẠNG BỆNH:" - chỉ lấy tên tạng (VD: "Gan", "Tâm", "Tỳ")
+   - motherOrgan: Từ dòng "TẠNG MẸ CẦN BỔ:" - chỉ lấy tên tạng (VD: "Thận", "Gan")
+   - explanation: Từ dòng "GIẢI THÍCH:" - lấy toàn bộ nội dung giải thích
+   - treatmentDirection: Từ dòng "HƯỚNG ĐIỀU TRỊ:" - lấy toàn bộ phương hướng điều trị
 9. "seasonalFactor": Trích xuất từ mục 【YẾU TỐ MÙA ẢNH HƯỞNG】
-   - Bao gồm: Mùa hiện tại, Ngũ hành mùa, Tương tác, Giải thích, Lời khuyên
+   - currentSeason: Từ dòng "MÙA HIỆN TẠI:" (VD: "Xuân", "Hạ", "Thu", "Đông")
+   - compatibility: Từ dòng "TƯƠNG TÁC:" - chỉ lấy giá trị đầu tiên (VD: "Thuận mùa", "Nghịch mùa", "Trung hòa")
+   - explanation: Ghép nội dung từ "GIẢI THÍCH:" và "LỜI KHUYÊN THEO MÙA:"
 10. "serviceRecommendations": Trích xuất từ mục 【GỢI Ý DỊCH VỤ CHUYÊN SÂU】
    - recommended = true nếu "Khuyến nghị: Có"
    - recommended = false nếu "Khuyến nghị: Không"

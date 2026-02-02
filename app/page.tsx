@@ -502,7 +502,7 @@ export default function HomePage() {
 
                 {/* Thông tin người bệnh */}
                 <div className="space-y-4 border-t border-border pt-6">
-                  <h3 className="text-sm font-semibold text-foreground">Thông tin người hỏi</h3>
+                  <h3 className="text-sm font-semibold text-foreground">Thông tin người bệnh</h3>
                   
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                     <div>
@@ -608,7 +608,7 @@ export default function HomePage() {
                             className="ml-1 font-semibold underline hover:no-underline"
                           >
                             Đăng nhập
-                          </button> để lưu lịch sử và mở nhiều tính năng khác.
+                          </button> để lưu lịch sử và không bị giới hạn.
                         </AlertDescription>
                       </Alert>
                     )}
@@ -626,7 +626,7 @@ export default function HomePage() {
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Đang xử lý...
                     </>
-                  ) : user ? 'Lập quẻ chẩn đoán' : 'Lập quẻ chẩn đoán'}
+                  ) : user ? 'Lập quẻ chẩn đoán' : 'Lập quẻ (không cần đăng nhập)'}
                 </Button>
               </CardContent>
             </Card>

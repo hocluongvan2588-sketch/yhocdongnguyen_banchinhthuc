@@ -248,18 +248,31 @@ Từ Quẻ Hổ ${maihua.mutualHexagram.name}, liệt kê 5 lời khuyên (mỗi
 - [Lời khuyên khác phù hợp]
 
 【TIÊN LƯỢNG & HỒI PHỤC】
-- Tiên lượng tổng quan: [đánh giá từ quan hệ Thể-Dụng: ${diagnostic.expertAnalysis.tiDung.relation}]
-- Thời gian hồi phục: [ước tính theo tuổi ${patientContext.age}]
-- Dấu hiệu cải thiện: [2-3 dấu hiệu, ngăn cách bằng ";"]
+- Tiên lượng tổng quan: [Đánh giá dựa trên quan hệ Thể-Dụng: ${diagnostic.expertAnalysis.tiDung.relation}. Tình trạng ${diagnostic.expertAnalysis.tiDung.severity}]
+- Thời gian hồi phục: [Ước tính cụ thể - ví dụ: "khoảng 1-2 tuần nếu..., có thể kéo dài hơn nếu...". Cá nhân hóa theo tuổi ${patientContext.age}]
+- Dấu hiệu cải thiện: [2-3 dấu hiệu cụ thể, ngăn cách bằng ";"]
 - Dấu hiệu cảnh báo: [2-3 dấu hiệu cần khám ngay, ngăn cách bằng ";"]
-- Yếu tố mùa: ${seasonInfo ? `SỬ DỤNG CHÍNH XÁC thông tin từ hệ thống: Tiết ${seasonInfo.tietKhi.name}, Mùa ${seasonInfo.tietKhi.season}, ${seasonInfo.seasonAnalysis.relation.toUpperCase()} với ${diagnostic.expertAnalysis.tiDung.ti.element}. Lời khuyên: ${seasonInfo.seasonAnalysis.advice}` : '[Mùa hiện tại] - [Thuận/Nghịch/Trung hòa với ' + diagnostic.expertAnalysis.tiDung.ti.element + '] - [Giải thích 1-2 câu]'}
 
 【KẾT LUẬN: BỆNH TỪ TẠNG NÀO PHÁT SINH】
-Dựa trên NGŨ HÀNH TƯƠNG SINH (Mộc←Thủy, Hỏa←Mộc, Thổ←Hỏa, Kim←Thổ, Thủy←Kim):
-- TẠNG BỆNH: [Tên tạng] (${diagnostic.expertAnalysis.tiDung.ti.element})
-- TẠNG MẸ CẦN BỔ: [Tên tạng mẹ theo tương sinh]
-- GIẢI THÍCH: [Tại sao cần bổ tạng mẹ - 1-2 câu]
-- HƯỚNG ĐIỀU TRỊ: [Phương hướng tổng hợp]
+Dựa trên NGŨ HÀNH TƯƠNG SINH (Mộc←Thủy, Hỏa←Mộc, Thổ←Hỏa, Kim←Thổ, Thủy←Kim) và TƯƠNG KHẮC:
+- TẠNG BỆNH: [Tên tạng biểu hiện triệu chứng] (${diagnostic.expertAnalysis.tiDung.ti.element})
+- TẠNG MẸ CẦN BỔ: [Tên tạng mẹ theo tương sinh - gốc cần bồi bổ]
+- GIẢI THÍCH: [BẮT BUỘC giải thích chuỗi tác động hoàn chỉnh. Ví dụ: "Theo nguyên lý Ngũ hành, thay vì chỉ xoa dịu triệu chứng, bạn cần bồi bổ [Tạng mẹ] để hỗ trợ [Tạng bệnh]. Khi [Tạng bệnh] uất lâu ngày, [element] khắc [element] làm [Tạng bị khắc] suy, [Tạng bị khắc] không sinh [Tạng mẹ], khiến [Tạng mẹ] hư dần và không nuôi được [Tạng bệnh]. Lúc này [Tạng bệnh] là tạng biểu hiện, [Tạng mẹ] là gốc cần bổ." - 2-3 câu chi tiết]
+- HƯỚNG ĐIỀU TRỊ: Bồi bổ [Tạng mẹ], hỗ trợ [Tạng bệnh]
+
+【YẾU TỐ MÙA ẢNH HƯỞNG】
+${seasonInfo ? `
+- MÙA HIỆN TẠI: ${seasonInfo.tietKhi.season}
+- TIẾT KHÍ: ${seasonInfo.tietKhi.name}
+- NGŨ HÀNH MÙA: ${seasonInfo.tietKhi.element}
+- TƯƠNG TÁC: ${seasonInfo.seasonAnalysis.relation.toUpperCase()} với ${diagnostic.expertAnalysis.tiDung.ti.element}
+- GIẢI THÍCH: ${seasonInfo.seasonAnalysis.description}
+- LỜI KHUYÊN THEO MÙA: ${seasonInfo.seasonAnalysis.advice}
+` : `
+- MÙA HIỆN TẠI: [Xuân/Hạ/Thu/Đông]
+- TƯƠNG TÁC: [Thuận mùa/Nghịch mùa/Trung hòa] với ${diagnostic.expertAnalysis.tiDung.ti.element}
+- GIẢI THÍCH: [Giải thích tác động của mùa lên tình trạng bệnh - 1-2 câu]
+`}
 
 【GỢI Ý DỊCH VỤ CHUYÊN SÂU】
 
