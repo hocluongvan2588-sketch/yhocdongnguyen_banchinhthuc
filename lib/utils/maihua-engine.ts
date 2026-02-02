@@ -56,7 +56,7 @@ export const BAGUA_LINES: Record<number, [boolean, boolean, boolean]> = {
  */
 export const HEXAGRAM_64: Record<number, { name: string; chinese: string; meaning: string }> = {
   // Nhóm 1: Càn Thượng (1)
-  11: { name: "Càn", chinese: "乾", meaning: "Đầu, phổi, xương - Năng lượng dương cực thịnh" },
+  11: { name: "Thuần Càn", chinese: "乾", meaning: "Đầu, phổi, xương - Năng lượng dương cực thịnh" },
   12: { name: "Thiên Trạch Lý", chinese: "天澤履", meaning: "Tranh chấp, viêm nhiễm" },
   13: { name: "Thiên Hỏa Đồng Nhân", chinese: "天火同人", meaning: "Cộng đồng, tim phế" },
   14: { name: "Thiên Lôi Vô Vọng", chinese: "天雷无妄", meaning: "Không vọng, gan phổi" },
@@ -67,7 +67,7 @@ export const HEXAGRAM_64: Record<number, { name: string; chinese: string; meanin
   
   // Nhóm 2: Đoài Thượng (2)
   21: { name: "Trạch Thiên Quải", chinese: "澤天夬", meaning: "Quyết đoán, đột phá" },
-  22: { name: "Đoài", chinese: "兌", meaning: "Phổi, miệng - Kim thuộc tính" },
+  22: { name: "Thuần Đoài", chinese: "兌", meaning: "Phổi, miệng - Kim thuộc tính" },
   23: { name: "Trạch Hỏa Cách", chinese: "澤火革", meaning: "Cách mạng, biến đổi đột ngột" },
   24: { name: "Trạch Lôi Tuỳ", chinese: "澤雷隨", meaning: "Theo đuổi, mất máu" },
   25: { name: "Trạch Phong Đại Quá", chinese: "澤風大過", meaning: "Quá độ, suy yếu nghiêm trọng" },
@@ -78,7 +78,7 @@ export const HEXAGRAM_64: Record<number, { name: string; chinese: string; meanin
   // Nhóm 3: Ly Thượng (3)
   31: { name: "Hỏa Thiên Đại Hữu", chinese: "火天大有", meaning: "Đại hữu, phổi tim" },
   32: { name: "Hỏa Trạch Khuê", chinese: "火澤睽", meaning: "Xa cách, bất đồng" },
-  33: { name: "Ly", chinese: "離", meaning: "Hỏa - Tim, mắt" },
+  33: { name: "Thuần Ly", chinese: "離", meaning: "Hỏa - Tim, mắt" },
   34: { name: "Hỏa Lôi Phệ Hạp", chinese: "火雷噬嗑", meaning: "Nhai cắn, dạ dày gan" },
   35: { name: "Hỏa Phong Đỉnh", chinese: "火風鼎", meaning: "Cái vạc, tỳ gan" },
   36: { name: "Hỏa Thủy Vị Tế", chinese: "火水未濟", meaning: "Chưa hoàn thành, tim thận" },
@@ -89,7 +89,7 @@ export const HEXAGRAM_64: Record<number, { name: string; chinese: string; meanin
   41: { name: "Lôi Thiên Đại Tráng", chinese: "雷天大壯", meaning: "Đại tráng, gan phổi" },
   42: { name: "Lôi Trạch Quy Muội", chinese: "雷澤歸妹", meaning: "Về nhà, hôn nhân - phụ khoa" },
   43: { name: "Lôi Hỏa Phong", chinese: "雷火豐", meaning: "Phong phú, huyết khí tốt" },
-  44: { name: "Chấn", chinese: "震", meaning: "Lôi - Gan, chấn động" },
+  44: { name: "Thuần Chấn", chinese: "震", meaning: "Lôi - Gan, chấn động" },
   45: { name: "Lôi Phong Hằng", chinese: "雷風恒", meaning: "Thường hằng, gan mật ổn định" },
   46: { name: "Lôi Thủy Giải", chinese: "雷水解", meaning: "Giải thoát, gan thận" },
   47: { name: "Lôi Sơn Tiểu Quá", chinese: "雷山小過", meaning: "Nhỏ vượt, gan tỳ" },
@@ -100,7 +100,7 @@ export const HEXAGRAM_64: Record<number, { name: string; chinese: string; meanin
   52: { name: "Phong Trạch Trung Phu", chinese: "風澤中孚", meaning: "Trung thành, phổi gan" },
   53: { name: "Phong Hỏa Gia Nhân", chinese: "風火家人", meaning: "Gia đình, nội tạng" },
   54: { name: "Phong Lôi Ích", chinese: "風雷益", meaning: "Lợi ích, tăng cường" },
-  55: { name: "Tốn", chinese: "巽", meaning: "Phong - Gan mật, gió" },
+  55: { name: "Thuần Tốn", chinese: "巽", meaning: "Phong - Gan mật, gió" },
   56: { name: "Phong Thủy Hoán", chinese: "風水渙", meaning: "Tán loạn, khí huyết rối" },
   57: { name: "Phong Sơn Tiệm", chinese: "風山漸", meaning: "Tiệm tiến, từ từ cải thiện" },
   58: { name: "Phong Địa Quán", chinese: "風地觀", meaning: "Quan sát, chậm tiến triển" },
@@ -111,7 +111,7 @@ export const HEXAGRAM_64: Record<number, { name: string; chinese: string; meanin
   63: { name: "Thủy Hỏa Ký Tế", chinese: "水火既濟", meaning: "Đã hoàn thành, thận tim cân bằng" },
   64: { name: "Thủy Lôi Truân", chinese: "水雷屯", meaning: "Gian nan, thận gan" },
   65: { name: "Thủy Phong Tỉnh", chinese: "水風井", meaning: "Giếng nước, thận gan" },
-  66: { name: "Khảm", chinese: "坎", meaning: "Thủy - Thận, tiết niệu" },
+  66: { name: "Thuần Khảm", chinese: "坎", meaning: "Thủy - Thận, tiết niệu" },
   67: { name: "Thủy Sơn Kiển", chinese: "水山蹇", meaning: "Khập khiễng, thận tỳ" },
   68: { name: "Thủy Địa Tỷ", chinese: "水地比", meaning: "So sánh, phù thũng" },
   
@@ -133,7 +133,7 @@ export const HEXAGRAM_64: Record<number, { name: string; chinese: string; meanin
   85: { name: "Địa Phong Thăng", chinese: "地風升", meaning: "Thăng tiến, tỳ gan tốt" },
   86: { name: "Địa Thủy Sư", chinese: "地水師", meaning: "Quân đội, tỳ thận" },
   87: { name: "Địa Sơn Khiêm", chinese: "地山謙", meaning: "Khiêm tốn, tỳ vị" },
-  88: { name: "Khôn", chinese: "坤", meaning: "Địa - Lá lách, bụng, tiêu hóa" }
+  88: { name: "Thuần Khôn", chinese: "坤", meaning: "Địa - Lá lách, bụng, tiêu hóa" }
 };
 
 /**
