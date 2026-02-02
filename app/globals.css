@@ -54,39 +54,40 @@
 
 :root {
   /* Fallback colors for older browsers (Safari iOS 15 and below) */
-  --background: hsl(40 20% 96%);
-  --foreground: hsl(20 10% 20%);
-  --card: hsl(0 0% 100%);
-  --card-foreground: hsl(20 10% 20%);
-  --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(20 10% 20%);
-  --primary: hsl(10 60% 35%);
-  --primary-foreground: hsl(40 20% 96%);
-  --secondary: hsl(35 45% 55%);
-  --secondary-foreground: hsl(40 20% 96%);
-  --muted: hsl(40 10% 92%);
-  --muted-foreground: hsl(20 10% 45%);
-  --accent: hsl(15 55% 40%);
-  --accent-foreground: hsl(40 20% 96%);
-  --destructive: hsl(0 65% 50%);
-  --destructive-foreground: hsl(40 20% 96%);
-  --border: hsl(40 10% 85%);
-  --input: hsl(40 10% 85%);
-  --ring: hsl(10 60% 35%);
-  --chart-1: hsl(10 60% 35%);
-  --chart-2: hsl(35 45% 55%);
-  --chart-3: hsl(15 55% 40%);
-  --chart-4: hsl(220 25% 30%);
-  --chart-5: hsl(20 10% 20%);
+  /* Using beige/cream background instead of allowing red to bleed through */
+  --background: #f5f2ed;
+  --foreground: #3d3530;
+  --card: #ffffff;
+  --card-foreground: #3d3530;
+  --popover: #ffffff;
+  --popover-foreground: #3d3530;
+  --primary: #8b4736;
+  --primary-foreground: #f5f2ed;
+  --secondary: #b88f5f;
+  --secondary-foreground: #f5f2ed;
+  --muted: #eae6df;
+  --muted-foreground: #6b5d54;
+  --accent: #a84f3a;
+  --accent-foreground: #f5f2ed;
+  --destructive: #dc3545;
+  --destructive-foreground: #f5f2ed;
+  --border: #d4cec4;
+  --input: #d4cec4;
+  --ring: #8b4736;
+  --chart-1: #8b4736;
+  --chart-2: #b88f5f;
+  --chart-3: #a84f3a;
+  --chart-4: #3d5368;
+  --chart-5: #3d3530;
   --radius: 0.5rem;
-  --sidebar: hsl(40 20% 96%);
-  --sidebar-foreground: hsl(20 10% 20%);
-  --sidebar-primary: hsl(10 60% 35%);
-  --sidebar-primary-foreground: hsl(40 20% 96%);
-  --sidebar-accent: hsl(40 10% 92%);
-  --sidebar-accent-foreground: hsl(20 10% 20%);
-  --sidebar-border: hsl(40 10% 85%);
-  --sidebar-ring: hsl(10 60% 35%);
+  --sidebar: #f5f2ed;
+  --sidebar-foreground: #3d3530;
+  --sidebar-primary: #8b4736;
+  --sidebar-primary-foreground: #f5f2ed;
+  --sidebar-accent: #eae6df;
+  --sidebar-accent-foreground: #3d3530;
+  --sidebar-border: #d4cec4;
+  --sidebar-ring: #8b4736;
 }
 
 /* Modern browsers with oklch support */
@@ -129,38 +130,38 @@
 
 /* Dark mode fallback for older browsers */
 .dark {
-  --background: hsl(20 10% 12%);
-  --foreground: hsl(40 10% 93%);
-  --card: hsl(20 10% 16%);
-  --card-foreground: hsl(40 10% 93%);
-  --popover: hsl(20 10% 16%);
-  --popover-foreground: hsl(40 10% 93%);
-  --primary: hsl(10 55% 45%);
-  --primary-foreground: hsl(40 20% 96%);
-  --secondary: hsl(35 50% 65%);
-  --secondary-foreground: hsl(20 10% 12%);
-  --muted: hsl(20 10% 25%);
-  --muted-foreground: hsl(40 5% 65%);
-  --accent: hsl(15 55% 50%);
-  --accent-foreground: hsl(20 10% 12%);
-  --destructive: hsl(0 65% 50%);
-  --destructive-foreground: hsl(40 10% 93%);
-  --border: hsl(20 10% 25%);
-  --input: hsl(20 10% 25%);
-  --ring: hsl(10 55% 45%);
-  --chart-1: hsl(10 55% 45%);
-  --chart-2: hsl(35 50% 65%);
-  --chart-3: hsl(15 55% 50%);
-  --chart-4: hsl(220 30% 40%);
-  --chart-5: hsl(40 5% 80%);
-  --sidebar: hsl(20 10% 16%);
-  --sidebar-foreground: hsl(40 10% 93%);
-  --sidebar-primary: hsl(10 55% 45%);
-  --sidebar-primary-foreground: hsl(40 20% 96%);
-  --sidebar-accent: hsl(20 10% 25%);
-  --sidebar-accent-foreground: hsl(40 10% 93%);
-  --sidebar-border: hsl(20 10% 25%);
-  --sidebar-ring: hsl(10 55% 45%);
+  --background: #1f1915;
+  --foreground: #ede9e3;
+  --card: #292420;
+  --card-foreground: #ede9e3;
+  --popover: #292420;
+  --popover-foreground: #ede9e3;
+  --primary: #b85f4d;
+  --primary-foreground: #f5f2ed;
+  --secondary: #d5a975;
+  --secondary-foreground: #1f1915;
+  --muted: #3d3530;
+  --muted-foreground: #a89d93;
+  --accent: #c76550;
+  --accent-foreground: #1f1915;
+  --destructive: #dc3545;
+  --destructive-foreground: #ede9e3;
+  --border: #3d3530;
+  --input: #3d3530;
+  --ring: #b85f4d;
+  --chart-1: #b85f4d;
+  --chart-2: #d5a975;
+  --chart-3: #c76550;
+  --chart-4: #4d6a8a;
+  --chart-5: #cdc8c0;
+  --sidebar: #292420;
+  --sidebar-foreground: #ede9e3;
+  --sidebar-primary: #b85f4d;
+  --sidebar-primary-foreground: #f5f2ed;
+  --sidebar-accent: #3d3530;
+  --sidebar-accent-foreground: #ede9e3;
+  --sidebar-border: #3d3530;
+  --sidebar-ring: #b85f4d;
 }
 
 /* Modern browsers with oklch support - dark mode */
@@ -205,8 +206,26 @@
   * {
     @apply border-border outline-ring/50;
   }
+  
+  /* Force proper background color for iOS Safari compatibility */
+  html {
+    background-color: hsl(40 20% 96%);
+  }
+  
+  html.dark {
+    background-color: hsl(20 10% 12%);
+  }
+  
   body {
     @apply bg-background text-foreground;
+    /* Explicit background fallback for older Safari */
+    background-color: hsl(40 20% 96%);
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  
+  body.dark {
+    background-color: hsl(20 10% 12%);
   }
 }
 

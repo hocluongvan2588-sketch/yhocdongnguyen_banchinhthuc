@@ -83,6 +83,39 @@ export default function HomePage() {
             const count = countData || 0;
             setQueriesRemaining(3 - count);
           }
+          
+          // Restore form data if user just logged in
+          const savedFormData = sessionStorage.getItem('pending-diagnosis-form');
+          if (savedFormData) {
+            try {
+              const formData = JSON.parse(savedFormData);
+              // Only restore if saved within last 10 minutes
+              if (Date.now() - formData.timestamp < 10 * 60 * 1000) {
+                setDay(formData.day);
+                setMonth(formData.month);
+                setYear(formData.year);
+                setHour(formData.hour);
+                setAge(formData.age);
+                setGender(formData.gender);
+                setSubject(formData.subject);
+                setQuestion(formData.question);
+                
+                // Clear saved data
+                sessionStorage.removeItem('pending-diagnosis-form');
+                
+                // Auto-trigger calculation after a brief delay
+                setTimeout(() => {
+                  handleCalculate();
+                }, 500);
+              } else {
+                // Clear expired data
+                sessionStorage.removeItem('pending-diagnosis-form');
+              }
+            } catch (e) {
+              console.error('Error restoring form data:', e);
+              sessionStorage.removeItem('pending-diagnosis-form');
+            }
+          }
         }
       } catch (err) {
         if (!isMounted) return;
@@ -125,6 +158,19 @@ export default function HomePage() {
     
     // Check if user is logged in - show modal instead of redirect
     if (!user) {
+      // Save form data before showing login modal
+      const formData = {
+        day,
+        month,
+        year,
+        hour,
+        age,
+        gender,
+        subject,
+        question,
+        timestamp: Date.now()
+      };
+      sessionStorage.setItem('pending-diagnosis-form', JSON.stringify(formData));
       setShowLoginModal(true);
       return;
     }

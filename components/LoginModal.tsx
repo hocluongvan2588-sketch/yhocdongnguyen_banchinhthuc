@@ -66,6 +66,10 @@ export default function LoginModal({ open, onOpenChange, onLoginSuccess }: Login
 
     try {
       const supabase = createClient();
+      
+      // Form data is already saved in sessionStorage by the parent component
+      // We'll redirect back to homepage where it will be restored
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -129,13 +133,17 @@ export default function LoginModal({ open, onOpenChange, onLoginSuccess }: Login
       resetFormTiming();
       setEmail('');
       setPassword('');
-      onOpenChange(false);
       
       if (onLoginSuccess) {
         onLoginSuccess();
       }
       
-      router.refresh();
+      onOpenChange(false);
+      
+      // Wait a bit before refreshing to allow callback to run
+      setTimeout(() => {
+        router.refresh();
+      }, 100);
     } catch (err) {
       setError('Đã xảy ra lỗi. Vui lòng thử lại.');
     } finally {
