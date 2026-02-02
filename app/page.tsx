@@ -54,7 +54,7 @@ export default function HomePage() {
     setIsHydrated(true);
   }, []);
 
-  // Check auth and rate limit on mount
+  // Check auth and rate limit on mount, and listen for auth changes
   useEffect(() => {
     let isMounted = true;
     
@@ -66,6 +66,9 @@ export default function HomePage() {
         setUser(currentUser);
         
         if (currentUser) {
+          // Close login modal if user is logged in
+          setShowLoginModal(false);
+          
           // Check rate limit via RPC function
           const { data: canQuery, error } = await supabase.rpc('can_user_query', {
             p_user_id: currentUser.id
@@ -132,8 +135,18 @@ export default function HomePage() {
     
     checkAuthAndRateLimit();
     
+    // Listen for auth state changes (for OAuth callbacks)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user && isMounted) {
+        setUser(session.user);
+        setShowLoginModal(false);
+        checkAuthAndRateLimit();
+      }
+    });
+    
     return () => {
       isMounted = false;
+      subscription.unsubscribe();
     };
   }, [supabase]);
   

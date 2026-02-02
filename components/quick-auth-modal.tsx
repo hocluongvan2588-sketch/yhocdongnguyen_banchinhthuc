@@ -37,6 +37,9 @@ export function QuickAuthModal({ open, onOpenChange }: QuickAuthModalProps) {
     setError("")
 
     try {
+      // Note: Form data should already be saved by parent component before opening this modal
+      // The parent component saves it in sessionStorage before calling setShowLoginModal(true)
+      
       const supabase = createClient()
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -66,8 +69,13 @@ export function QuickAuthModal({ open, onOpenChange }: QuickAuthModalProps) {
 
       if (error) throw error
 
+      // Close modal first
       onOpenChange(false)
-      router.refresh()
+      
+      // Wait a bit before refreshing to allow modal to close
+      setTimeout(() => {
+        router.refresh()
+      }, 100)
     } catch (err: any) {
       setError(err.message || "Đăng nhập thất bại")
     } finally {
@@ -100,8 +108,13 @@ export function QuickAuthModal({ open, onOpenChange }: QuickAuthModalProps) {
         await supabase.from("users").update({ full_name: registerFullName }).eq("id", data.user.id)
       }
 
+      // Close modal first
       onOpenChange(false)
-      router.refresh()
+      
+      // Wait a bit before refreshing to allow modal to close
+      setTimeout(() => {
+        router.refresh()
+      }, 100)
     } catch (err: any) {
       setError(err.message || "Đăng ký thất bại")
     } finally {
