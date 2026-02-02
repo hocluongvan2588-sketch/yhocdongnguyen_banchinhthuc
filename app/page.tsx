@@ -227,7 +227,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <Header title="Mai Hoa Tâm Pháp" subtitle="梅花心法" />
+      <Header title="Y Dịch Đồng Nguyên" subtitle="ydichdongnguyen" />
 
       {/* Login Modal */}
       <LoginModal 
@@ -264,8 +264,11 @@ export default function HomePage() {
             <Badge variant="outline" className="mb-4 border-primary/50 bg-primary/5 text-primary">
               Dịch học cổ truyền kết hợp công nghệ ngôn ngữ lớn
             </Badge>
-            <h2 className="mb-4 text-balance text-3xl font-bold leading-tight text-foreground md:text-4xl lg:text-5xl">
-              Khám phá sức khỏe qua <span className="text-primary">Mai Hoa Thần Số</span>
+            <h1 className="mb-4 text-balance text-3xl font-bold leading-tight text-foreground md:text-4xl lg:text-5xl">
+              Chào mừng bạn đến với nền tảng <span className="text-primary">Y Dịch Đồng Nguyên</span>
+            </h1>
+            <h2 className="mb-2 text-balance text-xl font-semibold text-foreground/80 md:text-2xl">
+              Khám phá sức khỏe qua Mai Hoa Thần Số
             </h2>
             <p className="mb-6 text-pretty text-base text-muted-foreground md:text-lg">
               Lập quẻ Tiên thiên theo phương pháp Thiệu Khang Tiết, phân tích sức khỏe dựa trên Bát Quái và Ngũ Hành
@@ -810,8 +813,8 @@ export default function HomePage() {
                   <span className="text-xl">☯</span>
                 </div>
                 <div>
-                  <h3 className="font-bold text-foreground">Mai Hoa Tâm Pháp</h3>
-                  <p className="text-xs text-muted-foreground">梅花心法</p>
+                  <h3 className="font-bold text-foreground">Y Dịch Đồng Nguyên</h3>
+                  <p className="text-xs text-muted-foreground">ydichdongnguyen</p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -865,13 +868,22 @@ export default function HomePage() {
               <h4 className="mb-4 font-semibold text-foreground">Hỗ trợ</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>Email: support@maihoatamphat.com</li>
-                <li>Hotline: 1900-xxxx</li>
+                <li>Hotline: 0786779493</li>
               </ul>
             </div>
           </div>
 
-          <div className="mt-8 border-t border-border/40 pt-6 text-center text-sm text-muted-foreground">
-            <p>© 2025 Mai Hoa Tâm Pháp. Phát triển bởi AI & Dịch học.</p>
+          <div className="mt-8 border-t border-border/40 pt-6">
+            <div className="mb-4 flex flex-wrap items-center justify-center gap-4 text-sm">
+              <a href="/privacy" className="text-foreground font-medium underline hover:text-primary transition-colors">
+                Chính sách bảo mật
+              </a>
+              <span className="text-muted-foreground">•</span>
+              <a href="/terms" className="text-foreground font-medium underline hover:text-primary transition-colors">
+                Điều khoản dịch vụ
+              </a>
+            </div>
+            <p className="text-center text-sm text-muted-foreground">© 2026 Y Dịch Đồng Nguyên. All rights reserved.</p>
           </div>
         </div>
       </footer>

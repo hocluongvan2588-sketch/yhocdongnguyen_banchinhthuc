@@ -22,8 +22,8 @@ interface HeaderProps {
 }
 
 export default function Header({
-  title = 'Mai Hoa Tâm Pháp',
-  subtitle = 'Dịch học Đông y',
+  title = 'Y Dịch Đồng Nguyên',
+  subtitle = 'ydichdongnguyen',
   showBackButton = false,
   backUrl = '/',
 }: HeaderProps) {
