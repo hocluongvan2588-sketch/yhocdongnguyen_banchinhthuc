@@ -625,7 +625,7 @@ function DiagnosisContent() {
                         <Badge className="bg-primary text-primary-foreground shadow-md">Phù hợp với bạn</Badge>
                       </div>
                     )}
-                    <div className="relative h-48 bg-gradient-to-br from-red-100 to-red-50 dark:from-red-900/20 dark:to-red-800/10">
+                    <div className="relative h-48 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/10 dark:to-amber-900/10">
                       <img
                         src="/traditional-herbal-medicine-herbs-natural-remedies.jpg"
                         alt="Gói Nam Dược"
@@ -656,7 +656,7 @@ function DiagnosisContent() {
                         <Badge className="bg-primary text-primary-foreground shadow-md">Phù hợp với bạn</Badge>
                       </div>
                     )}
-                    <div className="relative h-48 bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900/20 dark:to-green-800/10">
+                    <div className="relative h-48 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/10 dark:to-teal-900/10">
                       <img
                         src="/acupressure-points-meridian-therapy-wellness.jpg"
                         alt="Gói Khai Huyệt"
@@ -687,7 +687,7 @@ function DiagnosisContent() {
                         <Badge className="bg-primary text-primary-foreground shadow-md">Phù hợp với bạn</Badge>
                       </div>
                     )}
-                    <div className="relative h-48 bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/20 dark:to-purple-800/10">
+                    <div className="relative h-48 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/10 dark:to-purple-900/10">
                       <img
                         src="/i-ching-hexagram-yijing-divination-ancient-wisdom.jpg"
                         alt="Gói Tượng Số"

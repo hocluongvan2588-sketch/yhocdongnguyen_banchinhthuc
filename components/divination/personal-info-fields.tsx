@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -41,24 +41,38 @@ export function PersonalInfoFields({
 }: PersonalInfoFieldsProps) {
   const [canChiInfo, setCanChiInfo] = useState<BirthYearInfo | null>(null)
 
+  // Auto-calculate Can Chi when birth date is complete
+  useEffect(() => {
+    const year = Number.parseInt(birthYear)
+    const month = Number.parseInt(birthMonth)
+    const day = Number.parseInt(birthDay)
+
+    if (year && year >= 1900 && year <= 2100 && month && month >= 1 && month <= 12 && day && day >= 1 && day <= 31) {
+      const result = convertBirthYear(year, month, day)
+      setCanChiInfo(result)
+    } else {
+      setCanChiInfo(null)
+    }
+  }, [birthYear, birthMonth, birthDay])
+
   const handleConvertToCanChi = () => {
     const year = Number.parseInt(birthYear)
-    const month = Number.parseInt(birthMonth) || 6
-    const day = Number.parseInt(birthDay) || 15
+    const month = Number.parseInt(birthMonth)
+    const day = Number.parseInt(birthDay)
 
-    if (year && year >= 1900 && year <= 2100) {
+    if (year && year >= 1900 && year <= 2100 && month && month >= 1 && month <= 12 && day && day >= 1 && day <= 31) {
       const result = convertBirthYear(year, month, day)
       setCanChiInfo(result)
     }
   }
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <Label className="text-sm">Giới tính</Label>
+    <div className="space-y-3">
+      <div className="space-y-1.5">
+        <Label className="text-sm font-medium">Giới tính</Label>
         <Select value={gender} onValueChange={setGender}>
-          <SelectTrigger>
-            <SelectValue placeholder="Chọn giới tính" />
+          <SelectTrigger className="h-10">
+            <SelectValue placeholder="Chọn" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="male">Nam</SelectItem>
@@ -67,12 +81,10 @@ export function PersonalInfoFields({
         </Select>
       </div>
 
-      <div className="space-y-2">
-        <Label className="text-sm flex items-center gap-2">
-          Ngày sinh (Dương lịch)
-          <Badge variant="secondary" className="text-[10px] py-0">
-            Không bắt buộc
-          </Badge>
+      <div className="space-y-1.5">
+        <Label className="text-sm font-medium flex items-center gap-1.5">
+          Ngày sinh
+          <span className="text-[10px] text-muted-foreground font-normal">(Dương lịch)</span>
         </Label>
         <div className="grid grid-cols-3 gap-2">
           <Input
@@ -80,164 +92,131 @@ export function PersonalInfoFields({
             min="1900"
             max="2100"
             value={birthYear}
-            onChange={(e) => {
-              setBirthYear(e.target.value)
-              setCanChiInfo(null)
-            }}
+            onChange={(e) => setBirthYear(e.target.value)}
             placeholder="Năm"
+            className="text-base h-10 placeholder:text-xs placeholder:text-muted-foreground/60"
           />
           <Input
             type="number"
             min="1"
             max="12"
             value={birthMonth}
-            onChange={(e) => {
-              setBirthMonth(e.target.value)
-              setCanChiInfo(null)
-            }}
+            onChange={(e) => setBirthMonth(e.target.value)}
             placeholder="Tháng"
+            className="text-base h-10 placeholder:text-xs placeholder:text-muted-foreground/60"
           />
           <Input
             type="number"
             min="1"
             max="31"
             value={birthDay}
-            onChange={(e) => {
-              setBirthDay(e.target.value)
-              setCanChiInfo(null)
-            }}
+            onChange={(e) => setBirthDay(e.target.value)}
             placeholder="Ngày"
+            className="text-base h-10 placeholder:text-xs placeholder:text-muted-foreground/60"
           />
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={handleConvertToCanChi}
-          disabled={!birthYear || Number.parseInt(birthYear) < 1900}
-          className="w-full bg-transparent"
-        >
-          <Sparkles className="w-3 h-3 mr-2" />
-          Tự động chuyển sang Can Chi
-        </Button>
-
         {canChiInfo && (
-          <Alert className="bg-primary/5 border-primary/20">
-            <Info className="h-4 w-4 text-primary" />
-            <AlertDescription className="text-xs space-y-1">
-              <div className="font-semibold text-sm">
-                Năm {canChiInfo.canNam} {canChiInfo.chiNam} ({canChiInfo.animalZodiac})
+          <Alert className="bg-primary/5 border-primary/20 py-2 mt-2">
+            <Info className="h-3.5 w-3.5 text-primary" />
+            <AlertDescription className="text-[11px] space-y-0.5">
+              <div className="font-semibold">
+                {canChiInfo.canNam} {canChiInfo.chiNam} ({canChiInfo.animalZodiac})
               </div>
-              <div>Can Chi Ngày: {canChiInfo.canNgay} {canChiInfo.chiNgay}</div>
-              <div>Ngũ hành: {canChiInfo.element}</div>
-              <div>Tuổi: {canChiInfo.age} ({canChiInfo.ageGroup === "pediatric" ? "Trẻ em" : canChiInfo.ageGroup === "youth" ? "Thanh thiếu niên" : canChiInfo.ageGroup === "adult" ? "Người lớn" : "Người cao tuổi"})</div>
-              <div className="text-muted-foreground mt-2">
-                Năm âm lịch: {canChiInfo.lunarYear} (theo Lập Xuân)
+              <div>Ngày: {canChiInfo.canNgay} {canChiInfo.chiNgay} • {canChiInfo.element}</div>
+              <div className="text-muted-foreground">
+                {canChiInfo.age} tuổi • AL: {canChiInfo.lunarYear}
               </div>
             </AlertDescription>
           </Alert>
         )}
-
-        <p className="text-xs text-muted-foreground">
-          Hệ thống tự tính Can Chi Năm, Can Chi Ngày và Cung Phi cho phân tích chính xác
-        </p>
       </div>
 
-      <div className="space-y-2">
-        <Label className="text-sm flex items-center gap-2">
-          Vị trí đau/khó chịu
-          <Badge variant="outline" className="text-[10px]">
-            Dùng để phân tích Thuận/Nghịch
-          </Badge>
-        </Label>
-        <Select value={painLocation} onValueChange={setPainLocation}>
-          <SelectTrigger>
-            <SelectValue placeholder="Chọn vị trí" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="left">Bên trái cơ thể</SelectItem>
-            <SelectItem value="right">Bên phải cơ thể</SelectItem>
-            <SelectItem value="center">Trung tâm/Nội tạng</SelectItem>
-            <SelectItem value="whole">Toàn thân</SelectItem>
-            <SelectItem value="unknown">Không rõ/Không có</SelectItem>
-          </SelectContent>
-        </Select>
-        <p className="text-xs text-muted-foreground">
-          Nam đau trái = Thuận, Nam đau phải = Nghịch. Nữ ngược lại.
-        </p>
-      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <Label className="text-sm font-medium">Vị trí đau</Label>
+          <Select value={painLocation} onValueChange={setPainLocation}>
+            <SelectTrigger className="h-10">
+              <SelectValue placeholder="Chọn vị trí" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="left">Trái</SelectItem>
+              <SelectItem value="right">Phải</SelectItem>
+              <SelectItem value="center">Trung tâm</SelectItem>
+              <SelectItem value="whole">Toàn thân</SelectItem>
+              <SelectItem value="unknown">Không rõ</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-      <div className="space-y-2">
-        <Label className="text-sm">Tỉnh/Thành phố hiện tại</Label>
-        <Select value={userLocation} onValueChange={setUserLocation}>
-          <SelectTrigger>
-            <SelectValue placeholder="Chọn tỉnh/thành" />
-          </SelectTrigger>
-          <SelectContent className="max-h-[200px]">
-            <SelectItem value="hanoi">Hà Nội</SelectItem>
-            <SelectItem value="hochiminh">TP Hồ Chí Minh</SelectItem>
-            <SelectItem value="danang">Đà Nẵng</SelectItem>
-            <SelectItem value="haiphong">Hải Phòng</SelectItem>
-            <SelectItem value="cantho">Cần Thơ</SelectItem>
-            <SelectItem value="binhduong">Bình Dương</SelectItem>
-            <SelectItem value="dongnai">Đồng Nai</SelectItem>
-            <SelectItem value="baclieu">Bạc Liêu</SelectItem>
-            <SelectItem value="bacgiang">Bắc Giang</SelectItem>
-            <SelectItem value="backan">Bắc Kạn</SelectItem>
-            <SelectItem value="bacninh">Bắc Ninh</SelectItem>
-            <SelectItem value="bentre">Bến Tre</SelectItem>
-            <SelectItem value="camau">Cà Mau</SelectItem>
-            <SelectItem value="caobang">Cao Bằng</SelectItem>
-            <SelectItem value="daklak">Đắk Lắk</SelectItem>
-            <SelectItem value="daknong">Đắk Nông</SelectItem>
-            <SelectItem value="dienbien">Điện Biên</SelectItem>
-            <SelectItem value="dongthap">Đồng Tháp</SelectItem>
-            <SelectItem value="gialai">Gia Lai</SelectItem>
-            <SelectItem value="hagiang">Hà Giang</SelectItem>
-            <SelectItem value="hanam">Hà Nam</SelectItem>
-            <SelectItem value="hatinh">Hà Tĩnh</SelectItem>
-            <SelectItem value="haugiang">Hậu Giang</SelectItem>
-            <SelectItem value="hoabinh">Hòa Bình</SelectItem>
-            <SelectItem value="hungyen">Hưng Yên</SelectItem>
-            <SelectItem value="khanhhoa">Khánh Hòa</SelectItem>
-            <SelectItem value="kiengiang">Kiên Giang</SelectItem>
-            <SelectItem value="kontum">Kon Tum</SelectItem>
-            <SelectItem value="laichau">Lai Châu</SelectItem>
-            <SelectItem value="lamdong">Lâm Đồng</SelectItem>
-            <SelectItem value="langson">Lạng Sơn</SelectItem>
-            <SelectItem value="laocai">Lào Cai</SelectItem>
-            <SelectItem value="longan">Long An</SelectItem>
-            <SelectItem value="namdinh">Nam Định</SelectItem>
-            <SelectItem value="nghean">Nghệ An</SelectItem>
-            <SelectItem value="ninhbinh">Ninh Bình</SelectItem>
-            <SelectItem value="ninhthuan">Ninh Thuận</SelectItem>
-            <SelectItem value="phutho">Phú Thọ</SelectItem>
-            <SelectItem value="phuyen">Phú Yên</SelectItem>
-            <SelectItem value="quangbinh">Quảng Bình</SelectItem>
-            <SelectItem value="quangnam">Quảng Nam</SelectItem>
-            <SelectItem value="quangngai">Quảng Ngãi</SelectItem>
-            <SelectItem value="quangninh">Quảng Ninh</SelectItem>
-            <SelectItem value="quangtri">Quảng Trị</SelectItem>
-            <SelectItem value="soctrang">Sóc Trăng</SelectItem>
-            <SelectItem value="sonla">Sơn La</SelectItem>
-            <SelectItem value="tayninh">Tây Ninh</SelectItem>
-            <SelectItem value="thaibinh">Thái Bình</SelectItem>
-            <SelectItem value="thainguyen">Thái Nguyên</SelectItem>
-            <SelectItem value="thanhhoa">Thanh Hóa</SelectItem>
-            <SelectItem value="thuathienhue">Thừa Thiên Huế</SelectItem>
-            <SelectItem value="tiengiang">Tiền Giang</SelectItem>
-            <SelectItem value="travinh">Trà Vinh</SelectItem>
-            <SelectItem value="tuyenquang">Tuyên Quang</SelectItem>
-            <SelectItem value="vinhlong">Vĩnh Long</SelectItem>
-            <SelectItem value="vinhphuc">Vĩnh Phúc</SelectItem>
-            <SelectItem value="yenbai">Yên Bái</SelectItem>
+        <div className="space-y-1.5">
+          <Label className="text-sm font-medium">Tỉnh/Thành</Label>
+          <Select value={userLocation} onValueChange={setUserLocation}>
+            <SelectTrigger className="h-10">
+              <SelectValue placeholder="Chọn" />
+            </SelectTrigger>
+            <SelectContent className="max-h-[200px]">
+              <SelectItem value="hanoi">Hà Nội</SelectItem>
+              <SelectItem value="hochiminh">TP HCM</SelectItem>
+              <SelectItem value="danang">Đà Nẵng</SelectItem>
+              <SelectItem value="haiphong">Hải Phòng</SelectItem>
+              <SelectItem value="cantho">Cần Thơ</SelectItem>
+              <SelectItem value="binhduong">Bình Dương</SelectItem>
+              <SelectItem value="dongnai">Đồng Nai</SelectItem>
+              <SelectItem value="baclieu">Bạc Liêu</SelectItem>
+              <SelectItem value="bacgiang">Bắc Giang</SelectItem>
+              <SelectItem value="backan">Bắc Kạn</SelectItem>
+              <SelectItem value="bacninh">Bắc Ninh</SelectItem>
+              <SelectItem value="bentre">Bến Tre</SelectItem>
+              <SelectItem value="camau">Cà Mau</SelectItem>
+              <SelectItem value="caobang">Cao Bằng</SelectItem>
+              <SelectItem value="daklak">Đắk Lắk</SelectItem>
+              <SelectItem value="daknong">Đắk Nông</SelectItem>
+              <SelectItem value="dienbien">Điện Biên</SelectItem>
+              <SelectItem value="dongthap">Đồng Tháp</SelectItem>
+              <SelectItem value="gialai">Gia Lai</SelectItem>
+              <SelectItem value="hagiang">Hà Giang</SelectItem>
+              <SelectItem value="hanam">Hà Nam</SelectItem>
+              <SelectItem value="hatinh">Hà Tĩnh</SelectItem>
+              <SelectItem value="haugiang">Hậu Giang</SelectItem>
+              <SelectItem value="hoabinh">Hòa Bình</SelectItem>
+              <SelectItem value="hungyen">Hưng Yên</SelectItem>
+              <SelectItem value="khanhhoa">Khánh Hòa</SelectItem>
+              <SelectItem value="kiengiang">Kiên Giang</SelectItem>
+              <SelectItem value="kontum">Kon Tum</SelectItem>
+              <SelectItem value="laichau">Lai Châu</SelectItem>
+              <SelectItem value="lamdong">Lâm Đồng</SelectItem>
+              <SelectItem value="langson">Lạng Sơn</SelectItem>
+              <SelectItem value="laocai">Lào Cai</SelectItem>
+              <SelectItem value="longan">Long An</SelectItem>
+              <SelectItem value="namdinh">Nam Định</SelectItem>
+              <SelectItem value="nghean">Nghệ An</SelectItem>
+              <SelectItem value="ninhbinh">Ninh Bình</SelectItem>
+              <SelectItem value="ninhthuan">Ninh Thuận</SelectItem>
+              <SelectItem value="phutho">Phú Thọ</SelectItem>
+              <SelectItem value="phuyen">Phú Yên</SelectItem>
+              <SelectItem value="quangbinh">Quảng Bình</SelectItem>
+              <SelectItem value="quangnam">Quảng Nam</SelectItem>
+              <SelectItem value="quangngai">Quảng Ngãi</SelectItem>
+              <SelectItem value="quangninh">Quảng Ninh</SelectItem>
+              <SelectItem value="quangtri">Quảng Trị</SelectItem>
+              <SelectItem value="soctrang">Sóc Trăng</SelectItem>
+              <SelectItem value="sonla">Sơn La</SelectItem>
+              <SelectItem value="tayninh">Tây Ninh</SelectItem>
+              <SelectItem value="thaibinh">Thái Bình</SelectItem>
+              <SelectItem value="thainguyen">Thái Nguyên</SelectItem>
+              <SelectItem value="thanhhoa">Thanh Hóa</SelectItem>
+              <SelectItem value="thuathienhue">Huế</SelectItem>
+              <SelectItem value="tiengiang">Tiền Giang</SelectItem>
+              <SelectItem value="travinh">Trà Vinh</SelectItem>
+              <SelectItem value="tuyenquang">Tuyên Quang</SelectItem>
+              <SelectItem value="vinhlong">Vĩnh Long</SelectItem>
+              <SelectItem value="vinhphuc">Vĩnh Phúc</SelectItem>
+              <SelectItem value="yenbai">Yên Bái</SelectItem>
             <SelectItem value="other">Khác</SelectItem>
           </SelectContent>
         </Select>
-        <p className="text-xs text-muted-foreground">
-          Dùng để tính địa phương khí hậu và yếu tố môi trường
-        </p>
+        </div>
       </div>
     </div>
   )
