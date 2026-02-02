@@ -21,16 +21,39 @@ export const OUTPUT_FORMAT = `**CẤU TRÚC TRẢ LỜI - UX FRIENDLY (BẮT BU�
 
 ---
 
-## 2. STRESS/BỆNH ĐANG ẢNH HƯỞNG GÌ? (3-4 điểm, icon + ngắn gọn)
-**Mục tiêu:** Giải thích cơ chế bằng ngôn ngữ đơn giản
+## 2. STRESS/BỆNH ĐANG ẢNH HƯỞNG GÌ? (THEO FLOW: Y HỌC HIỆN ĐẠI → ĐÔNG Y → NGŨ HÀNH)
 
-**Format:**
-🧠 Hệ thần kinh: [mô tả ảnh hưởng cụ thể]
-😮‍💨 Hô hấp - phổi: [mô tả ảnh hưởng]
-⚡ Năng lượng cơ thể: [mô tả ảnh hưởng]
+**BƯỚC 1: Thể bệnh theo Y học hiện đại (2-3 câu)**
+Mô tả triệu chứng bằng thuật ngữ y học hiện đại dễ hiểu:
+- Ví dụ: "Theo y học hiện đại, đây là biểu hiện của tình trạng căng thẳng thần kinh thực vật, làm rối loạn nhịp tim, huyết áp, và giấc ngủ."
 
-**SAU ĐÓ mới giải thích ngắn gọn cơ chế Dịch lý (1-2 câu):**
-"Theo phân tích từ quẻ [tên quẻ], đây là biểu hiện của [giải thích ngắn bằng Dịch lý]"
+**BƯỚC 2: Chuyển tiếp sang ngôn ngữ Đông y (2-3 câu)**
+Dịch thể bệnh hiện đại sang khái niệm Đông y:
+- Ví dụ: "Trong Đông y, tình trạng này được gọi là 'Khí trệ', khi khí huyết không lưu thông, tâm thần bất an, dẫn đến mất ngủ và suy nghĩ quá nhiều."
+
+**BƯỚC 3: Gốc căn bệnh theo Ngũ hành và Quẻ Mai Hoa (3-4 câu)**
+Phân tích sâu vào tạng phủ dựa trên quan hệ Ngũ hành:
+- Ví dụ: "Theo quẻ [tên quẻ] bạn gieo được, gốc rễ nằm ở Gan (Mộc) đang bị ức chế, không thể sinh Tâm (Hỏa). Khi Gan bị trệ, khí huyết không nuôi được não, dẫn đến đầu óc mê mệt, hay suy nghĩ."
+
+**QUY TẮC QUAN TRỌNG:**
+- CHỈ tập trung vào 1-2 bệnh CHÍNH của quẻ, KHÔNG gom nhiều bệnh
+- Giữ luồng logic: Hiện đại → Đông y → Ngũ hành (theo thứ tự)
+- Dùng icon nếu cần: 🧠 🫁 ❤️ 🫀 🍃 để dễ đọc
+
+---
+
+## 2.5. GÓC NHÌN Y DỊCH – VÌ SAO CƠ THỂ PHẢN ỨNG NHƯ VẬY?
+
+**Mục tiêu:** Kết nối Dịch lý với cơ thể bằng ngôn ngữ đời thường, không làm người dùng thấy mình đang bị “coi quẻ”.
+
+**Yêu cầu:**
+- Không mở bằng thuật ngữ quẻ.
+- Giải thích bằng ngôn ngữ đời thường trước, sau đó mới nhắc nhẹ tên quẻ nếu cần.
+- Chỉ 2–3 câu, ngắn gọn.
+- Cho người đọc cảm giác: "À, hóa ra cơ thể phản ứng vậy là có logic."
+
+**Ví dụ:**
+"Trong Y Dịch, cơ thể được xem như một hệ thống tự cân bằng. Quẻ bạn gieo cho thấy khi nhịp sống căng và thiếu nghỉ, phần ‘trụ’ của cơ thể sẽ thu lại trước, làm khí huyết lưu thông kém hơn. Vì vậy bạn mới dễ mỏi, nặng người và khó thư giãn."
 
 ---
 
@@ -100,11 +123,15 @@ export const OUTPUT_FORMAT = `**CẤU TRÚC TRẢ LỜI - UX FRIENDLY (BẮT BU�
 Tình trạng stress của bạn hiện ở mức trung bình, ảnh hưởng chủ yếu đến hệ thần kinh và khả năng nghỉ ngơi. Mức độ này chưa phức tạp và có thể cải thiện tốt nếu bạn điều chỉnh sinh hoạt.
 
 ## Stress đang ảnh hưởng gì?
-🧠 Hệ thần kinh: Dễ đau đầu, suy nghĩ nhiều, khó ngủ sâu
-😮‍💨 Hô hấp: Cảm giác nặng ngực, thở nông khi lo âu
-⚡ Năng lượng: Mệt mỏi nhanh, giảm sự hứng thú
 
-Theo phân tích, khi tinh thần căng thẳng kéo dài, cơ thể sẽ co rút, khiến não và phổi hoạt động kém linh hoạt hơn.
+**Theo Y học hiện đại:**
+Đây là biểu hiện của tình trạng căng thẳng thần kinh thực vật, làm rối loạn nhịp tim, huyết áp, và giấc ngủ. Cơ thể luôn ở trạng thái "báo động", khiến bạn mệt mỏi nhưng khó nghỉ ngơi sâu.
+
+**Theo Đông y:**
+Trong Đông y, đây là tình trạng "Khí trệ Tâm Can" - khi khí huyết không lưu thông mượt mà, tâm thần bất an, dẫn đến mất ngủ, suy nghĩ quá nhiều và cảm giác nặng ngực.
+
+**Gốc rễ theo Ngũ hành:**
+Theo quẻ Thiên Trạch Lý bạn gieo được, gốc nằm ở Gan (Mộc) đang bị ức chế, không thể nuôi dưỡng Tâm (Hỏa). Khi Gan trệ, khí huyết không lên nuôi não, gây đau đầu, mất ngủ, và hay lo âu.
 
 ## Mức độ có cần lưu ý không?
 Tin tốt là tình trạng này chưa nặng, vẫn nằm trong ngưỡng có thể điều chỉnh tốt. Tuy nhiên, nếu để kéo dài, cơ thể có xu hướng phức tạp thêm như rối loạn giấc ngủ hoặc lo âu nhiều hơn.

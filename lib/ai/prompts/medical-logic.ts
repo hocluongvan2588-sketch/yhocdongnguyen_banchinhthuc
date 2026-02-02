@@ -17,13 +17,13 @@ A. Dụng sinh Thể = Tốt
 - Bệnh nhẹ, dễ khỏi, cơ thể đang được bổ sung
 - Ví dụ: Thể Mộc, Dụng Thủy → Thủy sinh Mộc = thuận lợi
 
-B. Thể sinh Dụng = Xấu
-- Cơ thể đang nuôi bệnh, tiêu hao năng lượng
-- Cần chú ý hơn, có xu hướng phức tạp nếu không xử lý
+B. Thể sinh Dụng = Cần chú ý
+- Cơ thể đang tiêu hao năng lượng nhiều hơn
+- Nên điều chỉnh sớm để cải thiện, tránh xu hướng phức tạp
 
-C. Dụng khắc Thể = Cần lưu ý
-- Bệnh đang tấn công cơ thể trực tiếp
-- Tình trạng có xu hướng phức tạp, cần quan tâm sớm
+C. Dụng khắc Thể = Cần quan tâm hơn
+- Triệu chứng đang tác động đến cơ thể
+- Tình trạng có xu hướng phức tạp nếu không xử lý, nhưng vẫn điều chỉnh được nếu kịp thời
 
 D. Thể khắc Dụng = Trung bình
 - Cơ thể đang tự chống lại bệnh
@@ -88,7 +88,18 @@ E. Hòa (cùng hành) = Ổn định
 - 30-50: Giai đoạn làm việc căng thẳng, dễ mệt
 - > 50: Khí huyết suy, cần bồi bổ nhiều hơn
 
-## 6. XỬ LÝ QUẺ CỔ (Hào động nhiều)
+## 6. NGUYÊN TẮC TẬP TRUNG VÀO BỆNH CHÍNH
+
+**QUY TẮC VÀNG:**
+- CHỈ phân tích 1-2 bệnh CHÍNH liên quan đến quẻ
+- KHÔNG liệt kê nhiều bệnh, gây hoang mang
+- Tập trung sâu vào cơ chế, nguyên nhân, giải pháp của bệnh chính
+
+**Ví dụ:**
+- ❌ SAI: "Có thể là đau đầu, mất ngủ, lo âu, cao huyết áp, rối loạn tiêu hóa, đau lưng..."
+- ✅ ĐÚNG: "Tập trung vào stress thần kinh là vấn đề chính, dẫn đến đau đầu và mất ngủ"
+
+## 7. XỬ LÝ QUẺ CỔ (Hào động nhiều)
 
 **Khi có >= 4 hào động:**
 - KHÔNG nói: "Bệnh mãn tính, âm ỉ, khó điều trị"
@@ -96,7 +107,7 @@ E. Hòa (cùng hành) = Ổn định
 
 **Đánh giá quẻ cổ:**
 - Nhiều hào động = Nhiều khía cạnh cần quan tâm
-- Cần hướng dẫn TOÀN DIỆN, không chỉ tập trung 1 điểm
+- Vẫn tập trung vào 1-2 vấn đề CHÍNH nhất
 - Nhấn mạnh tính ĐIỀU CHỈNH LỐI SỐNG lâu dài
 
 ## 7. PHỐI HỢP VỚI Y HỌC HIỆN ĐẠI

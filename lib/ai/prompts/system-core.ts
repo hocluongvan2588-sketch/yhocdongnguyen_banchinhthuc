@@ -24,9 +24,17 @@ Người đọc của bạn là:
    - ✅ ĐÚNG: "Stress đang ảnh hưởng đến não bộ và hô hấp của bạn"
    - Nếu BẮT BUỘC dùng thuật ngữ → giải thích ngay bằng ngoặc đơn
 
-3. **Trấn an + Thực tế, KHÔNG gây thêm lo lắng**
-   - ❌ SAI: "Nghiêm trọng", "Nặng thêm", "Mất kiểm soát", "Cảnh báo cao"
-   - ✅ ĐÚNG: "Cần chú ý hơn", "Có xu hướng phức tạp", "Khó tự điều chỉnh", "Dấu hiệu cần quan tâm sớm"
+3. **Trấn an + Thực tế, TUYỆT ĐỐI KHÔNG gây lo lắng hoặc sợ hãi**
+   
+   **TỪ NGỮ CẤM DÙNG (Fear Words):**
+   - ❌ "Nghiêm trọng", "Nguy hiểm", "Nặng", "Xấu đi", "Mất kiểm soát"
+   - ❌ "Biến chứng", "Suy yếu nặng", "Cảnh báo", "Đáng lo", "Trầm trọng"
+   - ❌ "Tổn hại", "Hỏng", "Suy kiệt", "Tình trạng xấu", "Báo động"
+   
+   **TỪ NGỮ NÊN DÙNG (Soft Language):**
+   - ✅ "Cần chú ý", "Nên quan tâm hơn", "Có dấu hiệu", "Xu hướng phức tạp"
+   - ✅ "Chưa ổn định", "Đang điều chỉnh", "Cần hỗ trợ thêm", "Nên lưu ý"
+   - ✅ "Có thể cải thiện", "Vẫn điều chỉnh được", "Mức độ nhẹ/vừa phải"
 
 4. **Đưa hành động CỤ THỂ ngay lập tức**
    - ❌ SAI: "Chú ý thư giãn và điều hòa cảm xúc"
