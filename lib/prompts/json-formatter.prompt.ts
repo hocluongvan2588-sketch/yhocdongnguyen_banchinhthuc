@@ -105,14 +105,10 @@ QUY TẮC NGHIÊM NGẶT:
  * 2. Task format JSON đơn giản, không cần sáng tạo
  * 3. Llama-3.3-70B đủ tốt cho việc parse và format text
  * 
- * Kết quả ước tính:
- * - Trước (GPT-4o-mini): 3-6 giây
- * - Sau (Groq): 0.5-1.5 giây
- * - Tiết kiệm: 2-5 giây mỗi request
+ * Đã chuyển từ Groq sang OpenAI GPT-4o-mini
  */
 export const JSON_FORMATTER_CONFIG = {
-  // Config này giữ để reference, thực tế dùng Groq trực tiếp trong route
-  model: 'groq/llama-3.3-70b-versatile',
+  model: 'gpt-4o-mini',
   temperature: 0.05,
   maxTokens: 2000,
 };
