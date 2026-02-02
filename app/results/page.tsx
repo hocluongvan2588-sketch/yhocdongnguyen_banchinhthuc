@@ -503,10 +503,10 @@ export default function ResultsPage() {
                     </h3>
                     <div className="space-y-3">
                       <div className="flex flex-wrap gap-3">
-                        <Badge variant="outline" className="bg-indigo-500/10 text-indigo-700 border-indigo-500/30">
+                        <Badge variant="outline" className="bg-indigo-500/10 text-indigo-700 border-indigo-500/30 whitespace-normal break-words max-w-full">
                           {aiAnalysis.prognosis.outlook}
                         </Badge>
-                        <Badge variant="outline" className="bg-transparent">
+                        <Badge variant="outline" className="bg-transparent whitespace-normal">
                           {aiAnalysis.prognosis.recoveryTime}
                         </Badge>
                       </div>
