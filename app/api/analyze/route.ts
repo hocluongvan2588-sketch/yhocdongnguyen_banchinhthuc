@@ -1,5 +1,6 @@
 import { generateText } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
+import { createGroq } from '@ai-sdk/groq';
 import { SYSTEM_INSTRUCTION } from '@/lib/ai/prompts/system-instruction';
 import { buildUnifiedMedicalPrompt, UNIFIED_MEDICAL_CONFIG } from '@/lib/prompts/unified-medical.prompt';
 import {
@@ -312,17 +313,18 @@ Hãy phân tích theo cấu trúc UX-friendly đã được hướng dẫn.`;
     }
 
     // ═══════════════════════════════════════════════════════════
-    // TẦNG 2: JSON FORMATTER (OPENAI GPT-4O-MINI)
-    // Model: GPT-4o-mini - nhanh và tốt cho task format
+    // TẦNG 2: JSON FORMATTER (GROQ - FAST MODE)
+    // Groq LPU: 6-10x nhanh hơn GPU thông thường
+    // Model: Llama-3.3-70B - đủ tốt cho task format đơn giản
     // Temperature: 0.05 (cực thấp, tối đa deterministic)
     // Output: JSON thuần túy theo schema
     // ═══════════════════════════════════════════════════════════
     const layer2Start = Date.now();
-    console.log('[v0] Layer 2: JSON Formatter (OpenAI GPT-4o-mini)...');
+    console.log('[v0] Layer 2: JSON Formatter (Groq Llama-3.3-70B - FAST)...');
     const jsonFormatterPrompt = buildJsonFormatterPrompt(unifiedContent);
 
     const layer2Result = await generateText({
-      model: openai('gpt-4o-mini'),
+      model: 'llama-3.3-70b-versatile',
       prompt: jsonFormatterPrompt,
       temperature: 0.05, // Cực thấp để tăng tính deterministic
       maxTokens: 2000, // Đủ cho JSON output
@@ -403,7 +405,7 @@ Hãy phân tích theo cấu trúc UX-friendly đã được hướng dẫn.`;
     console.log('[v0] ═══════════════════════════════════════════════════');
     console.log(`[v0] HYBRID AI Complete! Total: ${totalTime}ms`);
     console.log(`[v0] ├── Layer 1 (OpenAI Direct GPT-4o): ${layer1Time}ms`);
-    console.log(`[v0] └── Layer 2 (OpenAI GPT-4o-mini): ${layer2Time}ms`);
+    console.log(`[v0] └── Layer 2 (Groq Llama-3.3-70B): ${layer2Time}ms`);
     console.log('[v0] ═══════════════════════════════════════════════════');
 
     return Response.json({

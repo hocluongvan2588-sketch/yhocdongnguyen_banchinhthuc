@@ -42,21 +42,6 @@ Phân tích sâu vào tạng phủ dựa trên quan hệ Ngũ hành:
 
 ---
 
-## 2.5. GÓC NHÌN Y DỊCH – VÌ SAO CƠ THỂ PHẢN ỨNG NHƯ VẬY?
-
-**Mục tiêu:** Kết nối Dịch lý với cơ thể bằng ngôn ngữ đời thường, không làm người dùng thấy mình đang bị “coi quẻ”.
-
-**Yêu cầu:**
-- Không mở bằng thuật ngữ quẻ.
-- Giải thích bằng ngôn ngữ đời thường trước, sau đó mới nhắc nhẹ tên quẻ nếu cần.
-- Chỉ 2–3 câu, ngắn gọn.
-- Cho người đọc cảm giác: "À, hóa ra cơ thể phản ứng vậy là có logic."
-
-**Ví dụ:**
-"Trong Y Dịch, cơ thể được xem như một hệ thống tự cân bằng. Quẻ bạn gieo cho thấy khi nhịp sống căng và thiếu nghỉ, phần ‘trụ’ của cơ thể sẽ thu lại trước, làm khí huyết lưu thông kém hơn. Vì vậy bạn mới dễ mỏi, nặng người và khó thư giãn."
-
----
-
 ## 3. MỨC ĐỘ CÓ CẦN LƯU Ý KHÔNG? (2-3 câu, trấn an + thực tế)
 **Mục tiêu:** Giảm lo lắng nhưng không chủ quan
 
