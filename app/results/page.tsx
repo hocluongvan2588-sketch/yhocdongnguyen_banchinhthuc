@@ -636,7 +636,7 @@ export default function ResultsPage() {
                                   size="sm"
                                   variant="outline"
                                   className="mt-3 w-full border-green-500/50 text-green-700 hover:bg-green-500/10 bg-transparent"
-                                  onClick={() => router.push('/checkout/bai-thuoc-dong-y')}
+                                  onClick={() => router.push(`/treatment/herbal?upper=${maihua.mainHexagram.upperTrigram}&lower=${maihua.mainHexagram.lowerTrigram}&moving=${maihua.movingLine}`)}
                                 >
                                   <Pill className="mr-1.5 h-3.5 w-3.5" />
                                   Xem bài thuốc phù hợp
