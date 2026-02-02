@@ -216,10 +216,9 @@ Liệt kê 6-8 triệu chứng cụ thể (mỗi triệu chứng 1 dòng, bắt 
 
 【MỐI LIÊN HỆ CẢM XÚC - BỆNH LÝ】
 Dựa vào Ngũ hành Dụng (${diagnostic.expertAnalysis.tiDung.dung.element}):
-- Cảm xúc chính: [xác định cảm xúc]
-- Tạng phủ bị ảnh hưởng: [tên tạng]
-- Giải thích sinh lý: [cơ chế hormone, thần kinh - 2-3 câu]
-- Lời khuyên: [cách cân bằng cảm xúc cụ thể]
+- Cảm xúc chính: [Xác định cảm xúc - VD: Căng thẳng, Lo âu, Buồn bã, Sợ hãi, Căng thẳng]
+- Tạng phủ bị ảnh hưởng: [Tên tạng bị ảnh hưởng - VD: Gan, Tâm, Tỳ, Phổi, Thận]
+- Giải thích cơ chế: [CHỈ giải thích CƠ CHẾ sinh lý - KHÔNG đưa ra lời khuyên hành động. VD: "Theo y học cổ truyền, Gan chủ tình chí, khi căng thẳng làm Khí Gan uất, gây đau đầu, chóng mặt. Y học hiện đại cho thấy stress kéo dài tăng cortisol, làm co mạch máu và căng cơ." - 2-3 câu]
 
 【CHẾ ĐỘ ĂN UỐNG】
 Dựa vào Ngũ hành cần bổ (${diagnostic.expertAnalysis.tiDung.ti.element}):

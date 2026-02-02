@@ -28,8 +28,7 @@ SCHEMA JSON (TUÂN THỦ CHÍNH XÁC):
   "emotionalConnection": {
     "emotion": "string - Cảm xúc chính từ mục CẢM XÚC - BỆNH LÝ",
     "organ": "string - Tạng phủ bị ảnh hưởng",
-    "westernExplanation": "string - Giải thích sinh lý học",
-    "advice": "string - Lời khuyên cân bằng cảm xúc"
+    "explanation": "string - Giải thích cơ chế sinh lý (Đông + Tây y) - CHỈ giải thích, KHÔNG có lời khuyên"
   },
   "diet": {
     "shouldEat": ["string - Thực phẩm + lý do", ...] - 4-5 items,
@@ -87,6 +86,9 @@ QUY TẮC CHUYỂN ĐỔI:
 2. "explanation": Ghép toàn bộ nội dung từ mục 【PHÂN TÍCH Y LÝ CHI TIẾT】 thành 1 STRING, ngăn cách đoạn bằng "\\n\\n"
 3. "symptoms": Trích xuất từng triệu chứng từ mục 【TRIỆU CHỨNG CÓ THỂ GẶP】
 4. "emotionalConnection": Trích xuất từ mục 【MỐI LIÊN HỆ CẢM XÚC - BỆNH LÝ】
+   - emotion: Từ dòng "Cảm xúc chính:"
+   - organ: Từ dòng "Tạng phủ bị ảnh hưởng:"
+   - explanation: Từ dòng "Giải thích cơ chế:" - CHỈ lấy giải thích, KHÔNG bao gồm lời khuyên hành động
 5. "diet": Trích xuất từ mục 【CHẾ ĐỘ ĂN UỐNG】
 6. "lifestyle": Trích xuất từ mục 【LỜI KHUYÊN SINH HOẠT】
 7. "prognosis": Trích xuất từ mục 【TIÊN LƯỢNG & HỒI PHỤC】

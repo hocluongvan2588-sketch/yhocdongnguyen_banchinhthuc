@@ -32,8 +32,7 @@ interface AIAnalysis {
   emotionalConnection: {
     emotion: string;
     organ: string;
-    westernExplanation: string;
-    advice: string;
+    explanation: string;
   };
   diet: {
     shouldEat: string[];
@@ -405,15 +404,9 @@ export default function ResultsPage() {
                           Ảnh hưởng: {aiAnalysis.emotionalConnection.organ}
                         </Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground">
-                        <span className="font-medium text-foreground">Theo y học hiện đại:</span> {aiAnalysis.emotionalConnection.westernExplanation}
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {aiAnalysis.emotionalConnection.explanation}
                       </p>
-                      <div className="pt-2 border-t border-pink-500/20">
-                        <p className="text-sm">
-                          <span className="font-medium text-foreground">Lời khuyên:</span>{' '}
-                          <span className="text-muted-foreground">{aiAnalysis.emotionalConnection.advice}</span>
-                        </p>
-                      </div>
                     </div>
                   </div>
                 )}

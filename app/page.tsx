@@ -608,7 +608,7 @@ export default function HomePage() {
                             className="ml-1 font-semibold underline hover:no-underline"
                           >
                             Đăng nhập
-                          </button> để lưu lịch sử và không bị giới hạn.
+                          </button> để lưu lịch sử và nhiều tính năng khác.
                         </AlertDescription>
                       </Alert>
                     )}
@@ -626,7 +626,7 @@ export default function HomePage() {
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Đang xử lý...
                     </>
-                  ) : user ? 'Lập quẻ chẩn đoán' : 'Lập quẻ (không cần đăng nhập)'}
+                  ) : user ? 'Lập quẻ chẩn đoán' : 'Lập quẻ chẩn đoán'}
                 </Button>
               </CardContent>
             </Card>
