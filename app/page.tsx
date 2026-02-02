@@ -502,7 +502,7 @@ export default function HomePage() {
 
                 {/* Thông tin người bệnh */}
                 <div className="space-y-4 border-t border-border pt-6">
-                  <h3 className="text-sm font-semibold text-foreground">Thông tin người bệnh</h3>
+                  <h3 className="text-sm font-semibold text-foreground">Thông tin người hỏi</h3>
                   
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                     <div>
@@ -608,7 +608,7 @@ export default function HomePage() {
                             className="ml-1 font-semibold underline hover:no-underline"
                           >
                             Đăng nhập
-                          </button> để lưu lịch sử và không bị giới hạn.
+                          </button> để lưu lịch sử và mở nhiều tính năng khác.
                         </AlertDescription>
                       </Alert>
                     )}
@@ -626,7 +626,7 @@ export default function HomePage() {
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Đang xử lý...
                     </>
-                  ) : user ? 'Lập quẻ chẩn đoán' : 'Lập quẻ (không cần đăng nhập)'}
+                  ) : user ? 'Lập quẻ chẩn đoán' : 'Lập quẻ chẩn đoán'}
                 </Button>
               </CardContent>
             </Card>
@@ -918,7 +918,7 @@ export default function HomePage() {
               <AccordionContent className="text-muted-foreground">
                 <strong>Quẻ Chủ (Bản quái):</strong> Phản ánh tình trạng hiện tại của người hỏi. 
                 <strong> Quẻ Biến:</strong> Cho thấy xu hướng phát triển trong tương lai. 
-                <strong> Quẻ Hõ (Hỗ quái):</strong> Thể hiện những yếu tố tiềm ẩn bên trong, 
+                <strong> Quẻ Hổ (Hỗ quái):</strong> Thể hiện những yếu tố tiềm ẩn bên trong, 
                 giúp phân tích sâu hơn về nguyên nhân gốc rễ của vấn đề.
               </AccordionContent>
             </AccordionItem>
