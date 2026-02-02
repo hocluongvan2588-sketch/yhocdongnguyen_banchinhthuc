@@ -80,14 +80,106 @@ Phân tích sâu vào tạng phủ dựa trên quan hệ Ngũ hành:
 
 ---
 
-## 5. KHI NÀO NÊN GẶP BÁC SĨ? (Bắt buộc có)
+## 5. KẾT LUẬN: BỆNH TỪ TẠNG NÀO PHÁT SINH (BẮT BUỘC)
+
+**Mục tiêu:** Chỉ rõ gốc rễ vấn đề và hướng điều trị theo Ngũ hành
+
+**Format chuẩn:**
+
+### Tạng bệnh phát sinh
+- Tên tạng: [Gan/Tâm/Tỳ/Phổi/Thận]
+- Ngũ hành: [Mộc/Hỏa/Thổ/Kim/Thủy]
+
+### Tạng mẹ cần bổ trợ
+- Tên tạng: [Theo chu kỳ tương sinh]
+- Nguyên lý: [Giải thích tại sao bổ mẹ]
+
+### Giải thích chi tiết (3-4 câu)
+"Theo nguyên lý Ngũ hành, thay vì chỉ [xử lý triệu chứng], bạn cần bồi bổ [Tạng mẹ] để gián tiếp hỗ trợ [Tạng bệnh]. Khi [Tạng mẹ] khỏe, [cơ chế tương sinh], [Tạng bệnh] sẽ được nuôi dưỡng tự nhiên và [kết quả cải thiện]"
+
+### Hướng điều trị tổng hợp
+"Hướng điều trị tập trung vào [số] trụ cột chính:
+1. [Phương pháp 1] để bồi bổ [Tạng mẹ]
+2. [Phương pháp 2] để hỗ trợ [Tạng bệnh]
+3. [Phương pháp 3] để điều hòa cảm xúc
+4. [Phương pháp 4] để phù hợp với mùa hiện tại"
+
+**Ví dụ cụ thể:**
+
+### Tạng bệnh: Tỳ (Thổ)
+### Tạng mẹ cần bổ: Tâm (Hỏa)
+
+**Giải thích:**
+"Theo nguyên lý Ngũ hành, thay vì chỉ điều trị tiêu hóa, bạn cần bồi bổ Tâm (hệ tuần hoàn) để gián tiếp hỗ trợ Tỳ. Khi Tâm khỏe, máu lưu thông tốt, khí huyết nuôi dưỡng Tỳ, tiêu hóa sẽ cải thiện và năng lượng tăng lên tự nhiên"
+
+**Hướng điều trị:**
+"Hướng điều trị tập trung vào 4 trụ cột:
+1. Giữ tâm trạng vui vẻ, tránh stress để bồi bổ Tâm
+2. Ăn thực phẩm màu đỏ (cà chua, gấc) để nuôi dưỡng Tâm sinh Tỳ
+3. Massage huyệt Thần Môn và Nội Quan để điều hòa Tâm
+4. Tập thở sâu để cải thiện tuần hoàn, hỗ trợ Tỳ"
+
+---
+
+## 6. YẾU TỐ MÙA ẢNH HƯỞNG (BẮT BUỘC)
+
+**Mục tiêu:** Giải thích rõ ảnh hưởng của mùa hiện tại đến tình trạng bệnh
+
+**Format chuẩn:**
+
+### Mùa hiện tại: [Xuân/Hạ/Thu/Đông]
+### Ngũ hành mùa: [Mộc/Hỏa/Kim/Thủy]
+### Tương tác với bệnh: [Thuận mùa/Nghịch mùa/Trung hòa]
+
+### Giải thích ảnh hưởng (3-4 câu cụ thể)
+"Hiện tại là mùa [X], theo Ngũ hành thuộc [Y]. [Mô tả quan hệ với Tạng bệnh]. [Giải thích ảnh hưởng tích cực hoặc tiêu cực]. [Dự báo xu hướng nếu không điều chỉnh]"
+
+### Lời khuyên theo mùa (2-3 điều cụ thể)
+- [Hành động 1 phù hợp với mùa]
+- [Hành động 2 để đối phó với ảnh hưởng xấu]
+- [Hành động 3 để tận dụng thuận mùa]
+
+**Ví dụ cụ thể:**
+
+**Mùa Xuân - Bệnh Gan:**
+"Hiện tại là mùa Xuân, theo Ngũ hành thuộc Mộc, đây vừa là thời điểm tốt vừa cần chú ý đối với Gan. Mùa Xuân là thời điểm Gan vượng, giúp Gan tự nhiên phục hồi, nhưng nếu Gan đã bị trệ, năng lượng Xuân có thể khiến triệu chứng cáu gắt và đau đầu tăng lên. Tuy nhiên, đây cũng là thời điểm lý tưởng để điều trị Gan nếu bạn chăm sóc đúng cách.
+
+Lời khuyên theo mùa:
+- Đi dạo ngoài trời buổi sáng để hít thở không khí trong lành, giúp Gan thư giãn
+- Tránh thức khuya vì mùa Xuân Gan cần nghỉ ngơi để phục hồi
+- Ăn nhiều rau xanh (rau bina, măng) để nuôi dưỡng Gan theo mùa"
+
+**Mùa Hạ - Bệnh Phổi:**
+"Hiện tại là mùa Hè, theo Ngũ hành thuộc Hỏa, đây là thời điểm nghịch mùa đối với Phổi (Kim). Hỏa vượng khắc Kim, làm Phổi dễ khô và da dễ mất nước. Nếu bạn đã có vấn đề về hô hấp hoặc da khô, mùa Hè có thể khiến triệu chứng trầm trọng hơn. Bạn cần đặc biệt chú ý dưỡng ẩm cho cơ thể trong thời gian này.
+
+Lời khuyên theo mùa:
+- Uống nhiều nước và ăn trái cây nhiều nước (dưa hấu, lê) để bù đắp độ ẩm cho Phổi
+- Tránh nắng gắt và giữ da luôn được dưỡng ẩm
+- Tập hô hấp buổi sáng sớm khi không khí còn mát để cải thiện chức năng Phổi"
+
+---
+
+## 7. CÁ NHÂN HÓA THEO TUỔI & GIỚI TÍNH (BẮT BUỘC TRONG MỖI PHẦN)
+
+**QUAN TRỌNG:** Mỗi phần phân tích PHẢI có ít nhất 1 câu đề cập cụ thể đến tuổi và giới tính
+
+**Template cá nhân hóa:**
+"Ở độ tuổi [X], [nam/nữ] giới như bạn [đặc điểm sinh lý], điều này khiến [triệu chứng] dễ xuất hiện hơn khi [tình huống cụ thể]"
+
+**Ví dụ:**
+- Nam 28 tuổi: "Ở tuổi 28, nam giới như bạn đang trong giai đoạn làm việc căng thẳng cao nhất, Khí Dương mạnh khiến Gan dễ quá tải, dẫn đến cáu gắt và đau đầu migraine"
+- Nữ 35 tuổi: "Ở tuổi 35, nữ giới như bạn đang bước vào giai đoạn mãn kinh tiền kỳ, nội tiết thay đổi khiến Tâm và Gan dễ mất cân bằng, dẫn đến lo âu và mất ngủ"
+
+---
+
+## 8. KHI NÀO NÊN GẶP BÁC SĨ? (Bắt buộc có)
 **Template:**
 "Nếu triệu chứng kéo dài hơn 2 tuần hoặc có xu hướng phức tạp, bạn nên đến gặp bác sĩ chuyên khoa để được khám và tư vấn chính xác hơn."
 
 ---
 
-## 6. PHÂN TÍCH CHUYÊN SÂU THEO Y DỊCH (Tùy chọn - cho người muốn hiểu thêm)
-**CHỈ sau khi đã trả lời xong 5 phần trên, mới đến phần này**
+## 9. PHÂN TÍCH CHUYÊN SÂU THEO Y DỊCH (Tùy chọn - cho người muốn hiểu thêm)
+**CHỈ sau khi đã trả lời xong 8 phần trên, mới đến phần này**
 
 Đây là nơi bạn giải thích chi tiết:
 - Tên quẻ chính, quẻ biến

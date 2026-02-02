@@ -49,10 +49,19 @@ SCHEMA JSON (TUÂN THỦ CHÍNH XÁC):
     }
   },
   "treatmentOrigin": {
-    "affectedOrgan": "string - Tạng bệnh phát sinh (VD: Gan, Tim, Tỳ, Phổi, Thận)",
+    "affectedOrgan": "string - Tạng bệnh phát sinh (VD: Gan, Tâm, Tỳ, Phổi, Thận)",
+    "affectedElement": "string - Ngũ hành của tạng bệnh (Mộc/Hỏa/Thổ/Kim/Thủy)",
     "motherOrgan": "string - Tạng mẹ cần bổ trợ theo ngũ hành tương sinh",
-    "explanation": "string - Giải thích tại sao cần bổ trợ tạng mẹ",
-    "treatmentDirection": "string - Hướng điều trị tổng hợp"
+    "motherElement": "string - Ngũ hành của tạng mẹ",
+    "explanation": "string - Giải thích chi tiết (3-4 câu) tại sao cần bổ trợ tạng mẹ thay vì chữa con",
+    "treatmentDirection": "string - Hướng điều trị tổng hợp gồm 4 trụ cột cụ thể"
+  },
+  "seasonalFactor": {
+    "currentSeason": "string - Mùa hiện tại (Xuân/Hạ/Thu/Đông)",
+    "seasonElement": "string - Ngũ hành của mùa (Mộc/Hỏa/Kim/Thủy)",
+    "compatibility": "string - Tương tác với bệnh (Thuận mùa/Nghịch mùa/Trung hòa)",
+    "explanation": "string - Giải thích ảnh hưởng cụ thể của mùa (3-4 câu)",
+    "seasonalAdvice": ["string - Lời khuyên 1", "string - Lời khuyên 2", "string - Lời khuyên 3"]
   },
   "serviceRecommendations": {
     "herbalMedicine": {
@@ -82,7 +91,10 @@ QUY TẮC CHUYỂN ĐỔI:
 6. "lifestyle": Trích xuất từ mục 【LỜI KHUYÊN SINH HOẠT】
 7. "prognosis": Trích xuất từ mục 【TIÊN LƯỢNG & HỒI PHỤC】
 8. "treatmentOrigin": Trích xuất từ mục 【KẾT LUẬN: BỆNH TỪ TẠNG NÀO PHÁT SINH】
-9. "serviceRecommendations": Trích xuất từ mục 【GỢI Ý DỊCH VỤ CHUYÊN SÂU】
+   - Bao gồm: Tạng bệnh, Tạng mẹ, Giải thích chi tiết, Hướng điều trị
+9. "seasonalFactor": Trích xuất từ mục 【YẾU TỐ MÙA ẢNH HƯỞNG】
+   - Bao gồm: Mùa hiện tại, Ngũ hành mùa, Tương tác, Giải thích, Lời khuyên
+10. "serviceRecommendations": Trích xuất từ mục 【GỢI Ý DỊCH VỤ CHUYÊN SÂU】
    - recommended = true nếu "Khuyến nghị: Có"
    - recommended = false nếu "Khuyến nghị: Không"
 
