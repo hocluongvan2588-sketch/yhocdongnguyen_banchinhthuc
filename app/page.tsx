@@ -1,13 +1,9 @@
 'use client';
 
 import { AccordionContent } from "@/components/ui/accordion"
-
 import { AccordionTrigger } from "@/components/ui/accordion"
-
 import { AccordionItem } from "@/components/ui/accordion"
-
 import { Accordion } from "@/components/ui/accordion"
-
 import Link from "next/link"
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -23,7 +19,8 @@ import type { MaiHuaResult } from '@/lib/utils/maihua-engine';
 import Header from '@/components/Header';
 import LoginModal from '@/components/LoginModal';
 import { createClient } from '@/lib/supabase/client';
-import { AlertTriangle, Loader2, BookOpen, ArrowRight } from 'lucide-react';
+import { Loader2, BookOpen, ArrowRight, AlertCircle, Info } from 'lucide-react';
+import { checkGuestRateLimit } from '@/lib/utils/rate-limit';
 
 export default function HomePage() {
   const router = useRouter();
@@ -119,6 +116,10 @@ export default function HomePage() {
               sessionStorage.removeItem('pending-diagnosis-form');
             }
           }
+        } else {
+          // For guest users, check localStorage
+          const { remaining } = checkGuestRateLimit();
+          setQueriesRemaining(remaining);
         }
       } catch (err) {
         if (!isMounted) return;
@@ -153,6 +154,59 @@ export default function HomePage() {
   const [result, setResult] = useState<MaiHuaResult | null>(null);
   const [diagnostic, setDiagnostic] = useState<DiagnosticResult | null>(null);
   
+  // Guest rate limiting using localStorage
+  const checkGuestRateLimit = () => {
+    const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+    const storageKey = 'guest_query_limit';
+    
+    try {
+      const stored = localStorage.getItem(storageKey);
+      const data = stored ? JSON.parse(stored) : { date: today, count: 0 };
+      
+      // Reset if new day
+      if (data.date !== today) {
+        data.date = today;
+        data.count = 0;
+      }
+      
+      // Check if limit reached
+      if (data.count >= 3) {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        return { allowed: false, remaining: 0, resetTime: tomorrow.getTime() };
+      }
+      
+      return { allowed: true, remaining: 3 - data.count, resetTime: 0 };
+    } catch (e) {
+      console.error('Error checking guest rate limit:', e);
+      return { allowed: true, remaining: 3, resetTime: 0 };
+    }
+  };
+  
+  const incrementGuestQueryCount = () => {
+    const today = new Date().toLocaleDateString('en-CA');
+    const storageKey = 'guest_query_limit';
+    
+    try {
+      const stored = localStorage.getItem(storageKey);
+      const data = stored ? JSON.parse(stored) : { date: today, count: 0 };
+      
+      if (data.date !== today) {
+        data.date = today;
+        data.count = 0;
+      }
+      
+      data.count += 1;
+      localStorage.setItem(storageKey, JSON.stringify(data));
+      
+      // Update remaining count display
+      setQueriesRemaining(3 - data.count);
+    } catch (e) {
+      console.error('Error incrementing guest query count:', e);
+    }
+  };
+  
   // Thông tin người bệnh
   const [age, setAge] = useState<string>('');
   const [gender, setGender] = useState<'nam' | 'nu'>('nam');
@@ -169,27 +223,26 @@ export default function HomePage() {
   const handleCalculate = async () => {
     setRateLimitError(null);
     
-    // Check if user is logged in - show modal instead of redirect
-    if (!user) {
-      // Save form data before showing login modal
-      const formData = {
-        day,
-        month,
-        year,
-        hour,
-        age,
-        gender,
-        subject,
-        question,
-        timestamp: Date.now()
-      };
-      sessionStorage.setItem('pending-diagnosis-form', JSON.stringify(formData));
-      setShowLoginModal(true);
+    // Check rate limit for both logged-in and guest users
+    const { allowed, remaining, resetTime } = checkGuestRateLimit();
+    
+    if (!allowed) {
+      const resetDate = new Date(resetTime);
+      const hours = resetDate.getHours().toString().padStart(2, '0');
+      const minutes = resetDate.getMinutes().toString().padStart(2, '0');
+      
+      if (user) {
+        setRateLimitError(`Bạn đã sử dụng hết 3 lượt hỏi quẻ trong ngày. Vui lòng quay lại vào ngày mai sau ${hours}:${minutes}.`);
+      } else {
+        setRateLimitError(
+          `Bạn đã sử dụng hết 3 lượt hỏi quẻ miễn phí trong ngày. Đăng nhập để tiếp tục sử dụng và lưu lịch sử các lần gieo quẻ. Reset sau ${hours}:${minutes}.`
+        );
+      }
       return;
     }
     
-    // Check rate limit
-    if (queriesRemaining !== null && queriesRemaining <= 0) {
+    // For logged-in users, also check database rate limit
+    if (user && queriesRemaining !== null && queriesRemaining <= 0) {
       setRateLimitError('Bạn đã sử dụng hết 3 lượt hỏi quẻ trong ngày. Vui lòng quay lại vào ngày mai.');
       return;
     }
@@ -212,33 +265,38 @@ export default function HomePage() {
       
       setPatientContext(context);
       
-      // Save query to database for history and rate limiting
-      const { error: insertError } = await supabase.from('query_history').insert({
-        user_id: user.id,
-        query_date: new Date().toLocaleDateString('en-CA'), // YYYY-MM-DD format
-        query_time: new Date().toISOString(),
-        main_hexagram: calculatedResult.mainHexagram.name,
-        changed_hexagram: calculatedResult.changedHexagram.name,
-        mutual_hexagram: calculatedResult.mutualHexagram.name,
-        moving_line: calculatedResult.movingLine,
-        patient_age: context.age || null,
-        patient_gender: context.gender,
-        patient_subject: context.subject,
-        question: context.question,
-        input_data: {
-          day, month, year, hour,
-          lunarDate: calculatedResult.lunarDate
+      // Save query to database for logged-in users only
+      if (user) {
+        const { error: insertError } = await supabase.from('query_history').insert({
+          user_id: user.id,
+          query_date: new Date().toLocaleDateString('en-CA'), // YYYY-MM-DD format
+          query_time: new Date().toISOString(),
+          main_hexagram: calculatedResult.mainHexagram.name,
+          changed_hexagram: calculatedResult.changedHexagram.name,
+          mutual_hexagram: calculatedResult.mutualHexagram.name,
+          moving_line: calculatedResult.movingLine,
+          patient_age: context.age || null,
+          patient_gender: context.gender,
+          patient_subject: context.subject,
+          question: context.question,
+          input_data: {
+            day, month, year, hour,
+            lunarDate: calculatedResult.lunarDate
+          }
+        });
+        
+        if (insertError) {
+          console.error('Error saving query:', insertError);
+          // Continue anyway - don't block user
+        } else {
+          // Update remaining queries
+          if (queriesRemaining !== null) {
+            setQueriesRemaining(queriesRemaining - 1);
+          }
         }
-      });
-      
-      if (insertError) {
-        console.error('Error saving query:', insertError);
-        // Continue anyway - don't block user
       } else {
-        // Update remaining queries
-        if (queriesRemaining !== null) {
-          setQueriesRemaining(queriesRemaining - 1);
-        }
+        // For guest users, increment localStorage count
+        incrementGuestQueryCount();
       }
       
       // Lưu vào sessionStorage và chuyển trang
@@ -522,9 +580,11 @@ export default function HomePage() {
                 {/* Rate Limit Status */}
                 {!isCheckingAuth && (
                   <div className="space-y-3">
-                    {user && queriesRemaining !== null && (
+                    {queriesRemaining !== null && (
                       <div className="flex items-center justify-between rounded-md border border-border/50 bg-muted/30 px-4 py-2">
-                        <span className="text-sm text-muted-foreground">Số lượt hỏi còn lại hôm nay:</span>
+                        <span className="text-sm text-muted-foreground">
+                          {user ? 'Số lượt hỏi còn lại hôm nay:' : 'Số lượt miễn phí còn lại:'}
+                        </span>
                         <Badge variant={queriesRemaining > 0 ? "secondary" : "destructive"}>
                           {queriesRemaining}/3
                         </Badge>
@@ -532,9 +592,24 @@ export default function HomePage() {
                     )}
                     
                     {rateLimitError && (
-                      <Alert variant="destructive">
-                        <AlertTriangle className="h-4 w-4" />
+                      <Alert variant="destructive" className="mt-4">
+                        <AlertCircle className="h-4 w-4" />
                         <AlertDescription>{rateLimitError}</AlertDescription>
+                      </Alert>
+                    )}
+                    
+                    {!user && queriesRemaining !== null && queriesRemaining > 0 && (
+                      <Alert className="mt-4 border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950">
+                        <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        <AlertDescription className="text-blue-800 dark:text-blue-200">
+                          Bạn có thể gieo quẻ mà không cần đăng nhập (còn {queriesRemaining} lượt hôm nay). 
+                          <button 
+                            onClick={() => setShowLoginModal(true)}
+                            className="ml-1 font-semibold underline hover:no-underline"
+                          >
+                            Đăng nhập
+                          </button> để lưu lịch sử và không bị giới hạn.
+                        </AlertDescription>
                       </Alert>
                     )}
                   </div>
@@ -544,14 +619,14 @@ export default function HomePage() {
                   onClick={handleCalculate} 
                   className="w-full" 
                   size="lg"
-                  disabled={isSubmitting || (user && queriesRemaining !== null && queriesRemaining <= 0)}
+                  disabled={isSubmitting || (queriesRemaining !== null && queriesRemaining <= 0)}
                 >
                   {isSubmitting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Đang xử lý...
                     </>
-                  ) : !user ? 'Đăng nhập để lập quẻ' : 'Lập quẻ chẩn đoán'}
+                  ) : user ? 'Lập quẻ chẩn đoán' : 'Lập quẻ (không cần đăng nhập)'}
                 </Button>
               </CardContent>
             </Card>

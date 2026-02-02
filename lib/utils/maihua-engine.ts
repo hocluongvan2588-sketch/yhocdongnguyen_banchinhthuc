@@ -51,20 +51,27 @@ export const BAGUA_LINES: Record<number, [boolean, boolean, boolean]> = {
 };
 
 /**
+ * Bảng tra số Hoàng Đế cho Địa Chi
+ * Tý=1, Sửu=2, Dần=3, Mão=4, Thìn=5, Tỵ=6,
+ * Ngọ=7, Mùi=8, Thân=9, Dậu=10, Tuất=11, Hợi=12
+ */
+export const DI_CHI_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+/**
  * Bảng 64 quẻ (index bằng upper * 10 + lower)
  * Format: "Tên quẻ|Ý nghĩa y lý"
  */
 export const HEXAGRAM_64 = {
   11: "Càn|Đầu, phổi, xương - Năng lượng dương cực thịnh",
-  12: "Đoài|Phổi, miệng, hô hấp - Vấn đề phế kim",
-  13: "Ly|Tim, mắt - Huyết áp, tuần hoàn",
-  14: "Chấn|Gan, chân - Thần kinh, cơ bắp",
-  15: "Tốn|Gan, mật - Gió, khí hư",
-  16: "Khảm|Thận, tai - Thủy, tiết niệu",
-  17: "Cấn|Dạ dày, lưng - Tiêu hóa, xương khớp",
-  18: "Khôn|Lá lách, bụng - Thổ, tiêu hóa",
+  12: "Thiên Trạch Lý|Tranh chấp, viêm nhiễm",
+  13: "Thiên Hỏa Đồng Nhân|Cộng đồng, tim phế",
+  14: "Thiên Lôi Vô Vọng|Không vọng, gan phổi",
+  15: "Thiên Phong Cấu|Gặp gỡ, phong hàn",
+  16: "Thiên Thủy Tụng|Tranh tụng, phổi thận",
+  17: "Thiên Sơn Độn|Ẩn náu, phổi tỳ",
+  18: "Thiên Địa Bĩ|Tắc nghẽn, phế tỳ",
   
-  21: "Thiên Trạch Lý|Tranh chấp, viêm nhiễm",
+  21: "Trạch Thiên Quải|Quyết đoán, đột phá",
   22: "Đoài|Phổi, miệng - Kim thuộc tính",
   23: "Trạch Hỏa Cách|Cách mạng, biến đổi đột ngột",
   24: "Trạch Lôi Tuỳ|Theo đuổi, mất máu",
@@ -73,14 +80,14 @@ export const HEXAGRAM_64 = {
   27: "Trạch Sơn Hàm|Nhai, dạ dày",
   28: "Trạch Địa Tụy|Tụ tập, u bướu",
   
-  31: "Thiên Hỏa Đồng Nhân|Cộng đồng, tim phế",
-  32: "Hỏa Trạch Khuê|Chia ly, nhãn khoa",
+  31: "Sơn Trạch Tổn|Tổn thất, tỳ phế",
+  32: "Sơn Hỏa Bí|Trang trí, tỳ tim",
   33: "Ly|Hỏa - Tim, mắt",
-  34: "Hỏa Lôi Phệ Hạp|Cắn gặp, viêm gan",
-  35: "Hỏa Phong Đỉnh|Nấu nướng, tiêu hóa mạnh",
-  36: "Hỏa Thủy Vị Tế|Chưa hoàn thành, thận tim bất giao",
-  37: "Hỏa Sơn Lữ|Du lịch, bất an",
-  38: "Hỏa Địa Tấn|Tiến bộ, sốt nhẹ",
+  34: "Sơn Lôi Di|Nuôi dưỡng, dạ dày gan",
+  35: "Sơn Phong Cổ|Rối loạn, tỳ gan",
+  36: "Sơn Thủy Mông|Mù mờ, tỳ thận",
+  37: "Cấn|Sơn - Dạ dày, lưng",
+  38: "Sơn Địa Bác|Bóc lột, tiêu hóa kém",
   
   41: "Thiên Lôi Vô Vọng|Không vọng, gan phổi",
   42: "Lôi Trạch Quy Muội|Về nhà, hôn nhân - phụ khoa",
@@ -190,6 +197,7 @@ function getHexagramLines(upper: number, lower: number): boolean[] {
  */
 function flipLine(lines: boolean[], position: number): boolean[] {
   const newLines = [...lines];
+  // position: 1-6, nhưng mảng bắt đầu từ 0
   newLines[position - 1] = !newLines[position - 1];
   return newLines;
 }
@@ -231,9 +239,12 @@ function getHexagramInfo(upper: number, lower: number): { name: string; meaning:
 /**
  * Tính Quẻ Hổ (Mutual Hexagram)
  * Lấy hào 2,3,4 làm Hổ Hạ và hào 3,4,5 làm Hổ Thượng
+ * Chú ý: lines[0] = hào 1 (dưới cùng), lines[5] = hào 6 (trên cùng)
  */
 function getMutualHexagram(lines: boolean[]): { upper: number; lower: number } {
+  // Hào 2,3,4 làm Hạ quẻ Hổ
   const mutualLower: [boolean, boolean, boolean] = [lines[1], lines[2], lines[3]];
+  // Hào 3,4,5 làm Thượng quẻ Hổ
   const mutualUpper: [boolean, boolean, boolean] = [lines[2], lines[3], lines[4]];
   
   let lower = 0;
@@ -253,6 +264,47 @@ function getMutualHexagram(lines: boolean[]): { upper: number; lower: number } {
 }
 
 /**
+ * Tính Địa Chi của năm (0-11: Tý đến Hợi)
+ */
+function getYearDiChi(year: number): number {
+  // Công thức: (năm - 4) % 12
+  // Lý do: Năm Giáp Tý là năm 4, nên lấy năm - 4
+  let result = (year - 4) % 12;
+  if (result < 0) result += 12; // Xử lý số âm
+  return result;
+}
+
+/**
+ * Xác định ngày Âm lịch chính xác theo giờ Dịch học
+ * Quy tắc: 0h-1h sáng thuộc ngày mới, 23h-24h vẫn thuộc ngày cũ
+ */
+function getLunarDateForDichHoc(
+  solarDay: number,
+  solarMonth: number,
+  solarYear: number,
+  hour: number
+): { day: number; month: number; year: number; isLeap: boolean } {
+  let targetDay = solarDay;
+  let targetMonth = solarMonth;
+  let targetYear = solarYear;
+  
+  // Trong Dịch học: 0h-1h sáng đã thuộc ngày mới
+  if (hour >= 0 && hour < 1) {
+    // Chuyển sang ngày hôm sau
+    const nextDay = new Date(solarYear, solarMonth - 1, solarDay);
+    nextDay.setDate(nextDay.getDate() + 1);
+    targetDay = nextDay.getDate();
+    targetMonth = nextDay.getMonth() + 1;
+    targetYear = nextDay.getFullYear();
+    console.log(`[MaiHua] Giờ ${hour}h thuộc ngày mới: ${targetDay}/${targetMonth}/${targetYear}`);
+  } else {
+    console.log(`[MaiHua] Giờ ${hour}h thuộc ngày hiện tại: ${solarDay}/${solarMonth}/${solarYear}`);
+  }
+  
+  return convertSolar2Lunar(targetDay, targetMonth, targetYear);
+}
+
+/**
  * Hàm chính: Lập quẻ Mai Hoa từ ngày dương lịch
  * 
  * @param day - Ngày (1-31)
@@ -267,82 +319,73 @@ export function calculateMaiHua(
   year: number,
   hour: number
 ): MaiHuaResult {
-  // Module 1: Chuẩn hóa dữ liệu đầu vào
-  let lunar = convertSolar2Lunar(day, month, year);
+  console.log(`[MaiHua] Input: ${day}/${month}/${year} ${hour}h`);
+  
+  // 1. Xác định ngày Âm lịch theo giờ Dịch học
+  const lunar = getLunarDateForDichHoc(day, month, year, hour);
   const hourChi = getHourChi(hour);
   
-  // QUY TẮC QUAN TRỌNG: Sau 23h đêm (Giờ Tý) được tính là ngày hôm sau
-  // Giờ Tý (23h-01h sáng) thuộc về ngày mới trong Dịch học
-  if (hour >= 23) {
-    // Chuyển sang ngày hôm sau
-    const nextDay = new Date(year, month - 1, day);
-    nextDay.setDate(nextDay.getDate() + 1);
-    lunar = convertSolar2Lunar(nextDay.getDate(), nextDay.getMonth() + 1, nextDay.getFullYear());
-    
-    console.log('[v0] Hour >= 23, advancing to next lunar day:', {
-      originalDay: day,
-      newDay: lunar.day,
-      hour,
-      hourChi: 'Tý'
-    });
-  }
+  console.log(`[MaiHua] Lunar date: ${lunar.day}/${lunar.month}/${lunar.year} (${lunar.isLeap ? 'leap' : 'normal'})`);
+  console.log(`[MaiHua] Hour Chi: ${hourChi} (hour: ${hour})`);
   
-  // Công thức lấy số năm: (năm + 8) % 12 => Địa chi năm
-  // Ất Tỵ: Chi = Tỵ = 5 (Tý=0,Sửu=1,Dần=2,Mão=3,Thìn=4,Tỵ=5...)
-  // Cộng thêm 1 để có 1-12: 5+1=6 ✓
-  const yearChi = (lunar.year + 8) % 12; // 0-11: Tý đến Hợi
-  const Y = yearChi + 1; // 1-12 (nhưng sẽ dùng để tính mod 8)
+  // 2. Tính các số theo công thức Thiệu Khang Tiết
+  
+  // a) Số năm (Y): Lấy số Hoàng Đế của Địa Chi năm
+  const yearDiChi = getYearDiChi(lunar.year);
+  const Y = DI_CHI_NUMBERS[yearDiChi];
+  
+  // b) Số tháng (M): Tháng Âm lịch
   const M = lunar.month;
+  
+  // c) Số ngày (D): Ngày Âm lịch
   const D = lunar.day;
-  const H = hourChi + 1; // Chi giờ (1-12)
   
-  console.log('[v0] Mai Hoa Calculation Input:', { Y, M, D, H, lunarYear: lunar.year, yearChi });
+  // d) Số giờ (H): Lấy số Hoàng Đế của Địa Chi giờ + 1
+  const H = hourChi + 1; // hourChi từ 0-11, cần 1-12
   
-  // Module 2: Engine lập quẻ
+  console.log(`[MaiHua] Numbers: Y=${Y} (DiChi=${yearDiChi}), M=${M}, D=${D}, H=${H}`);
   
-  // 2.1: Xác định Quẻ Thượng và Quẻ Hạ
+  // 3. Tính Quẻ Thượng và Quẻ Hạ
   let upperValue = (Y + M + D) % 8;
   if (upperValue === 0) upperValue = 8;
   
   let lowerValue = (Y + M + D + H) % 8;
   if (lowerValue === 0) lowerValue = 8;
   
-  // 2.2: Xác định Hào động
+  // 4. Tính Hào động
   let movingLineValue = (Y + M + D + H) % 6;
   if (movingLineValue === 0) movingLineValue = 6;
   
-  console.log('[v0] Mai Hoa Trigrams:', { 
-    sum1: Y + M + D, 
-    upperValue, 
-    upperName: BAGUA_NAMES[upperValue],
-    sum2: Y + M + D + H, 
-    lowerValue,
-    lowerName: BAGUA_NAMES[lowerValue],
-    movingLineValue 
-  });
+  console.log(`[MaiHua] Trigrams: Upper=${upperValue}(${BAGUA_NAMES[upperValue]}), Lower=${lowerValue}(${BAGUA_NAMES[lowerValue]})`);
+  console.log(`[MaiHua] Moving line: ${movingLineValue}`);
   
-  // Tạo Quẻ Chủ
+  // 5. Tạo Quẻ Chủ (Bản quái)
   const mainLines = getHexagramLines(upperValue, lowerValue);
   const mainInfo = getHexagramInfo(upperValue, lowerValue);
   
-  // Tạo Quẻ Biến (đổi hào động)
+  // 6. Tạo Quẻ Biến (đổi hào động)
   const changedLines = flipLine(mainLines, movingLineValue);
   const changedTrigrams = linesToTrigrams(changedLines);
   const changedInfo = getHexagramInfo(changedTrigrams.upper, changedTrigrams.lower);
   
-  // 2.3: Tính Quẻ Hổ
+  // 7. Tính Quẻ Hổ (Tương quái)
   const mutualTrigrams = getMutualHexagram(mainLines);
   const mutualLines = getHexagramLines(mutualTrigrams.upper, mutualTrigrams.lower);
   const mutualInfo = getHexagramInfo(mutualTrigrams.upper, mutualTrigrams.lower);
   
-  // Diễn giải y lý cơ bản
+  console.log(`[MaiHua] Main hexagram: ${mainInfo.name}`);
+  console.log(`[MaiHua] Changed hexagram: ${changedInfo.name}`);
+  console.log(`[MaiHua] Mutual hexagram: ${mutualInfo.name}`);
+  
+  // 8. Diễn giải y lý
   const interpretation = {
     mainMeaning: mainInfo.meaning || "Trạng thái hiện tại của cơ thể",
     changedMeaning: changedInfo.meaning || "Xu hướng diễn biến của bệnh",
-    health: `Quẻ chủ ${mainInfo.name} cho thấy tình trạng sức khỏe liên quan đến ${mainInfo.meaning}. Hào động ở vị trí ${movingLineValue} và quẻ biến ${changedInfo.name} cho thấy xu hướng ${changedInfo.meaning}.`
+    health: `Quẻ chủ ${mainInfo.name} cho thấy: ${mainInfo.meaning}. Hào động ở vị trí ${movingLineValue} biến thành quẻ ${changedInfo.name}, biểu thị xu hướng ${changedInfo.meaning}. Quẻ hổ ${mutualInfo.name} cho thấy tình trạng tiềm ẩn.`
   };
   
-  return {
+  // 9. Tạo kết quả
+  const result: MaiHuaResult = {
     solarDate: { day, month, year, hour },
     lunarDate: {
       day: lunar.day,
@@ -377,4 +420,49 @@ export function calculateMaiHua(
     },
     interpretation
   };
+  
+  return result;
+}
+
+/**
+ * Hàm helper: Hiển thị quẻ dạng text
+ */
+export function displayHexagram(result: MaiHuaResult): string {
+  const { mainHexagram, changedHexagram, mutualHexagram, movingLine } = result;
+  
+  let display = `QUẺ MAI HOA DỊCH SỐ\n`;
+  display += `Ngày: ${result.solarDate.day}/${result.solarDate.month}/${result.solarDate.year} ${result.solarDate.hour}h\n`;
+  display += `Âm lịch: ${result.lunarDate.day}/${result.lunarDate.month}/${result.lunarDate.year} ${result.lunarDate.isLeap ? '(nhuận)' : ''}\n\n`;
+  
+  display += `1. QUẺ CHỦ (Bản quái): ${mainHexagram.name}\n`;
+  display += `   ${mainHexagram.symbol}\n`;
+  display += `   Hào từ dưới lên:\n`;
+  mainHexagram.lines.forEach((line, index) => {
+    const lineNum = index + 1;
+    const lineSymbol = line ? '⚊ Dương' : '⚋ Âm';
+    const moving = lineNum === movingLine ? ' ← ĐỘNG' : '';
+    display += `   Hào ${lineNum}: ${lineSymbol}${moving}\n`;
+  });
+  display += `   Ý nghĩa: ${result.interpretation.mainMeaning}\n\n`;
+  
+  display += `2. QUẺ BIẾN (Chi quái): ${changedHexagram.name}\n`;
+  display += `   ${changedHexagram.symbol}\n`;
+  display += `   Hào động: ${movingLine}\n`;
+  display += `   Ý nghĩa: ${result.interpretation.changedMeaning}\n\n`;
+  
+  display += `3. QUẺ HỔ (Tương quái): ${mutualHexagram.name}\n`;
+  display += `   ${mutualHexagram.symbol}\n\n`;
+  
+  display += `4. TỔNG KẾT Y LÝ:\n`;
+  display += `   ${result.interpretation.health}\n`;
+  
+  return display;
+}
+
+/**
+ * Test với ví dụ cụ thể
+ */
+export function testMaiHuaExample(): MaiHuaResult {
+  // Test với ngày 15/3/2025 10:30 (giờ Tỵ)
+  return calculateMaiHua(15, 3, 2025, 10);
 }
