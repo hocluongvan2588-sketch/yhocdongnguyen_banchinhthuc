@@ -51,88 +51,89 @@ export const BAGUA_LINES: Record<number, [boolean, boolean, boolean]> = {
 };
 
 /**
- * Bảng tra số Hoàng Đế cho Địa Chi
- * Tý=1, Sửu=2, Dần=3, Mão=4, Thìn=5, Tỵ=6,
- * Ngọ=7, Mùi=8, Thân=9, Dậu=10, Tuất=11, Hợi=12
+ * Bảng 64 quẻ theo công thức: upper * 10 + lower
+ * Ví dụ: Càn (1) + Đoài (2) = 12 = Thiên Trạch Lý
  */
-export const DI_CHI_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-
-/**
- * Bảng 64 quẻ (index bằng upper * 10 + lower)
- * Format: "Tên quẻ|Ý nghĩa y lý"
- */
-export const HEXAGRAM_64 = {
-  11: "Càn|Đầu, phổi, xương - Năng lượng dương cực thịnh",
-  12: "Thiên Trạch Lý|Tranh chấp, viêm nhiễm",
-  13: "Thiên Hỏa Đồng Nhân|Cộng đồng, tim phế",
-  14: "Thiên Lôi Vô Vọng|Không vọng, gan phổi",
-  15: "Thiên Phong Cấu|Gặp gỡ, phong hàn",
-  16: "Thiên Thủy Tụng|Tranh tụng, phổi thận",
-  17: "Thiên Sơn Độn|Ẩn náu, phổi tỳ",
-  18: "Thiên Địa Bĩ|Tắc nghẽn, phế tỳ",
+export const HEXAGRAM_64: Record<number, { name: string; chinese: string; meaning: string }> = {
+  // Nhóm 1: Càn Thượng (1)
+  11: { name: "Càn", chinese: "乾", meaning: "Đầu, phổi, xương - Năng lượng dương cực thịnh" },
+  12: { name: "Thiên Trạch Lý", chinese: "天澤履", meaning: "Tranh chấp, viêm nhiễm" },
+  13: { name: "Thiên Hỏa Đồng Nhân", chinese: "天火同人", meaning: "Cộng đồng, tim phế" },
+  14: { name: "Thiên Lôi Vô Vọng", chinese: "天雷无妄", meaning: "Không vọng, gan phổi" },
+  15: { name: "Thiên Phong Cấu", chinese: "天風姤", meaning: "Gặp gỡ, phong hàn" },
+  16: { name: "Thiên Thủy Tụng", chinese: "天水訟", meaning: "Tranh tụng, phổi thận" },
+  17: { name: "Thiên Sơn Độn", chinese: "天山遯", meaning: "Ẩn náu, phổi tỳ" },
+  18: { name: "Thiên Địa Bĩ", chinese: "天地否", meaning: "Tắc nghẽn, phế tỳ" },
   
-  21: "Trạch Thiên Quải|Quyết đoán, đột phá",
-  22: "Đoài|Phổi, miệng - Kim thuộc tính",
-  23: "Trạch Hỏa Cách|Cách mạng, biến đổi đột ngột",
-  24: "Trạch Lôi Tuỳ|Theo đuổi, mất máu",
-  25: "Trạch Phong Đại Quá|Quá độ, suy yếu nghiêm trọng",
-  26: "Trạch Thủy Khốn|Khốn đốn, thận hư",
-  27: "Trạch Sơn Hàm|Nhai, dạ dày",
-  28: "Trạch Địa Tụy|Tụ tập, u bướu",
+  // Nhóm 2: Đoài Thượng (2)
+  21: { name: "Trạch Thiên Quải", chinese: "澤天夬", meaning: "Quyết đoán, đột phá" },
+  22: { name: "Đoài", chinese: "兌", meaning: "Phổi, miệng - Kim thuộc tính" },
+  23: { name: "Trạch Hỏa Cách", chinese: "澤火革", meaning: "Cách mạng, biến đổi đột ngột" },
+  24: { name: "Trạch Lôi Tuỳ", chinese: "澤雷隨", meaning: "Theo đuổi, mất máu" },
+  25: { name: "Trạch Phong Đại Quá", chinese: "澤風大過", meaning: "Quá độ, suy yếu nghiêm trọng" },
+  26: { name: "Trạch Thủy Khốn", chinese: "澤水困", meaning: "Khốn đốn, thận hư" },
+  27: { name: "Trạch Sơn Hàm", chinese: "澤山咸", meaning: "Nhai, dạ dày" },
+  28: { name: "Trạch Địa Tụy", chinese: "澤地萃", meaning: "Tụ tập, u bướu" },
   
-  31: "Sơn Trạch Tổn|Tổn thất, tỳ phế",
-  32: "Sơn Hỏa Bí|Trang trí, tỳ tim",
-  33: "Ly|Hỏa - Tim, mắt",
-  34: "Sơn Lôi Di|Nuôi dưỡng, dạ dày gan",
-  35: "Sơn Phong Cổ|Rối loạn, tỳ gan",
-  36: "Sơn Thủy Mông|Mù mờ, tỳ thận",
-  37: "Cấn|Sơn - Dạ dày, lưng",
-  38: "Sơn Địa Bác|Bóc lột, tiêu hóa kém",
+  // Nhóm 3: Ly Thượng (3)
+  31: { name: "Hỏa Thiên Đại Hữu", chinese: "火天大有", meaning: "Đại hữu, phổi tim" },
+  32: { name: "Hỏa Trạch Khuê", chinese: "火澤睽", meaning: "Xa cách, bất đồng" },
+  33: { name: "Ly", chinese: "離", meaning: "Hỏa - Tim, mắt" },
+  34: { name: "Hỏa Lôi Phệ Hạp", chinese: "火雷噬嗑", meaning: "Nhai cắn, dạ dày gan" },
+  35: { name: "Hỏa Phong Đỉnh", chinese: "火風鼎", meaning: "Cái vạc, tỳ gan" },
+  36: { name: "Hỏa Thủy Vị Tế", chinese: "火水未濟", meaning: "Chưa hoàn thành, tim thận" },
+  37: { name: "Hỏa Sơn Lữ", chinese: "火山旅", meaning: "Du lịch, tỳ tim" },
+  38: { name: "Hỏa Địa Tấn", chinese: "火地晉", meaning: "Tiến lên, tiêu hóa kém" },
   
-  41: "Thiên Lôi Vô Vọng|Không vọng, gan phổi",
-  42: "Lôi Trạch Quy Muội|Về nhà, hôn nhân - phụ khoa",
-  43: "Lôi Hỏa Phong|Phong phú, huyết khí tốt",
-  44: "Chấn|Lôi - Gan, chấn động",
-  45: "Lôi Phong Hằng|Thường hằng, gan mật ổn định",
-  46: "Lôi Thủy Giải|Giải thoát, gan thận",
-  47: "Lôi Sơn Tiểu Quá|Nhỏ vượt, gan tỳ",
-  48: "Lôi Địa Dự|An nhàn, lạc quan - Khí huyết thông suốt",
+  // Nhóm 4: Chấn Thượng (4)
+  41: { name: "Lôi Thiên Đại Tráng", chinese: "雷天大壯", meaning: "Đại tráng, gan phổi" },
+  42: { name: "Lôi Trạch Quy Muội", chinese: "雷澤歸妹", meaning: "Về nhà, hôn nhân - phụ khoa" },
+  43: { name: "Lôi Hỏa Phong", chinese: "雷火豐", meaning: "Phong phú, huyết khí tốt" },
+  44: { name: "Chấn", chinese: "震", meaning: "Lôi - Gan, chấn động" },
+  45: { name: "Lôi Phong Hằng", chinese: "雷風恒", meaning: "Thường hằng, gan mật ổn định" },
+  46: { name: "Lôi Thủy Giải", chinese: "雷水解", meaning: "Giải thoát, gan thận" },
+  47: { name: "Lôi Sơn Tiểu Quá", chinese: "雷山小過", meaning: "Nhỏ vượt, gan tỳ" },
+  48: { name: "Lôi Địa Dự", chinese: "雷地豫", meaning: "An nhàn, lạc quan - Khí huyết thông suốt" },
   
-  51: "Thiên Phong Cấu|Gặp gỡ, phong hàn",
-  52: "Phong Trạch Trung Phu|Trung thành, phổi gan",
-  53: "Phong Hỏa Gia Nhân|Gia đình, nội tạng",
-  54: "Phong Lôi Ích|Lợi ích, tăng cường",
-  55: "Tốn|Phong - Gan mật, gió",
-  56: "Phong Thủy Hoán|Tán loạn, khí huyết rối",
-  57: "Phong Sơn Tiệm|Tiệm tiến, từ từ cải thiện",
-  58: "Phong Địa Quán|Quan sát, chậm tiến triển",
+  // Nhóm 5: Tốn Thượng (5)
+  51: { name: "Phong Thiên Tiểu Súc", chinese: "風天小畜", meaning: "Tiểu súc, phong hàn" },
+  52: { name: "Phong Trạch Trung Phu", chinese: "風澤中孚", meaning: "Trung thành, phổi gan" },
+  53: { name: "Phong Hỏa Gia Nhân", chinese: "風火家人", meaning: "Gia đình, nội tạng" },
+  54: { name: "Phong Lôi Ích", chinese: "風雷益", meaning: "Lợi ích, tăng cường" },
+  55: { name: "Tốn", chinese: "巽", meaning: "Phong - Gan mật, gió" },
+  56: { name: "Phong Thủy Hoán", chinese: "風水渙", meaning: "Tán loạn, khí huyết rối" },
+  57: { name: "Phong Sơn Tiệm", chinese: "風山漸", meaning: "Tiệm tiến, từ từ cải thiện" },
+  58: { name: "Phong Địa Quán", chinese: "風地觀", meaning: "Quan sát, chậm tiến triển" },
   
-  61: "Thiên Thủy Tụng|Tranh tụng, phổi thận",
-  62: "Thủy Trạch Tiết|Tiết chế, thận phế",
-  63: "Thủy Hỏa Ký Tế|Đã hoàn thành, thận tim cân bằng",
-  64: "Thủy Lôi Truân|Gian nan, thận gan",
-  65: "Thủy Phong Tỉnh|Giếng nước, thận gan",
-  66: "Khảm|Thủy - Thận, tiết niệu",
-  67: "Thủy Sơn Kiển|Khập khiễng, thận tỳ",
-  68: "Thủy Địa Tỷ|So sánh, phù thũng",
+  // Nhóm 6: Khảm Thượng (6)
+  61: { name: "Thủy Thiên Nhu", chinese: "水天需", meaning: "Chờ đợi, phổi thận" },
+  62: { name: "Thủy Trạch Tiết", chinese: "水澤節", meaning: "Tiết chế, thận phế" },
+  63: { name: "Thủy Hỏa Ký Tế", chinese: "水火既濟", meaning: "Đã hoàn thành, thận tim cân bằng" },
+  64: { name: "Thủy Lôi Truân", chinese: "水雷屯", meaning: "Gian nan, thận gan" },
+  65: { name: "Thủy Phong Tỉnh", chinese: "水風井", meaning: "Giếng nước, thận gan" },
+  66: { name: "Khảm", chinese: "坎", meaning: "Thủy - Thận, tiết niệu" },
+  67: { name: "Thủy Sơn Kiển", chinese: "水山蹇", meaning: "Khập khiễng, thận tỳ" },
+  68: { name: "Thủy Địa Tỷ", chinese: "水地比", meaning: "So sánh, phù thũng" },
   
-  71: "Thiên Sơn Độn|Ẩn náu, phổi tỳ",
-  72: "Sơn Trạch Tổn|Tổn thất, tỳ phế",
-  73: "Sơn Hỏa Bí|Trang trí, tỳ tim",
-  74: "Sơn Lôi Di|Nuôi dưỡng, dạ dày gan",
-  75: "Sơn Phong Cổ|Rối loạn, tỳ gan",
-  76: "Sơn Thủy Mông|Mù mờ, tỳ thận",
-  77: "Cấn|Sơn - Dạ dày, lưng",
-  78: "Sơn Địa Bác|Bóc lột, tiêu hóa kém",
+  // Nhóm 7: Cấn Thượng (7)
+  71: { name: "Sơn Thiên Đại Súc", chinese: "山天大畜", meaning: "Đại súc, tỳ phổi" },
+  72: { name: "Sơn Trạch Tổn", chinese: "山澤損", meaning: "Tổn thất, tỳ phế" },
+  73: { name: "Sơn Hỏa Bí", chinese: "山火賁", meaning: "Trang trí, tỳ tim" },
+  74: { name: "Sơn Lôi Di", chinese: "山雷頤", meaning: "Nuôi dưỡng, dạ dày gan" },
+  75: { name: "Sơn Phong Cổ", chinese: "山風蠱", meaning: "Rối loạn, tỳ gan" },
+  76: { name: "Sơn Thủy Mông", chinese: "山水蒙", meaning: "Mù mờ, tỳ thận" },
+  77: { name: "Cấn", chinese: "艮", meaning: "Sơn - Dạ dày, lưng" },
+  78: { name: "Sơn Địa Bác", chinese: "山地剝", meaning: "Bóc lột, tiêu hóa kém" },
   
-  81: "Thiên Địa Bĩ|Tắc nghẽn, phế tỳ",
-  82: "Địa Trạch Lâm|Đến gần, tỳ phế",
-  83: "Địa Hỏa Minh Di|Ánh sáng bị tổn, tỳ tim",
-  84: "Địa Lôi Phục|Phục hồi, tỳ gan",
-  85: "Địa Phong Thăng|Thăng tiến, tỳ gan tốt",
-  86: "Địa Thủy Sư|Quân đội, tỳ thận",
-  87: "Địa Sơn Khiêm|Khiêm tốn, tỳ vị",
-  88: "Khôn|Địa - Lá lách, bụng, tiêu hóa"
+  // Nhóm 8: Khôn Thượng (8)
+  81: { name: "Địa Thiên Thái", chinese: "地天泰", meaning: "Thái hòa, tỳ phổi cân bằng" },
+  82: { name: "Địa Trạch Lâm", chinese: "地澤臨", meaning: "Đến gần, tỳ phế" },
+  83: { name: "Địa Hỏa Minh Di", chinese: "地火明夷", meaning: "Ánh sáng bị tổn, tỳ tim" },
+  84: { name: "Địa Lôi Phục", chinese: "地雷復", meaning: "Phục hồi, tỳ gan" },
+  85: { name: "Địa Phong Thăng", chinese: "地風升", meaning: "Thăng tiến, tỳ gan tốt" },
+  86: { name: "Địa Thủy Sư", chinese: "地水師", meaning: "Quân đội, tỳ thận" },
+  87: { name: "Địa Sơn Khiêm", chinese: "地山謙", meaning: "Khiêm tốn, tỳ vị" },
+  88: { name: "Khôn", chinese: "坤", meaning: "Địa - Lá lách, bụng, tiêu hóa" }
 };
 
 /**
@@ -197,7 +198,6 @@ function getHexagramLines(upper: number, lower: number): boolean[] {
  */
 function flipLine(lines: boolean[], position: number): boolean[] {
   const newLines = [...lines];
-  // position: 1-6, nhưng mảng bắt đầu từ 0
   newLines[position - 1] = !newLines[position - 1];
   return newLines;
 }
@@ -229,22 +229,21 @@ function linesToTrigrams(lines: boolean[]): { upper: number; lower: number } {
 /**
  * Lấy tên và ý nghĩa quẻ
  */
-function getHexagramInfo(upper: number, lower: number): { name: string; meaning: string } {
+function getHexagramInfo(upper: number, lower: number): { name: string; chinese: string; meaning: string } {
   const key = upper * 10 + lower;
-  const info = HEXAGRAM_64[key as keyof typeof HEXAGRAM_64] || "Chưa có thông tin|";
-  const [name, meaning] = info.split("|");
-  return { name, meaning };
+  const info = HEXAGRAM_64[key];
+  if (!info) {
+    return { name: "Không xác định", chinese: "", meaning: "" };
+  }
+  return info;
 }
 
 /**
  * Tính Quẻ Hổ (Mutual Hexagram)
  * Lấy hào 2,3,4 làm Hổ Hạ và hào 3,4,5 làm Hổ Thượng
- * Chú ý: lines[0] = hào 1 (dưới cùng), lines[5] = hào 6 (trên cùng)
  */
 function getMutualHexagram(lines: boolean[]): { upper: number; lower: number } {
-  // Hào 2,3,4 làm Hạ quẻ Hổ
   const mutualLower: [boolean, boolean, boolean] = [lines[1], lines[2], lines[3]];
-  // Hào 3,4,5 làm Thượng quẻ Hổ
   const mutualUpper: [boolean, boolean, boolean] = [lines[2], lines[3], lines[4]];
   
   let lower = 0;
@@ -264,47 +263,6 @@ function getMutualHexagram(lines: boolean[]): { upper: number; lower: number } {
 }
 
 /**
- * Tính Địa Chi của năm (0-11: Tý đến Hợi)
- */
-function getYearDiChi(year: number): number {
-  // Công thức: (năm - 4) % 12
-  // Lý do: Năm Giáp Tý là năm 4, nên lấy năm - 4
-  let result = (year - 4) % 12;
-  if (result < 0) result += 12; // Xử lý số âm
-  return result;
-}
-
-/**
- * Xác định ngày Âm lịch chính xác theo giờ Dịch học
- * Quy tắc: 0h-1h sáng thuộc ngày mới, 23h-24h vẫn thuộc ngày cũ
- */
-function getLunarDateForDichHoc(
-  solarDay: number,
-  solarMonth: number,
-  solarYear: number,
-  hour: number
-): { day: number; month: number; year: number; isLeap: boolean } {
-  let targetDay = solarDay;
-  let targetMonth = solarMonth;
-  let targetYear = solarYear;
-  
-  // Trong Dịch học: 0h-1h sáng đã thuộc ngày mới
-  if (hour >= 0 && hour < 1) {
-    // Chuyển sang ngày hôm sau
-    const nextDay = new Date(solarYear, solarMonth - 1, solarDay);
-    nextDay.setDate(nextDay.getDate() + 1);
-    targetDay = nextDay.getDate();
-    targetMonth = nextDay.getMonth() + 1;
-    targetYear = nextDay.getFullYear();
-    console.log(`[MaiHua] Giờ ${hour}h thuộc ngày mới: ${targetDay}/${targetMonth}/${targetYear}`);
-  } else {
-    console.log(`[MaiHua] Giờ ${hour}h thuộc ngày hiện tại: ${solarDay}/${solarMonth}/${solarYear}`);
-  }
-  
-  return convertSolar2Lunar(targetDay, targetMonth, targetYear);
-}
-
-/**
  * Hàm chính: Lập quẻ Mai Hoa từ ngày dương lịch
  * 
  * @param day - Ngày (1-31)
@@ -319,73 +277,82 @@ export function calculateMaiHua(
   year: number,
   hour: number
 ): MaiHuaResult {
-  console.log(`[MaiHua] Input: ${day}/${month}/${year} ${hour}h`);
-  
-  // 1. Xác định ngày Âm lịch theo giờ Dịch học
-  const lunar = getLunarDateForDichHoc(day, month, year, hour);
+  // Module 1: Chuẩn hóa dữ liệu đầu vào
+  let lunar = convertSolar2Lunar(day, month, year);
   const hourChi = getHourChi(hour);
   
-  console.log(`[MaiHua] Lunar date: ${lunar.day}/${lunar.month}/${lunar.year} (${lunar.isLeap ? 'leap' : 'normal'})`);
-  console.log(`[MaiHua] Hour Chi: ${hourChi} (hour: ${hour})`);
+  // QUY TẮC QUAN TRỌNG: Sau 23h đêm (Giờ Tý) được tính là ngày hôm sau
+  // Giờ Tý (23h-01h sáng) thuộc về ngày mới trong Dịch học
+  if (hour >= 23) {
+    // Chuyển sang ngày hôm sau
+    const nextDay = new Date(year, month - 1, day);
+    nextDay.setDate(nextDay.getDate() + 1);
+    lunar = convertSolar2Lunar(nextDay.getDate(), nextDay.getMonth() + 1, nextDay.getFullYear());
+    
+    console.log('[v0] Hour >= 23, advancing to next lunar day:', {
+      originalDay: day,
+      newDay: lunar.day,
+      hour,
+      hourChi: 'Tý'
+    });
+  }
   
-  // 2. Tính các số theo công thức Thiệu Khang Tiết
-  
-  // a) Số năm (Y): Lấy số Hoàng Đế của Địa Chi năm
-  const yearDiChi = getYearDiChi(lunar.year);
-  const Y = DI_CHI_NUMBERS[yearDiChi];
-  
-  // b) Số tháng (M): Tháng Âm lịch
+  // Công thức lấy số năm: (năm + 8) % 12 => Địa chi năm
+  // Ất Tỵ: Chi = Tỵ = 5 (Tý=0,Sửu=1,Dần=2,Mão=3,Thìn=4,Tỵ=5...)
+  // Cộng thêm 1 để có 1-12: 5+1=6 ✓
+  const yearChi = (lunar.year + 8) % 12; // 0-11: Tý đến Hợi
+  const Y = yearChi + 1; // 1-12 (nhưng sẽ dùng để tính mod 8)
   const M = lunar.month;
-  
-  // c) Số ngày (D): Ngày Âm lịch
   const D = lunar.day;
+  const H = hourChi + 1; // Chi giờ (1-12)
   
-  // d) Số giờ (H): Lấy số Hoàng Đế của Địa Chi giờ + 1
-  const H = hourChi + 1; // hourChi từ 0-11, cần 1-12
+  console.log('[v0] Mai Hoa Calculation Input:', { Y, M, D, H, lunarYear: lunar.year, yearChi });
   
-  console.log(`[MaiHua] Numbers: Y=${Y} (DiChi=${yearDiChi}), M=${M}, D=${D}, H=${H}`);
+  // Module 2: Engine lập quẻ
   
-  // 3. Tính Quẻ Thượng và Quẻ Hạ
+  // 2.1: Xác định Quẻ Thượng và Quẻ Hạ
   let upperValue = (Y + M + D) % 8;
   if (upperValue === 0) upperValue = 8;
   
   let lowerValue = (Y + M + D + H) % 8;
   if (lowerValue === 0) lowerValue = 8;
   
-  // 4. Tính Hào động
+  // 2.2: Xác định Hào động
   let movingLineValue = (Y + M + D + H) % 6;
   if (movingLineValue === 0) movingLineValue = 6;
   
-  console.log(`[MaiHua] Trigrams: Upper=${upperValue}(${BAGUA_NAMES[upperValue]}), Lower=${lowerValue}(${BAGUA_NAMES[lowerValue]})`);
-  console.log(`[MaiHua] Moving line: ${movingLineValue}`);
+  console.log('[v0] Mai Hoa Trigrams:', { 
+    sum1: Y + M + D, 
+    upperValue, 
+    upperName: BAGUA_NAMES[upperValue],
+    sum2: Y + M + D + H, 
+    lowerValue,
+    lowerName: BAGUA_NAMES[lowerValue],
+    movingLineValue 
+  });
   
-  // 5. Tạo Quẻ Chủ (Bản quái)
+  // Tạo Quẻ Chủ
   const mainLines = getHexagramLines(upperValue, lowerValue);
   const mainInfo = getHexagramInfo(upperValue, lowerValue);
   
-  // 6. Tạo Quẻ Biến (đổi hào động)
+  // Tạo Quẻ Biến (đổi hào động)
   const changedLines = flipLine(mainLines, movingLineValue);
   const changedTrigrams = linesToTrigrams(changedLines);
   const changedInfo = getHexagramInfo(changedTrigrams.upper, changedTrigrams.lower);
   
-  // 7. Tính Quẻ Hổ (Tương quái)
+  // 2.3: Tính Quẻ Hổ
   const mutualTrigrams = getMutualHexagram(mainLines);
   const mutualLines = getHexagramLines(mutualTrigrams.upper, mutualTrigrams.lower);
   const mutualInfo = getHexagramInfo(mutualTrigrams.upper, mutualTrigrams.lower);
   
-  console.log(`[MaiHua] Main hexagram: ${mainInfo.name}`);
-  console.log(`[MaiHua] Changed hexagram: ${changedInfo.name}`);
-  console.log(`[MaiHua] Mutual hexagram: ${mutualInfo.name}`);
-  
-  // 8. Diễn giải y lý
+  // Diễn giải y lý cơ bản
   const interpretation = {
     mainMeaning: mainInfo.meaning || "Trạng thái hiện tại của cơ thể",
     changedMeaning: changedInfo.meaning || "Xu hướng diễn biến của bệnh",
-    health: `Quẻ chủ ${mainInfo.name} cho thấy: ${mainInfo.meaning}. Hào động ở vị trí ${movingLineValue} biến thành quẻ ${changedInfo.name}, biểu thị xu hướng ${changedInfo.meaning}. Quẻ hổ ${mutualInfo.name} cho thấy tình trạng tiềm ẩn.`
+    health: `Quẻ chủ ${mainInfo.name} cho thấy tình trạng sức khỏe liên quan đến ${mainInfo.meaning}. Hào động ở vị trí ${movingLineValue} và quẻ biến ${changedInfo.name} cho thấy xu hướng ${changedInfo.meaning}.`
   };
   
-  // 9. Tạo kết quả
-  const result: MaiHuaResult = {
+  return {
     solarDate: { day, month, year, hour },
     lunarDate: {
       day: lunar.day,
@@ -420,49 +387,4 @@ export function calculateMaiHua(
     },
     interpretation
   };
-  
-  return result;
-}
-
-/**
- * Hàm helper: Hiển thị quẻ dạng text
- */
-export function displayHexagram(result: MaiHuaResult): string {
-  const { mainHexagram, changedHexagram, mutualHexagram, movingLine } = result;
-  
-  let display = `QUẺ MAI HOA DỊCH SỐ\n`;
-  display += `Ngày: ${result.solarDate.day}/${result.solarDate.month}/${result.solarDate.year} ${result.solarDate.hour}h\n`;
-  display += `Âm lịch: ${result.lunarDate.day}/${result.lunarDate.month}/${result.lunarDate.year} ${result.lunarDate.isLeap ? '(nhuận)' : ''}\n\n`;
-  
-  display += `1. QUẺ CHỦ (Bản quái): ${mainHexagram.name}\n`;
-  display += `   ${mainHexagram.symbol}\n`;
-  display += `   Hào từ dưới lên:\n`;
-  mainHexagram.lines.forEach((line, index) => {
-    const lineNum = index + 1;
-    const lineSymbol = line ? '⚊ Dương' : '⚋ Âm';
-    const moving = lineNum === movingLine ? ' ← ĐỘNG' : '';
-    display += `   Hào ${lineNum}: ${lineSymbol}${moving}\n`;
-  });
-  display += `   Ý nghĩa: ${result.interpretation.mainMeaning}\n\n`;
-  
-  display += `2. QUẺ BIẾN (Chi quái): ${changedHexagram.name}\n`;
-  display += `   ${changedHexagram.symbol}\n`;
-  display += `   Hào động: ${movingLine}\n`;
-  display += `   Ý nghĩa: ${result.interpretation.changedMeaning}\n\n`;
-  
-  display += `3. QUẺ HỔ (Tương quái): ${mutualHexagram.name}\n`;
-  display += `   ${mutualHexagram.symbol}\n\n`;
-  
-  display += `4. TỔNG KẾT Y LÝ:\n`;
-  display += `   ${result.interpretation.health}\n`;
-  
-  return display;
-}
-
-/**
- * Test với ví dụ cụ thể
- */
-export function testMaiHuaExample(): MaiHuaResult {
-  // Test với ngày 15/3/2025 10:30 (giờ Tỵ)
-  return calculateMaiHua(15, 3, 2025, 10);
 }
