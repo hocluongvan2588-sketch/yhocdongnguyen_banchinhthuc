@@ -1,8 +1,18 @@
 import React from "react"
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
+
+// Viewport configuration - cố định màn hình mobile, không cho phóng to/thu nhỏ
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  minimumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover', // Hỗ trợ iPhone có notch
+}
 
 import { Geist_Mono, Manrope as V0_Font_Manrope, Geist_Mono as V0_Font_Geist_Mono, Cormorant as V0_Font_Cormorant } from 'next/font/google'
 
