@@ -92,17 +92,56 @@ export default function ResultsPage() {
       const parsedData = JSON.parse(storedData);
       setData(parsedData);
       
-      // Gọi API để lấy phân tích AI
-      fetchAIAnalysis(parsedData);
+      // Kiểm tra cache AI analysis trước khi gọi API
+      const cachedAIAnalysis = sessionStorage.getItem('ai-analysis-cache');
+      const cacheTimestamp = sessionStorage.getItem('ai-analysis-timestamp');
+      const cacheInputHash = sessionStorage.getItem('ai-analysis-input-hash');
+      
+      // Tạo hash từ input để so sánh (đơn giản: dùng JSON string)
+      const currentInputHash = JSON.stringify({
+        maihua: parsedData.maihua?.mainHexagram?.name,
+        movingLine: parsedData.maihua?.movingLine,
+        gender: parsedData.patientContext?.gender,
+        age: parsedData.patientContext?.age,
+        question: parsedData.patientContext?.question
+      });
+      
+      // Cache hợp lệ trong 30 phút và input phải khớp
+      const cacheAge = cacheTimestamp ? Date.now() - parseInt(cacheTimestamp) : Infinity;
+      const cacheValid = cacheAge < 30 * 60 * 1000 && cacheInputHash === currentInputHash;
+      
+      if (cachedAIAnalysis && cacheValid) {
+        // Sử dụng cache, không cần gọi API
+        try {
+          const parsedCache = JSON.parse(cachedAIAnalysis);
+          setAiAnalysis(parsedCache);
+          setIsLoadingAI(false);
+          console.log('[v0] Using cached AI analysis (age: ' + Math.round(cacheAge / 1000) + 's)');
+        } catch {
+          // Cache lỗi, gọi API mới
+          fetchAIAnalysis(parsedData);
+        }
+      } else {
+        // Không có cache hoặc cache hết hạn, gọi API
+        fetchAIAnalysis(parsedData);
+      }
     } else {
       router.push('/');
     }
   }, [router]);
 
-  const fetchAIAnalysis = async (resultsData: ResultsData) => {
+  const fetchAIAnalysis = async (resultsData: ResultsData, forceRefresh = false) => {
     try {
       setIsLoadingAI(true);
       setAiError(null);
+      
+      // Xóa cache cũ nếu force refresh
+      if (forceRefresh) {
+        sessionStorage.removeItem('ai-analysis-cache');
+        sessionStorage.removeItem('ai-analysis-timestamp');
+        sessionStorage.removeItem('ai-analysis-input-hash');
+        console.log('[v0] Cache cleared for force refresh');
+      }
       
       const response = await fetch('/api/analyze', {
         method: 'POST',
@@ -116,6 +155,24 @@ export default function ResultsPage() {
 
       if (result.success) {
         setAiAnalysis(result.analysis);
+        
+        // Lưu cache AI analysis
+        try {
+          sessionStorage.setItem('ai-analysis-cache', JSON.stringify(result.analysis));
+          sessionStorage.setItem('ai-analysis-timestamp', Date.now().toString());
+          // Lưu hash của input để validate cache
+          const inputHash = JSON.stringify({
+            maihua: resultsData.maihua?.mainHexagram?.name,
+            movingLine: resultsData.maihua?.movingLine,
+            gender: resultsData.patientContext?.gender,
+            age: resultsData.patientContext?.age,
+            question: resultsData.patientContext?.question
+          });
+          sessionStorage.setItem('ai-analysis-input-hash', inputHash);
+          console.log('[v0] AI analysis cached successfully');
+        } catch (cacheError) {
+          console.warn('[v0] Failed to cache AI analysis:', cacheError);
+        }
       } else {
         setAiError(result.error || 'Không thể phân tích');
       }
@@ -317,7 +374,7 @@ export default function ResultsPage() {
                       variant="outline" 
                       size="sm" 
                       className="mt-4 bg-transparent"
-                      onClick={() => fetchAIAnalysis(data)}
+                      onClick={() => fetchAIAnalysis(data, true)}
                     >
                       Thử lại
                     </Button>
