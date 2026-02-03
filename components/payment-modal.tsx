@@ -348,13 +348,17 @@ Nội dung: ${deposit.payment_code}`
   if (deposit) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-lg max-h-[95vh] overflow-y-auto p-3 sm:p-6">
-          <DialogHeader className="space-y-1 sm:space-y-2">
+        <DialogContent className="sm:max-w-lg max-h-[90vh] flex flex-col p-0">
+          {/* Sticky Header - luôn hiển thị ở trên */}
+          <DialogHeader className="space-y-1 sm:space-y-2 px-3 sm:px-6 pt-4 sm:pt-6 pb-3 border-b bg-background sticky top-0 z-10">
             <DialogTitle className="text-base sm:text-lg text-foreground">
               {isMobile ? "Chuyển Khoản Thanh Toán" : "Quét Mã QR Để Thanh Toán"}
             </DialogTitle>
             <DialogDescription className="text-xs sm:text-sm">{packageInfo.name}</DialogDescription>
           </DialogHeader>
+          
+          {/* Scrollable Content Area */}
+          <div className="flex-1 overflow-y-auto px-3 sm:px-6 pb-4 sm:pb-6">
 
           <div className="space-y-3 sm:space-y-6 py-2 sm:py-4">
             {isMobile ? (
@@ -553,6 +557,7 @@ Nội dung: ${deposit.payment_code}`
               </Alert>
             )}
           </div>
+          </div>
         </DialogContent>
       </Dialog>
     )
@@ -561,7 +566,7 @@ Nội dung: ${deposit.payment_code}`
   // Initial state - show package info and create deposit button
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-foreground">Thanh Toán</DialogTitle>
           <DialogDescription>{packageInfo.name}</DialogDescription>
