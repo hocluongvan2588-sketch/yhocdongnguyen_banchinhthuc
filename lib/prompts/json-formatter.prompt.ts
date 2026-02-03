@@ -6,11 +6,28 @@
  * Output: JSON thuần túy, không text bên ngoài
  */
 
-export function buildJsonFormatterPrompt(unifiedContent: string): string {
+export function buildJsonFormatterPrompt(
+  unifiedContent: string,
+  patientInfo?: { subject: string; gender: string; age: number; pronoun: string }
+): string {
+  // Tạo phần thông tin bệnh nhân cố định nếu được cung cấp
+  const patientInfoSection = patientInfo ? `
+═══════════════════════════════════════════════════════════
+⚠️ THÔNG TIN BỆNH NHÂN CỐ ĐỊNH (KHÔNG ĐƯỢC THAY ĐỔI):
+═══════════════════════════════════════════════════════════
+- Đối tượng: ${patientInfo.subject}
+- Giới tính: ${patientInfo.gender} (BẮT BUỘC PHẢI LÀ "${patientInfo.gender}")
+- Tuổi: ${patientInfo.age} (BẮT BUỘC PHẢI LÀ ${patientInfo.age})
+- Cách xưng hô: "${patientInfo.pronoun}"
+
+KHI TẠO JSON, BẠN PHẢI COPY CHÍNH XÁC 4 GIÁ TRỊ NÀY VÀO "patientInfo".
+TUYỆT ĐỐI KHÔNG ĐƯỢC ĐỔI GIỚI TÍNH HOẶC TUỔI!
+` : '';
+
   return `Bạn là hệ thống FORMAT DỮ LIỆU. KHÔNG sáng tạo, CHỈ trích xuất và format.
 
 NHIỆM VỤ: Chuyển nội dung thành JSON THEO ĐÚNG SCHEMA.
-
+${patientInfoSection}
 ═══════════════════════════════════════════════════════════
 NỘI DUNG CẦN CHUYỂN ĐỔI:
 ═══════════════════════════════════════════════════════════

@@ -389,7 +389,16 @@ Hãy phân tích theo cấu trúc UX-friendly đã được hướng dẫn.`;
     // ═══════════════════════════════════════════════════════════
     const layer2Start = Date.now();
     console.log('[v0] Layer 2: JSON Formatter (Groq Llama-3.3-70B - FAST)...');
-    const jsonFormatterPrompt = buildJsonFormatterPrompt(unifiedContent);
+    
+    // Truyền thông tin bệnh nhân vào JSON Formatter để tránh sai lệch
+    const patientInfoForFormatter = {
+      subject,
+      gender: genderText,
+      age: patientContext.age,
+      pronoun: subjectInfo.pronoun
+    };
+    
+    const jsonFormatterPrompt = buildJsonFormatterPrompt(unifiedContent, patientInfoForFormatter);
 
     const layer2Result = await generateText({
       model: 'llama-3.3-70b-versatile',
