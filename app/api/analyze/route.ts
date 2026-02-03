@@ -482,6 +482,54 @@ Hãy phân tích theo cấu trúc UX-friendly đã được hướng dẫn.`;
       console.error('[v0] Missing required fields:', missingFields);
       console.error('[v0] Available fields:', Object.keys(analysis));
       
+      // Provide fallback for emotionalConnection if missing
+      if (!analysis.emotionalConnection) {
+        const upperElement = diagnostic.mapping?.upperTrigram?.element || 'Mộc';
+        const emotionMap: Record<string, string> = {
+          'Mộc': 'Giận dữ, căng thẳng',
+          'Hỏa': 'Hưng phấn quá độ, lo âu',
+          'Thổ': 'Lo nghĩ, suy tư nhiều',
+          'Kim': 'Buồn bã, u sầu',
+          'Thủy': 'Sợ hãi, bất an'
+        };
+        const organMap: Record<string, string> = {
+          'Mộc': 'Gan',
+          'Hỏa': 'Tâm',
+          'Thổ': 'Tỳ',
+          'Kim': 'Phổi',
+          'Thủy': 'Thận'
+        };
+        
+        analysis.emotionalConnection = {
+          emotion: emotionMap[upperElement] || 'Căng thẳng',
+          organ: organMap[upperElement] || 'Gan',
+          patientFeeling: `${subjectInfo.pronoun === 'bạn' ? 'Bạn' : subjectInfo.pronoun.charAt(0).toUpperCase() + subjectInfo.pronoun.slice(1)} có thể đang trải qua cảm xúc tiêu cực ảnh hưởng đến sức khỏe.`,
+          mechanismTCM: `Cảm xúc ảnh hưởng đến ${organMap[upperElement]}, gây rối loạn khí huyết.`,
+          mechanismModern: 'Căng thẳng kéo dài kích hoạt hệ thần kinh giao cảm, tăng cortisol, ảnh hưởng đến các cơ quan nội tạng.'
+        };
+        console.log('[v0] Auto-added emotionalConnection');
+      }
+      
+      // Provide fallback for prognosis if missing
+      if (!analysis.prognosis) {
+        const severity = diagnostic.expertAnalysis?.tiDung?.severity || 'trung bình';
+        analysis.prognosis = {
+          outlook: severity === 'nặng' ? 'Cần theo dõi chặt chẽ' : 'Tích cực nếu tuân thủ hướng dẫn',
+          recoveryTime: severity === 'nặng' ? '3-6 tháng' : '1-2 tháng',
+          improvementSigns: [
+            'Giảm mệt mỏi, tăng năng lượng',
+            'Cải thiện giấc ngủ và cảm xúc',
+            'Triệu chứng giảm dần theo thời gian'
+          ],
+          warningSigns: [
+            'Triệu chứng tăng lên hoặc không cải thiện sau 2 tuần',
+            'Xuất hiện triệu chứng mới hoặc nghiêm trọng hơn',
+            'Ảnh hưởng đến sinh hoạt hàng ngày'
+          ]
+        };
+        console.log('[v0] Auto-added prognosis');
+      }
+      
       // If only missing some optional fields, provide defaults instead of failing
       if (!analysis.serviceRecommendations) {
         analysis.serviceRecommendations = {
@@ -489,6 +537,7 @@ Hãy phân tích theo cấu trúc UX-friendly đã được hướng dẫn.`;
           acupressure: { recommended: false, reason: 'Chưa xác định' },
           energyNumber: { recommended: true, reason: 'Phù hợp với phân tích quẻ tượng' }
         };
+        console.log('[v0] Auto-added serviceRecommendations');
       }
       
       if (!analysis.treatmentOrigin) {
@@ -498,6 +547,7 @@ Hãy phân tích theo cấu trúc UX-friendly đã được hướng dẫn.`;
           explanation: 'Cần phân tích thêm',
           treatmentDirection: 'Tham vấn chuyên gia'
         };
+        console.log('[v0] Auto-added treatmentOrigin');
       }
       
       // Only throw if critical fields are missing

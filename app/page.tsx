@@ -223,28 +223,27 @@ export default function HomePage() {
   const handleCalculate = async () => {
     setRateLimitError(null);
     
-    // Check rate limit for both logged-in and guest users
-    const { allowed, remaining, resetTime } = checkGuestRateLimit();
-    
-    if (!allowed) {
-      const resetDate = new Date(resetTime);
-      const hours = resetDate.getHours().toString().padStart(2, '0');
-      const minutes = resetDate.getMinutes().toString().padStart(2, '0');
-      
-      if (user) {
-        setRateLimitError(`Bạn đã sử dụng hết 3 lượt hỏi quẻ trong ngày. Vui lòng quay lại vào ngày mai sau ${hours}:${minutes}.`);
-      } else {
-        setRateLimitError(
-          `Bạn đã sử dụng hết 3 lượt hỏi quẻ miễn phí trong ngày. Đăng nhập để tiếp tục sử dụng và lưu lịch sử các lần gieo quẻ. Reset sau ${hours}:${minutes}.`
-        );
+    // Check rate limit differently for logged-in vs guest users
+    if (user) {
+      // For logged-in users, only check database rate limit
+      if (queriesRemaining !== null && queriesRemaining <= 0) {
+        setRateLimitError('Ban da su dung het 3 luot hoi que trong ngay. Vui long quay lai vao ngay mai.');
+        return;
       }
-      return;
-    }
-    
-    // For logged-in users, also check database rate limit
-    if (user && queriesRemaining !== null && queriesRemaining <= 0) {
-      setRateLimitError('Bạn đã sử dụng hết 3 lượt hỏi quẻ trong ngày. Vui lòng quay lại vào ngày mai.');
-      return;
+    } else {
+      // For guest users, check localStorage rate limit
+      const { allowed, remaining, resetTime } = checkGuestRateLimit();
+      
+      if (!allowed) {
+        const resetDate = new Date(resetTime);
+        const hours = resetDate.getHours().toString().padStart(2, '0');
+        const minutes = resetDate.getMinutes().toString().padStart(2, '0');
+        
+        setRateLimitError(
+          `Ban da su dung het 3 luot hoi que mien phi trong ngay. Dang nhap de tiep tuc su dung va luu lich su cac lan gieo que. Reset sau ${hours}:${minutes}.`
+        );
+        return;
+      }
     }
     
     setIsSubmitting(true);

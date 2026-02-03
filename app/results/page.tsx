@@ -765,7 +765,7 @@ function ResultsContent() {
                                       ? 'bg-green-600' 
                                       : 'bg-green-500'
                                   }`}>
-                                    {smartRecommendations.herbalMedicine.priority === 'high' ? 'Uu tien' : 'Phu hop'}
+                                    {smartRecommendations.herbalMedicine.priority === 'high' ? 'Ưu tiên' : 'Phù hợp'}
                                   </Badge>
                                 )}
                               </div>
@@ -785,7 +785,7 @@ function ResultsContent() {
   onClick={() => handleOpenPayment(1)}
   >
   <Pill className="mr-1.5 h-3.5 w-3.5" />
-  Xem bai thuoc phu hop
+  Xem bài thuốc phù hợp
   </Button>
                               )}
                             </div>
@@ -804,14 +804,14 @@ function ResultsContent() {
                                     ? 'text-blue-600' 
                                     : 'text-muted-foreground'
                                 }`} />
-                                <h4 className="font-semibold text-sm text-foreground">Huyet vi bam/cham</h4>
+                                <h4 className="font-semibold text-sm text-foreground">Huyệt vị bấm/châm</h4>
                                 {smartRecommendations.acupressure.recommended && (
                                   <Badge className={`ml-auto text-xs ${
                                     smartRecommendations.acupressure.priority === 'high' 
                                       ? 'bg-blue-600' 
                                       : 'bg-blue-500'
                                   }`}>
-                                    {smartRecommendations.acupressure.priority === 'high' ? 'Uu tien' : 'Phu hop'}
+                                    {smartRecommendations.acupressure.priority === 'high' ? 'Ưu tiên' : 'Phù hợp'}
                                   </Badge>
                                 )}
                               </div>
@@ -823,7 +823,7 @@ function ResultsContent() {
                                   {smartRecommendations.acupressure.detailedReason}
                                 </p>
                               )}
-                              <p className="mt-2 text-xs text-muted-foreground italic">Sap ra mat</p>
+                              <p className="mt-2 text-xs text-muted-foreground italic">Sắp ra mắt</p>
                             </div>
                           </div>
                         </>
@@ -844,16 +844,16 @@ function ResultsContent() {
                         <div className="flex items-center justify-between mb-4">
                           <h3 className="flex items-center gap-2 text-base font-semibold text-foreground">
                             <Zap className="h-5 w-5 text-purple-600" />
-                            Goi bo tro: Tuong So Bat Quai
+                            Gói bổ trợ: Tượng Số Bát Quái
                           </h3>
                           <Badge variant="outline" className="bg-purple-500/10 text-purple-700 border-purple-500/30">
-                            Bo tro song song
+                            Bổ trợ song song
                           </Badge>
                         </div>
                         
                         <p className="text-sm text-muted-foreground mb-4">
-                          Lieu phap niem so ket hop voi 2 goi chinh de tang cuong hieu qua dieu tri. 
-                          Co the su dung doc lap hoac song song voi bai thuoc/bam huyet.
+                          Liệu pháp niệm số kết hợp với 2 gói chính để tăng cường hiệu quả điều trị. 
+                          Có thể sử dụng độc lập hoặc song song với bài thuốc/bấm huyệt.
                         </p>
                         
                         <div className="rounded-lg border border-purple-500/20 bg-background/50 p-4">
@@ -863,13 +863,13 @@ function ResultsContent() {
                               {tuongSoData ? (
                                 <>
                                   <div className="flex items-center gap-2">
-                                    <span className="text-sm text-muted-foreground">Que anh xa:</span>
+                                    <span className="text-sm text-muted-foreground">Quẻ ánh xạ:</span>
                                     <Badge variant="outline" className="bg-transparent text-purple-700 border-purple-300">
                                       {tuongSoData.guaName} ({tuongSoData.element})
                                     </Badge>
                                   </div>
                                   <div className="flex items-center gap-2">
-                                    <span className="text-sm text-muted-foreground">Cong thuc:</span>
+                                    <span className="text-sm text-muted-foreground">Công thức:</span>
                                     <span className="font-mono text-lg font-bold text-purple-700">
                                       {tuongSoData.formula}
                                     </span>
@@ -880,7 +880,7 @@ function ResultsContent() {
                                 </>
                               ) : (
                                 <p className="text-sm text-muted-foreground">
-                                  Cong thuc so dua tren que tuong cua ban
+                                  Công thức số dựa trên quẻ tượng của bạn
                                 </p>
                               )}
                             </div>
@@ -893,7 +893,7 @@ function ResultsContent() {
                                 onClick={() => handleOpenPayment(3)}
                               >
                                 <Sparkles className="mr-2 h-4 w-4" />
-                                Mo khoa huong dan chi tiet
+                                Mở khóa hướng dẫn chi tiết
                               </Button>
                             </div>
                           </div>
@@ -902,20 +902,20 @@ function ResultsContent() {
                           <div className="mt-4 pt-4 border-t border-purple-500/20">
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
                               <div className="p-2 bg-purple-500/5 rounded">
-                                <p className="text-xs text-muted-foreground">Huong dan niem</p>
-                                <p className="text-sm font-medium text-foreground">Chi tiet</p>
+                                <p className="text-xs text-muted-foreground">Hướng dẫn niệm</p>
+                                <p className="text-sm font-medium text-foreground">Chi tiết</p>
                               </div>
                               <div className="p-2 bg-purple-500/5 rounded">
-                                <p className="text-xs text-muted-foreground">Thien dinh</p>
-                                <p className="text-sm font-medium text-foreground">Tuong tac</p>
+                                <p className="text-xs text-muted-foreground">Thiền định</p>
+                                <p className="text-sm font-medium text-foreground">Tương tác</p>
                               </div>
                               <div className="p-2 bg-purple-500/5 rounded">
-                                <p className="text-xs text-muted-foreground">Hinh nen</p>
-                                <p className="text-sm font-medium text-foreground">Dien thoai</p>
+                                <p className="text-xs text-muted-foreground">Hình nền</p>
+                                <p className="text-sm font-medium text-foreground">Điện thoại</p>
                               </div>
                               <div className="p-2 bg-purple-500/5 rounded">
-                                <p className="text-xs text-muted-foreground">Am thanh</p>
-                                <p className="text-sm font-medium text-foreground">Huong dan</p>
+                                <p className="text-xs text-muted-foreground">Âm thanh</p>
+                                <p className="text-sm font-medium text-foreground">Hướng dẫn</p>
                               </div>
                             </div>
                           </div>
