@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2, AlertCircle, CheckCircle, Copy, QrCode, RefreshCw, Smartphone, Monitor } from "lucide-react"
+import { Loader2, AlertCircle, CheckCircle, Copy, QrCode, RefreshCw, Smartphone, Monitor, LogIn } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { getSolutionsByHexagram, getSolutionsByHexagramKey } from "@/lib/actions/solution-actions"
 import { getCurrentUser } from "@/lib/actions/auth-actions"
@@ -45,6 +45,9 @@ const PACKAGE_INFO = {
   },
 }
 
+// Key để lưu thông tin thanh toán pending (phải khớp với gated-content-wrapper.tsx)
+const PENDING_PAYMENT_KEY = "pending-payment-after-login"
+
 export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, moving }: PaymentModalProps) {
   const router = useRouter()
   const [isCreating, setIsCreating] = useState(false)
@@ -54,6 +57,7 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
   const [success, setSuccess] = useState(false)
   const [copied, setCopied] = useState<string | null>(null)
   const [isMobile, setIsMobile] = useState(false)
+  const [needsLogin, setNeedsLogin] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -74,6 +78,27 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
   if (!packageNumber) return null
 
   const packageInfo = PACKAGE_INFO[packageNumber]
+  
+  // Hàm xử lý khi user cần đăng nhập để thanh toán
+  const handleLoginForPayment = () => {
+    // Lưu thông tin thanh toán pending vào localStorage
+    const pendingPayment = {
+      packageNumber,
+      upper,
+      lower,
+      moving,
+      timestamp: Date.now()
+    }
+    localStorage.setItem(PENDING_PAYMENT_KEY, JSON.stringify(pendingPayment))
+    
+    // Redirect đến trang results với params quẻ và trigger mở payment modal sau khi đăng nhập
+    const redirectUrl = `/results?openPayment=${packageNumber}`
+    sessionStorage.setItem("auth-redirect-url", redirectUrl)
+    
+    // Đóng modal và chuyển đến trang login
+    onClose()
+    router.push(`/auth/login?redirectTo=${encodeURIComponent(redirectUrl)}`)
+  }
 
   const handleCreateDeposit = async () => {
     setError(null)
@@ -84,7 +109,7 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
       const { user } = await getCurrentUser()
 
       if (!user) {
-        setError("Bạn cần đăng nhập để thanh toán")
+        setNeedsLogin(true)
         setIsCreating(false)
         return
       }
@@ -555,27 +580,50 @@ Nội dung: ${deposit.payment_code}`
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
+          
+          {/* Hiển thị khi cần đăng nhập */}
+          {needsLogin ? (
+            <>
+              <Alert className="border-primary/30 bg-primary/5">
+                <AlertCircle className="h-4 w-4 text-primary" />
+                <AlertDescription className="text-foreground">
+                  Vui lòng đăng nhập để tiếp tục thanh toán
+                </AlertDescription>
+              </Alert>
+              
+              <Button onClick={handleLoginForPayment} className="w-full" size="lg">
+                <LogIn className="mr-2 h-4 w-4" />
+                Đăng nhập để thanh toán
+              </Button>
+              
+              <p className="text-xs text-center text-muted-foreground">
+                Sau khi đăng nhập, bạn sẽ được quay lại để hoàn tất thanh toán
+              </p>
+            </>
+          ) : (
+            <>
+              {/* Payment Button */}
+              <Button onClick={handleCreateDeposit} disabled={isCreating} className="w-full" size="lg">
+                {isCreating ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Đang tạo mã QR...
+                  </>
+                ) : (
+                  <>
+                    <QrCode className="mr-2 h-4 w-4" />
+                    Tạo mã QR thanh toán
+                  </>
+                )}
+              </Button>
 
-          {/* Payment Button */}
-          <Button onClick={handleCreateDeposit} disabled={isCreating} className="w-full" size="lg">
-            {isCreating ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Đang tạo mã QR...
-              </>
-            ) : (
-              <>
-                <QrCode className="mr-2 h-4 w-4" />
-                Tạo mã QR thanh toán
-              </>
-            )}
-          </Button>
-
-          <p className="text-xs text-center text-muted-foreground">
-            Thanh toán qua chuyển khoản ngân hàng Timo
-            <br />
-            Tự động xác nhận trong 1-5 phút
-          </p>
+              <p className="text-xs text-center text-muted-foreground">
+                Thanh toán qua chuyển khoản ngân hàng Timo
+                <br />
+                Tự động xác nhận trong 1-5 phút
+              </p>
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>
