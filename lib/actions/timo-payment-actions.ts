@@ -21,12 +21,33 @@ export async function getTimoPaymentMethod() {
 
   if (error) {
     console.error("[v0] Error fetching Timo payment method:", error)
-    return { error: "Không tìm thấy phương thức thanh toán Timo" }
+    
+    // If table doesn't exist (PGRST205), return default Timo payment method
+    if (error.code === "PGRST205") {
+      console.log("[v0] payment_methods table not found, using default Timo config")
+      return {
+        paymentMethod: {
+          id: "default-timo",
+          bank_code: "VCCB",
+          bank_name: "Timo by Ban Viet Bank",
+          account_number: process.env.TIMO_ACCOUNT_NUMBER || "9020283397825",
+          account_name: process.env.TIMO_ACCOUNT_NAME || "NGUYEN VAN A",
+          branch: "Ho Chi Minh",
+          is_active: true,
+          fee_percentage: 0,
+          fee_fixed: 0,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        } as TimoPaymentMethod,
+      }
+    }
+    
+    return { error: "Khong tim thay phuong thuc thanh toan Timo" }
   }
 
   if (!paymentMethods || paymentMethods.length === 0) {
     console.error("[v0] No active Timo payment method found")
-    return { error: "Không tìm thấy phương thức thanh toán Timo" }
+    return { error: "Khong tim thay phuong thuc thanh toan Timo" }
   }
 
   return { paymentMethod: paymentMethods[0] as TimoPaymentMethod }
