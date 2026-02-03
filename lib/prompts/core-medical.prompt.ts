@@ -51,7 +51,7 @@ interface CoreMedicalInput {
 export function buildCoreMedicalPrompt(input: CoreMedicalInput): string {
   const { patientContext, maihua, diagnostic } = input;
 
-  return `Bạn là BÁC SĨ ĐÔNG Y chuyên sâu DỊCH HỌC Y LÝ.
+  return `Bạn là chuyên gia văn hóa – triết học Đông phương.
 
 NHIỆM VỤ DUY NHẤT:
 Phân tích tình trạng bệnh của người bệnh dựa trên QUẺ DỊCH, HÀO ĐỘNG và QUAN HỆ THỂ–DỤNG.

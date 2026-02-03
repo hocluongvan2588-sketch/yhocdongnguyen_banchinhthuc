@@ -316,5 +316,5 @@ export const UNIFIED_MEDICAL_CONFIG = {
   // Model được sử dụng qua openai('gpt-4o') trong route
   model: 'gpt-4o',
   temperature: 0.5, // Cân bằng sáng tạo và chính xác
-  maxTokens: 4000, // Đảm bảo output đầy đủ cho phân tích y học
+  maxTokens: 5000, // Đảm bảo output đầy đủ cho phân tích y học
 };
