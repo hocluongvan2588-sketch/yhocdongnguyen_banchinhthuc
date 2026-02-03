@@ -365,7 +365,7 @@ export default function HomePage() {
         }}
       />
 
-      {/* Hero Banner */}
+       {/* Hero Banner */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
@@ -380,19 +380,20 @@ export default function HomePage() {
         <div className="container relative z-10 mx-auto px-4 py-16 md:py-20">
           <div className="mx-auto max-w-3xl text-center">
             <Badge variant="outline" className="mb-4 border-primary/50 bg-primary/5 text-primary">
-              Dịch học cổ truyền kết hợp công nghệ ngôn ngữ lớn
+              Y học cổ truyền kết hợp công nghệ xử lý ngôn ngữ lớn
             </Badge>
             <h1 className="mb-4 text-balance text-3xl font-bold leading-tight text-foreground md:text-4xl lg:text-5xl">
-              Chào mừng bạn đến với nền tảng <span className="text-primary">Y Dịch Đồng Nguyên</span>
+              Chào mừng bạn đến với <span className="text-primary">Y Dịch Đồng Nguyên</span>
             </h1>
             <h2 className="mb-2 text-balance text-xl font-semibold text-foreground/80 md:text-2xl">
-              Khám phá sức khỏe qua Mai Hoa Thần Số
+              Tìm hiểu sức khỏe của bạn qua Mai Hoa Dịch Số
             </h2>
             <p className="mb-6 text-pretty text-base text-muted-foreground md:text-lg">
-              Lập quẻ Tiên thiên theo phương pháp Thiệu Khang Tiết, phân tích sức khỏe dựa trên Bát Quái và Ngũ Hành
+              Khi tinh thần và cơ thể mất nhịp, bạn dễ mệt, khó ngủ, căng thẳng.
+Y Dịch Đồng Nguyên giúp bạn nhận diện trạng thái thân – tâm và gợi ý cách cân bằng lại đơn giản, an toàn.
             </p>
             <Button size="lg" onClick={() => document.getElementById('lap-que')?.scrollIntoView({ behavior: 'smooth' })}>
-              Lập quẻ ngay
+              Gieo quẻ ngay
             </Button>
           </div>
         </div>
@@ -402,14 +403,15 @@ export default function HomePage() {
       <section id="lap-que" className="py-12 md:py-16">
         <div className="container mx-auto px-4">
           <div className="mb-8 text-center">
-            <h2 className="mb-3 text-2xl font-bold text-foreground md:text-3xl">Lập quẻ chẩn đoán</h2>
+            <h2 className="mb-3 text-2xl font-bold text-foreground md:text-3xl">Xem quẻ về sức khỏe</h2>
             <p className="mx-auto max-w-2xl text-pretty text-muted-foreground">
-              Nhập thông tin thời gian và người bệnh để bắt đầu chẩn đoán theo Mai Hoa Dịch Số
+              Nhập thời gian và thông tin người hỏi để hệ thống hỗ trợ phân tích tình trạng thân – tâm theo Mai Hoa Dịch Số. 
             </p>
+
           </div>
 
           <div className="mx-auto max-w-4xl">
-            {/* Methodology Banner */}
+            {/* Methodology Banner - Ngôn ngữ gần gũi hơn */}
             <div className="mb-6 rounded-xl border border-primary/30 bg-gradient-to-r from-primary/10 via-primary/5 to-amber-500/10 p-5">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex gap-4">
@@ -417,16 +419,15 @@ export default function HomePage() {
                     <BookOpen className="h-6 w-6 text-primary" />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="font-semibold text-foreground">Tìm hiểu phương pháp trước khi gieo quẻ</h3>
+                    <h3 className="font-semibold text-foreground">Bạn muốn hiểu cách hoạt động?</h3>
                     <p className="text-sm leading-relaxed text-muted-foreground">
-                      Niềm tin và sự hiểu biết là nền tảng quan trọng để quẻ có tính linh nghiệm. 
-                      Hãy dành vài phút đọc về cơ sở khoa học của phương pháp này.
+                      Ví dụ: Nếu bạn đang stress kéo dài, hệ thống sẽ giúp bạn nhìn ra cơ thể đang chịu áp lực ở đâu, ảnh hưởng đến giấc ngủ và tinh thần như thế nào, rồi gợi ý cách điều chỉnh bằng sinh hoạt, hít thở và thói quen hằng ngày.
                     </p>
                   </div>
                 </div>
                 <Link href="/methodology">
                   <Button variant="outline" className="shrink-0 gap-2 border-primary/50 bg-transparent text-primary hover:bg-primary/10">
-                    Xem phương pháp
+                    Tìm hiểu thêm
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 </Link>
@@ -863,75 +864,160 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* Sample Results Section - Ví dụ kết quả mẫu */}
+      <section className="py-12 md:py-16">
+        <div className="container mx-auto px-4">
+          <div className="mb-8 text-center">
+            <Badge variant="secondary" className="mb-4">
+              Ví dụ kết quả
+            </Badge>
+            <h2 className="mb-3 text-2xl font-bold text-foreground md:text-3xl">
+              Kết quả trả về như thế nào?
+            </h2>
+            <p className="mx-auto max-w-2xl text-pretty text-muted-foreground">
+              Dưới đây là một ví dụ về cách hệ thống phân tích và đưa ra lời khuyên dễ hiểu cho bạn
+            </p>
+          </div>
+
+          <div className="mx-auto max-w-4xl">
+            <Card className="border-primary/20 bg-gradient-to-br from-card to-primary/5">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20">
+                    <Info className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg text-foreground">Tình huống: Stress và mệt mỏi kéo dài</CardTitle>
+                    <CardDescription>Nữ, 32 tuổi, làm việc văn phòng</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="rounded-lg border border-border/50 bg-background/80 p-4">
+                  <h4 className="mb-2 font-semibold text-foreground flex items-center gap-2">
+                    <span className="text-primary">1.</span> Nhận định tổng quan
+                  </h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Quẻ cho thấy tình trạng Can Khí Uất Kết - gan bị tắc nghẽn do stress. 
+                    Biểu hiện thường gặp: đau đầu, khó ngủ, hay cáu gắt, đau tức ngực sườn.
+                  </p>
+                </div>
+                
+                <div className="rounded-lg border border-border/50 bg-background/80 p-4">
+                  <h4 className="mb-2 font-semibold text-foreground flex items-center gap-2">
+                    <span className="text-primary">2.</span> Cơ quan cần chú ý
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="outline" className="bg-green-500/10 text-green-700 border-green-500/30">Gan (Can)</Badge>
+                    <Badge variant="outline" className="bg-amber-500/10 text-amber-700 border-amber-500/30">Lá lách (Tỳ)</Badge>
+                    <Badge variant="outline" className="bg-red-500/10 text-red-700 border-red-500/30">Tim (Tâm)</Badge>
+                  </div>
+                </div>
+                
+                <div className="rounded-lg border border-border/50 bg-background/80 p-4">
+                  <h4 className="mb-2 font-semibold text-foreground flex items-center gap-2">
+                    <span className="text-primary">3.</span> Lời khuyên cụ thể
+                  </h4>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-start gap-2">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span><strong className="text-foreground">Sinh hoạt:</strong> Tập thở sâu 5-10 phút mỗi sáng, đi bộ nhẹ sau bữa ăn</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span><strong className="text-foreground">Ăn uống:</strong> Uống trà hoa cúc hoặc bạc hà, tránh đồ cay nóng và rượu bia</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span><strong className="text-foreground">Huyệt vị:</strong> Bấm huyệt Thái Xung (mu bàn chân) và Hợp Cốc (hổ khẩu tay)</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <Alert className="border-amber-500/30 bg-amber-500/10">
+                  <AlertCircle className="h-4 w-4 text-amber-600" />
+                  <AlertDescription className="text-amber-800">
+                    Đây là lời khuyên tham khảo dựa trên y học cổ truyền. Nếu triệu chứng kéo dài, 
+                    vui lòng tham khảo ý kiến bác sĩ chuyên khoa.
+                  </AlertDescription>
+                </Alert>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section - Dạng Q&A thân thiện */}
       <section className="bg-gradient-to-b from-background to-muted/30 py-12 md:py-16">
         <div className="container mx-auto px-4">
           <div className="mb-8 text-center">
             <Badge variant="secondary" className="mb-4">
-              Câu hỏi thường gặp
+              Giải đáp thắc mắc
             </Badge>
             <h2 className="mb-3 text-2xl font-bold text-foreground md:text-3xl">
-              Tìm hiểu về Mai Hoa Tâm Pháp
+              Những câu hỏi bạn có thể đang thắc mắc
             </h2>
             <p className="mx-auto max-w-2xl text-pretty text-muted-foreground">
-              Giải đáp những thắc mắc phổ biến về hệ thống chẩn đoán
+              Chúng tôi giải thích mọi thứ bằng ngôn ngữ đời thường, không học thuật
             </p>
           </div>
 
           <Accordion type="single" collapsible className="mx-auto max-w-3xl">
             <AccordionItem value="item-1" className="border-border/50">
               <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline">
-                Mai Hoa Dịch Số là gì?
+                Đây có phải là bói toán hay mê tín không?
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                Mai Hoa Dịch Số là phương pháp bói toán cổ đại do Thiệu Khang Tiết (Thiệu Ung) sáng lập vào đời Tống. 
-                Phương pháp này sử dụng thời gian và các yếu tố tự nhiên để lập quẻ Dịch, từ đó phân tích và dự đoán 
-                các vấn đề về sức khỏe, vận mệnh.
+              <AccordionContent className="text-muted-foreground leading-relaxed">
+                Không hẳn như bạn nghĩ. Mai Hoa Dịch Số là phương pháp phân tích có lịch sử hơn 1000 năm, 
+                dựa trên triết học Kinh Dịch - một hệ thống logic về âm dương và ngũ hành. Chúng tôi sử dụng 
+                phương pháp này kết hợp với công nghệ AI để đưa ra <strong className="text-foreground">lời khuyên về sức khỏe theo cách dễ hiểu</strong>, 
+                không phải để "đoán vận mệnh".
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-2" className="border-border/50">
               <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline">
-                Hệ thống hoạt động như thế nào?
+                Kết quả có đáng tin cậy không?
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                Hệ thống tự động tính toán quẻ Tiên thiên dựa trên thời gian bạn nhập vào. Sau đó, AI sẽ phân tích 
-                mối quan hệ Ngũ Hành giữa các quẻ và Hào động để đưa ra nhận định về tình trạng sức khỏe, 
-                cơ quan có thể bị ảnh hưởng và hướng điều trị theo y học cổ truyền.
+              <AccordionContent className="text-muted-foreground leading-relaxed">
+                Kết quả là <strong className="text-foreground">góc nhìn tham khảo từ y học cổ truyền</strong>, giúp bạn hiểu hơn 
+                về cơ thể theo quan điểm Đông y. Chúng tôi không thay thế bác sĩ - nếu bạn có triệu chứng bất thường, 
+                hãy đi khám ngay. Phương pháp này hiệu quả nhất khi được dùng như <strong className="text-foreground">công cụ định hướng 
+                chăm sóc sức khỏe hàng ngày</strong>.
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-3" className="border-border/50">
               <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline">
-                Kết quả chẩn đoán có chính xác không?
+                Tại sao phải nhập đúng thời gian?
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                Kết quả mang tính chất tham khảo dựa trên lý thuyết Dịch học và Đông y cổ truyền. 
-                Đây không phải là chẩn đoán y khoa chính thức. Nếu có vấn đề sức khỏe, bạn nên 
-                tham khảo ý kiến bác sĩ hoặc thầy thuốc có chuyên môn.
+              <AccordionContent className="text-muted-foreground leading-relaxed">
+                Giống như khi bạn đo huyết áp - kết quả phụ thuộc vào thời điểm đo. Cơ thể chúng ta có <strong className="text-foreground">nhịp sinh học 
+                (Circadian rhythm)</strong> - hormone, năng lượng thay đổi theo từng giờ trong ngày. Thời gian bạn nhập 
+                giúp hệ thống "chụp" đúng trạng thái cơ thể tại khoảnh khắc đó để phân tích chính xác hơn.
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-4" className="border-border/50">
               <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline">
-                Quẻ Chủ, Quẻ Biến và Quẻ Hổ là gì?
+                Quẻ là gì? Tôi không hiểu Dịch học
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                <strong>Quẻ Chủ (Bản quái):</strong> Phản ánh tình trạng hiện tại của người hỏi. 
-                <strong> Quẻ Biến:</strong> Cho thấy xu hướng phát triển trong tương lai. 
-                <strong> Quẻ Hổ (Hỗ quái):</strong> Thể hiện những yếu tố tiềm ẩn bên trong, 
-                giúp phân tích sâu hơn về nguyên nhân gốc rễ của vấn đề.
+              <AccordionContent className="text-muted-foreground leading-relaxed">
+                Đừng lo, bạn không cần hiểu Dịch học! Hệ thống sẽ tự động tính toán và <strong className="text-foreground">giải thích kết quả 
+                bằng ngôn ngữ đời thường</strong>. Quẻ đơn giản là "bức ảnh" về trạng thái năng lượng cơ thể bạn - 
+                giống như khi bạn xem kết quả xét nghiệm máu, bạn không cần hiểu hóa học để biết mình khỏe hay không.
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-5" className="border-border/50">
               <AccordionTrigger className="text-left font-semibold text-foreground hover:no-underline">
-                Tại sao cần nhập đúng thời gian?
+                Ai nên sử dụng hệ thống này?
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                Trong Mai Hoa Dịch Số, thời gian là yếu tố quyết định để tính toán Thượng quái và Hạ quái. 
-                Ngày, tháng, năm (âm lịch) dùng để tính Thượng quái, còn giờ dùng để tính Hạ quái và Hào động. 
-                Thời gian chính xác giúp kết quả phân tích phản ánh đúng vấn đề bạn đang quan tâm.
+              <AccordionContent className="text-muted-foreground leading-relaxed">
+                Hệ thống phù hợp với những ai: <strong className="text-foreground">muốn tìm hiểu sức khỏe từ góc nhìn Đông y</strong>; 
+                quan tâm đến phòng bệnh và chăm sóc bản thân; đang tìm kiếm sự cân bằng giữa tâm và thân. 
+                <strong className="text-foreground"> Không khuyến khích</strong> cho người đang trong tình trạng sức khỏe nghiêm trọng 
+                cần can thiệp y tế khẩn cấp.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -944,9 +1030,13 @@ export default function HomePage() {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <div className="mb-4 flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                  <span className="text-xl">☯</span>
-                </div>
+                <Image
+                  src="/logo.jpg"
+                  alt="Y Dịch Đồng Nguyên Logo"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
                 <div>
                   <h3 className="font-bold text-foreground">Y Dịch Đồng Nguyên</h3>
                   <p className="text-xs text-muted-foreground">ydichdongnguyen</p>

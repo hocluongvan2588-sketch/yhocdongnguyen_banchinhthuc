@@ -27,21 +27,13 @@ export const metadata: Metadata = {
   keywords: 'ydichdongnguyen, y dịch đồng nguyên, dịch học, đông y, bát quái, ngũ hành, y học cổ truyền, tham vấn sức khỏe',
   generator: 'v0.app',
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+    icon: '/logo.jpg',
+    apple: '/logo.jpg',
+  },
+  openGraph: {
+    title: 'Y Dịch Đồng Nguyên - Nền tảng Tham vấn Sức khỏe',
+    description: 'Hệ thống tham vấn sức khỏe dựa trên Dịch học cổ truyền, kết hợp tri thức Bát Quái và Ngũ Hành',
+    images: ['/logo.jpg'],
   },
 }
 

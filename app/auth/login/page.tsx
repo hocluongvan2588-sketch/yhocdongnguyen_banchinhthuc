@@ -5,6 +5,7 @@ import React from "react"
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -132,9 +133,13 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <span className="text-2xl">☯</span>
-            </div>
+            <Image
+              src="/logo.jpg"
+              alt="Y Dịch Đồng Nguyên Logo"
+              width={48}
+              height={48}
+              className="rounded-full"
+            />
           </div>
           <CardTitle className="text-2xl font-bold">{'Đăng nhập'}</CardTitle>
           <CardDescription>

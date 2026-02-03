@@ -5,6 +5,7 @@ import React from "react"
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -156,9 +157,13 @@ export default function LoginModal({ open, onOpenChange, onLoginSuccess }: Login
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-center">
           <div className="flex justify-center mb-2">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <span className="text-2xl">☯</span>
-            </div>
+            <Image
+              src="/logo.jpg"
+              alt="Y Dịch Đồng Nguyên Logo"
+              width={48}
+              height={48}
+              className="rounded-full"
+            />
           </div>
           <DialogTitle className="text-xl font-bold text-center">Đăng nhập nhanh</DialogTitle>
           <DialogDescription className="text-center">

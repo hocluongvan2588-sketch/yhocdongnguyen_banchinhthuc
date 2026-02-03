@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -113,9 +114,13 @@ export default function Header({
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2 cursor-pointer">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-              <span className="text-xl">☯</span>
-            </div>
+            <Image
+              src="/logo.jpg"
+              alt="Y Dịch Đồng Nguyên Logo"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
             <div className="hidden sm:block text-left">
               <h1 className="text-lg font-bold text-foreground">{title}</h1>
               <p className="text-xs text-muted-foreground">{subtitle}</p>
@@ -150,9 +155,13 @@ export default function Header({
           onClick={() => router.push('/')}
           className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-            <span className="text-xl">☯</span>
-          </div>
+          <Image
+            src="/logo.jpg"
+            alt="Y Dịch Đồng Nguyên Logo"
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
           <div className="hidden sm:block text-left">
             <h1 className="text-lg font-bold text-foreground">{title}</h1>
             <p className="text-xs text-muted-foreground">{subtitle}</p>
