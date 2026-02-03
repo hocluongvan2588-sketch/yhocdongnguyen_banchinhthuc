@@ -29,7 +29,7 @@ const menuItems = [
   { href: '/admin/orders', label: 'Đơn hàng', icon: ShoppingCart },
   { href: '/admin/payments', label: 'Thanh toán', icon: CreditCard },
   { href: '/admin/users', label: 'Quản lý User', icon: Users },
-  { href: '/admin/services', label: 'Gói dịch vụ', icon: Package },
+  { href: '/admin/solutions', label: 'Gói dịch vụ', icon: Package },
   { href: '/admin/medicine', label: 'Bài thuốc Đông y', icon: Pill },
   { href: '/admin/settings', label: 'Cài đặt', icon: Settings },
 ];

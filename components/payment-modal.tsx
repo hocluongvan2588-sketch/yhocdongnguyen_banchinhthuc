@@ -23,18 +23,18 @@ interface PaymentModalProps {
 
 const PACKAGE_INFO = {
   1: {
-    name: "Gói Nam Dược",
-    price: "199.000đ",
-    amount: 199000,
-    route: "/treatment/herbal",
-    solutionType: "prescription" as const,
-  },
-  2: {
     name: "Gói Khai Huyệt",
     price: "299.000đ",
     amount: 299000,
     route: "/treatment/acupressure",
     solutionType: "acupoint" as const,
+  },
+  2: {
+    name: "Gói Nam Dược",
+    price: "199.000đ",
+    amount: 199000,
+    route: "/treatment/herbal",
+    solutionType: "prescription" as const,
   },
   3: {
     name: "Gói Tượng Số",
