@@ -211,13 +211,56 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
     setTimeout(() => setCopied(null), 2000)
   }
 
+  // Deep link generators cho các app ngân hàng phổ biến tại VN
+  const generateBankingDeepLinks = () => {
+    if (!deposit) return []
+
+    const accountNumber = deposit.payment_data?.account_number || ""
+    const amount = deposit.amount
+    const description = deposit.payment_code
+    const accountName = deposit.payment_data?.account_name || ""
+
+    return [
+      {
+        name: "VietQR",
+        subtitle: "Mở bất kỳ app ngân hàng",
+        url: `https://dl.vietqr.io/pay?bankCode=${TIMO_BANK_CODE}&accountNumber=${accountNumber}&amount=${amount}&description=${encodeURIComponent(description)}`,
+        icon: "🏦",
+        primary: true,
+      },
+      {
+        name: "MoMo",
+        subtitle: "Ví điện tử MoMo",
+        url: `momo://app?action=transfer&partnerId=TIMO&partnerName=${encodeURIComponent(accountName)}&amount=${amount}&description=${encodeURIComponent(description)}`,
+        icon: "💜",
+      },
+      {
+        name: "ZaloPay",
+        subtitle: "Ví ZaloPay",
+        url: `zalopay://app?action=pay&amount=${amount}&description=${encodeURIComponent(description)}`,
+        icon: "💙",
+      },
+    ]
+  }
+
+  // Copy toàn bộ thông tin chuyển khoản
+  const handleCopyAll = () => {
+    if (!deposit) return
+    
+    const allInfo = `Ngân hàng: Timo (Viet Capital Bank)
+Số TK: ${deposit.payment_data?.account_number}
+Tên: ${deposit.payment_data?.account_name}
+Số tiền: ${deposit.amount.toLocaleString("vi-VN")} VND
+Nội dung: ${deposit.payment_code}`
+
+    navigator.clipboard.writeText(allInfo)
+    setCopied("all")
+    setTimeout(() => setCopied(null), 2000)
+  }
+
+  // Fallback: VietQR link cho nút chính
   const generateBankingDeepLink = () => {
     if (!deposit) return "#"
-
-    // VietQR deep link format for universal banking apps
-    const qrData = `${TIMO_BANK_CODE}${deposit.payment_data?.account_number}${deposit.amount}${deposit.payment_code}`
-
-    // Try VietQR universal link first (works with most banking apps)
     return `https://dl.vietqr.io/pay?bankCode=${TIMO_BANK_CODE}&accountNumber=${deposit.payment_data?.account_number}&amount=${deposit.amount}&description=${encodeURIComponent(deposit.payment_code)}`
   }
 
@@ -291,20 +334,50 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
           <div className="space-y-3 sm:space-y-6 py-2 sm:py-4">
             {isMobile ? (
               <>
-                {/* Mobile: Primary CTA button to open banking app */}
-                <div className="space-y-2">
+                {/* Mobile: Các nút mở app ngân hàng */}
+                <div className="space-y-3">
+                  {/* Nút chính - VietQR (hoạt động với mọi app ngân hàng) */}
                   <Button
                     onClick={() => (window.location.href = generateBankingDeepLink())}
-                    className="w-full h-11 sm:h-14 text-sm sm:text-lg font-semibold"
+                    className="w-full h-14 text-base font-semibold bg-gradient-to-r from-primary to-primary/80"
                     size="lg"
                   >
-                    <Smartphone className="mr-1.5 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                    <Smartphone className="mr-2 h-5 w-5" />
                     Mở App Ngân Hàng
                   </Button>
-
-                  <p className="text-[10px] sm:text-xs text-center text-muted-foreground leading-tight">
-                    Hoặc chuyển khoản thủ công với thông tin bên dưới
+                  
+                  <p className="text-xs text-center text-muted-foreground">
+                    Bấm nút trên để mở app ngân hàng của bạn
                   </p>
+
+                  {/* Nút copy tất cả thông tin - rất hữu ích cho mobile */}
+                  <Button
+                    onClick={handleCopyAll}
+                    variant="outline"
+                    className="w-full h-12 text-sm font-medium border-2 bg-transparent"
+                  >
+                    <Copy className="mr-2 h-4 w-4" />
+                    {copied === "all" ? "Đã Copy Thành Công!" : "Copy Toàn Bộ Thông Tin"}
+                  </Button>
+
+                  {/* Các app phổ biến khác */}
+                  <div className="pt-2">
+                    <p className="text-xs text-muted-foreground mb-2 text-center">Hoặc mở trực tiếp:</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {generateBankingDeepLinks().slice(1).map((bank) => (
+                        <Button
+                          key={bank.name}
+                          variant="outline"
+                          size="sm"
+                          className="h-10 text-xs bg-transparent"
+                          onClick={() => (window.location.href = bank.url)}
+                        >
+                          <span className="mr-1">{bank.icon}</span>
+                          {bank.name}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </>
             ) : (
@@ -414,16 +487,17 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
                 <ol className="list-decimal list-inside space-y-0.5 sm:space-y-1.5 text-[10px] sm:text-sm">
                   {isMobile ? (
                     <>
-                      <li>Nhấn nút "Mở App Ngân Hàng" phía trên</li>
-                      <li>Hoặc mở app ngân hàng và chuyển khoản thủ công</li>
+                      <li><strong>Cách 1:</strong> Bấm nút Mở App Ngân Hàng - thông tin sẽ được điền sẵn</li>
+                      <li><strong>Cách 2:</strong> Bấm Copy Toàn Bộ rồi dán vào app ngân hàng</li>
+                      <li><strong>Cách 3:</strong> Mở app MoMo/ZaloPay và nhập thủ công</li>
                     </>
                   ) : (
                     <li>Quét mã QR bằng app ngân hàng trên điện thoại</li>
                   )}
                   <li>
-                    <strong className="text-red-600 font-bold">Nhập đúng nội dung: {deposit.payment_code}</strong>
+                    <strong className="text-red-600 font-bold">Nội dung bắt buộc: {deposit.payment_code}</strong>
                   </li>
-                  <li>Xác nhận thanh toán đúng số tiền {deposit.amount.toLocaleString("vi-VN")}đ</li>
+                  <li>Số tiền: <strong>{deposit.amount.toLocaleString("vi-VN")}đ</strong></li>
                   <li>Giao dịch sẽ được xác nhận tự động trong 1-5 phút</li>
                 </ol>
               </AlertDescription>
