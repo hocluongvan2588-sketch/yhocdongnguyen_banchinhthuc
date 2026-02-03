@@ -585,7 +585,7 @@ Y Dịch Đồng Nguyên giúp bạn nhận diện trạng thái thân – tâm 
                     {queriesRemaining !== null && (
                       <div className="flex items-center justify-between rounded-md border border-border/50 bg-muted/30 px-4 py-2">
                         <span className="text-sm text-muted-foreground">
-                          {user ? 'Số lượt hỏi còn lại hôm nay:' : 'Số lượt miễn phí còn lại:'}
+                          {user ? 'Số lượt hỏi còn lại hôm nay:' : 'Số lượt gieo quẻ còn lại:'}
                         </span>
                         <Badge variant={queriesRemaining > 0 ? "secondary" : "destructive"}>
                           {queriesRemaining}/3
