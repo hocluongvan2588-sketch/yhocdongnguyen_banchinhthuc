@@ -299,8 +299,9 @@ export default function HomePage() {
         incrementGuestQueryCount();
       }
       
-      // Lưu vào sessionStorage và chuyển trang
-      sessionStorage.setItem('diagnostic-results', JSON.stringify({
+      // Lưu vào localStorage thay vì sessionStorage để dữ liệu không bị mất 
+      // khi user đăng nhập qua Google OAuth (redirect qua domain Google)
+      localStorage.setItem('diagnostic-results', JSON.stringify({
         maihua: calculatedResult,
         diagnostic: diagnosticResult,
         patientContext: context

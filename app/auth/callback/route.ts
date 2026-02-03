@@ -5,8 +5,7 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
   // Support both 'next' and 'redirectTo' params for flexibility
-  // Nếu không có param, sẽ redirect về trang chủ (sessionStorage sẽ được check ở client)
-  const next = searchParams.get('next') ?? searchParams.get('redirectTo') ?? '/auth/redirect-handler';
+  const rawRedirectTo = searchParams.get('next') ?? searchParams.get('redirectTo');
 
   if (code) {
     const supabase = await createClient();
@@ -35,9 +34,17 @@ export async function GET(request: Request) {
         }
       }
       
-      // Ensure the redirect path is properly decoded
-      const redirectPath = decodeURIComponent(next);
-      return NextResponse.redirect(`${origin}${redirectPath}`);
+      // Nếu có redirectTo, truyền qua redirect-handler để xử lý
+      // Điều này giúp giữ lại URL đích khi đi qua Google OAuth
+      if (rawRedirectTo && rawRedirectTo !== '/' && rawRedirectTo !== '/auth/redirect-handler') {
+        const decodedRedirect = decodeURIComponent(rawRedirectTo);
+        // Truyền redirectTo qua query params để redirect-handler có thể đọc được
+        // (sessionStorage có thể bị mất khi qua Google OAuth)
+        return NextResponse.redirect(`${origin}/auth/redirect-handler?redirectTo=${encodeURIComponent(decodedRedirect)}`);
+      }
+      
+      // Nếu không có redirect cụ thể, về trang chủ
+      return NextResponse.redirect(`${origin}/`);
     }
   }
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,8 @@ import { AlertTriangle, CheckCircle2, Info, Sparkles, Loader2, Heart, Utensils, 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import DateTimeInfo from '@/components/DateTimeInfo';
 import Header from '@/components/Header';
+import { PaymentModal } from '@/components/payment-modal';
+import { Suspense } from 'react';
 
 interface ResultsData {
   maihua: MaiHuaResult;
@@ -78,16 +80,27 @@ interface AIAnalysis {
   cautionNote?: string;
 }
 
-export default function ResultsPage() {
+// Key để lưu thông tin thanh toán pending (phải khớp với gated-content-wrapper.tsx)
+const PENDING_PAYMENT_KEY = "pending-payment-after-login"
+
+function ResultsContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [data, setData] = useState<ResultsData | null>(null);
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysis | null>(null);
   const [isLoadingAI, setIsLoadingAI] = useState(true);
   const [aiError, setAiError] = useState<string | null>(null);
   const insights = { summary: '', explanation: '', symptoms: [], recommendations: [], cautionNote: '' };
+  
+  // State cho PaymentModal
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<1 | 2 | 3 | null>(null);
+  const [paymentParams, setPaymentParams] = useState<{ upper: number; lower: number; moving: number }>({ upper: 1, lower: 1, moving: 1 });
 
   useEffect(() => {
-    const storedData = sessionStorage.getItem('diagnostic-results');
+    // Đọc từ localStorage thay vì sessionStorage
+    // để dữ liệu không bị mất khi user đăng nhập qua Google OAuth
+    const storedData = localStorage.getItem('diagnostic-results');
     if (storedData) {
       const parsedData = JSON.parse(storedData);
       setData(parsedData);
@@ -129,6 +142,44 @@ export default function ResultsPage() {
       router.push('/');
     }
   }, [router]);
+  
+  // Effect để auto-open PaymentModal nếu có param openPayment (sau khi đăng nhập)
+  useEffect(() => {
+    const openPaymentParam = searchParams.get('openPayment');
+    if (openPaymentParam && data) {
+      const packageNum = parseInt(openPaymentParam) as 1 | 2 | 3;
+      if ([1, 2, 3].includes(packageNum)) {
+        // Set params từ data hoặc từ URL
+        const upper = data.maihua?.mainHexagram?.upperTrigram || parseInt(searchParams.get('upper') || '1');
+        const lower = data.maihua?.mainHexagram?.lowerTrigram || parseInt(searchParams.get('lower') || '1');
+        const moving = data.maihua?.movingLine || parseInt(searchParams.get('moving') || '1');
+        
+        setPaymentParams({ upper, lower, moving });
+        setSelectedPackage(packageNum);
+        setShowPaymentModal(true);
+        
+        // Xóa pending payment từ localStorage vì đã xử lý
+        localStorage.removeItem(PENDING_PAYMENT_KEY);
+        
+        // Xóa openPayment param khỏi URL để tránh mở lại khi refresh
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
+      }
+    }
+  }, [searchParams, data]);
+  
+  // Hàm mở PaymentModal (dùng cho các button trong page)
+  const handleOpenPayment = (packageNumber: 1 | 2 | 3) => {
+    if (data) {
+      const upper = data.maihua?.mainHexagram?.upperTrigram || 1;
+      const lower = data.maihua?.mainHexagram?.lowerTrigram || 1;
+      const moving = data.maihua?.movingLine || 1;
+      
+      setPaymentParams({ upper, lower, moving });
+      setSelectedPackage(packageNumber);
+      setShowPaymentModal(true);
+    }
+  };
 
   const fetchAIAnalysis = async (resultsData: ResultsData, forceRefresh = false) => {
     try {
@@ -730,14 +781,14 @@ export default function ResultsPage() {
                               )}
                               {smartRecommendations.herbalMedicine.recommended && (
                                 <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="mt-3 w-full border-green-500/50 text-green-700 hover:bg-green-500/10 bg-transparent"
-                                  onClick={() => router.push(`/treatment/herbal?upper=${maihua.mainHexagram.upperTrigram}&lower=${maihua.mainHexagram.lowerTrigram}&moving=${maihua.movingLine}`)}
-                                >
-                                  <Pill className="mr-1.5 h-3.5 w-3.5" />
-                                  Xem bài thuốc phù hợp
-                                </Button>
+  size="sm"
+  variant="outline"
+  className="mt-3 w-full border-green-500/50 text-green-700 hover:bg-green-500/10 bg-transparent"
+  onClick={() => handleOpenPayment(1)}
+  >
+  <Pill className="mr-1.5 h-3.5 w-3.5" />
+  Xem bài thuốc phù hợp
+  </Button>
                               )}
                             </div>
 
@@ -832,14 +883,14 @@ export default function ResultsPage() {
                               )}
                               
                               {smartRecommendations.energyNumber.recommended && (
-                                <Button
-                                  size="sm"
-                                  className="mt-3 w-full"
-                                  onClick={() => router.push(`/treatment/numerology?upper=${maihua.mainHexagram.upperTrigram}&lower=${maihua.mainHexagram.lowerTrigram}&moving=${maihua.movingLine}`)}
-                                >
-                                  <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-                                  Xem chi tiết công thức
-                                </Button>
+  <Button
+  size="sm"
+  className="mt-3 w-full"
+  onClick={() => handleOpenPayment(3)}
+  >
+  <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+  Xem chi tiết công thức
+  </Button>
                               )}
                             </div>
                           </div>
@@ -887,6 +938,32 @@ export default function ResultsPage() {
         {/* Logic Module 3 & 4 được giữ lại để sử dụng sau này */}
         {/* Dữ liệu vẫn có trong diagnostic.mapping và diagnostic.expertAnalysis */}
       </main>
+      
+      {/* PaymentModal - hiển thị khi cần thanh toán */}
+      <PaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        packageNumber={selectedPackage}
+        upper={paymentParams.upper}
+        lower={paymentParams.lower}
+        moving={paymentParams.moving}
+      />
     </div>
+  );
+}
+
+// Wrap trong Suspense vì sử dụng useSearchParams
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-secondary/20">
+        <div className="text-center space-y-4">
+          <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto" />
+          <p className="text-muted-foreground">Đang tải kết quả...</p>
+        </div>
+      </div>
+    }>
+      <ResultsContent />
+    </Suspense>
   );
 }
