@@ -720,7 +720,7 @@ function ResultsContent() {
                   </div>
                 )}
 
-                {/* Gợi ý dịch vụ chuyên sâu */}
+                {/* Gợi ý dịch vụ chuyên sâu - 2 gói chính */}
                 {aiAnalysis.serviceRecommendations && (
                   <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-4">
                     {(() => {
@@ -733,8 +733,6 @@ function ResultsContent() {
                       };
                       
                       const smartRecommendations = evaluateServiceRecommendations(analysisData);
-                      const affectedOrgan = aiAnalysis.treatmentOrigin?.affectedOrgan || '';
-                      const tuongSoData = generateTuongSoFromDiagnosis(affectedOrgan);
                       
                       return (
                         <>
@@ -745,7 +743,7 @@ function ResultsContent() {
                               (Dựa trên tiên lượng và tình trạng)
                             </span>
                           </h3>
-                          <div className="grid gap-3 md:grid-cols-3">
+                          <div className="grid gap-3 md:grid-cols-2">
                             {/* Bài thuốc Đông y */}
                             <div className={`rounded-lg border p-3 flex flex-col ${
                               smartRecommendations.herbalMedicine.recommended 
@@ -767,7 +765,7 @@ function ResultsContent() {
                                       ? 'bg-green-600' 
                                       : 'bg-green-500'
                                   }`}>
-                                    {smartRecommendations.herbalMedicine.priority === 'high' ? 'Ưu tiên' : 'Phù hợp'}
+                                    {smartRecommendations.herbalMedicine.priority === 'high' ? 'Uu tien' : 'Phu hop'}
                                   </Badge>
                                 )}
                               </div>
@@ -787,7 +785,7 @@ function ResultsContent() {
   onClick={() => handleOpenPayment(1)}
   >
   <Pill className="mr-1.5 h-3.5 w-3.5" />
-  Xem bài thuốc phù hợp
+  Xem bai thuoc phu hop
   </Button>
                               )}
                             </div>
@@ -806,14 +804,14 @@ function ResultsContent() {
                                     ? 'text-blue-600' 
                                     : 'text-muted-foreground'
                                 }`} />
-                                <h4 className="font-semibold text-sm text-foreground">Huyệt vị bấm/châm</h4>
+                                <h4 className="font-semibold text-sm text-foreground">Huyet vi bam/cham</h4>
                                 {smartRecommendations.acupressure.recommended && (
                                   <Badge className={`ml-auto text-xs ${
                                     smartRecommendations.acupressure.priority === 'high' 
                                       ? 'bg-blue-600' 
                                       : 'bg-blue-500'
                                   }`}>
-                                    {smartRecommendations.acupressure.priority === 'high' ? 'Ưu tiên' : 'Phù hợp'}
+                                    {smartRecommendations.acupressure.priority === 'high' ? 'Uu tien' : 'Phu hop'}
                                   </Badge>
                                 )}
                               </div>
@@ -825,73 +823,7 @@ function ResultsContent() {
                                   {smartRecommendations.acupressure.detailedReason}
                                 </p>
                               )}
-                              <p className="mt-2 text-xs text-muted-foreground italic">Sắp ra mắt</p>
-                            </div>
-
-                            {/* Tượng Số Bát Quái */}
-                            <div className={`rounded-lg border p-3 flex flex-col ${
-                              smartRecommendations.energyNumber.recommended 
-                                ? smartRecommendations.energyNumber.priority === 'high'
-                                  ? 'border-purple-500/50 bg-purple-500/10'
-                                  : 'border-purple-500/30 bg-purple-500/5'
-                                : 'border-border/50 bg-muted/20 opacity-60'
-                            }`}>
-                              <div className="flex items-center gap-2 mb-2">
-                                <Zap className={`h-5 w-5 ${
-                                  smartRecommendations.energyNumber.recommended 
-                                    ? 'text-purple-600' 
-                                    : 'text-muted-foreground'
-                                }`} />
-                                <h4 className="font-semibold text-sm text-foreground">Tượng Số Bát Quái</h4>
-                                {smartRecommendations.energyNumber.recommended && (
-                                  <Badge className={`ml-auto text-xs ${
-                                    smartRecommendations.energyNumber.priority === 'high' 
-                                      ? 'bg-purple-600' 
-                                      : 'bg-purple-500'
-                                  }`}>
-                                    {smartRecommendations.energyNumber.priority === 'high' ? 'Ưu tiên' : 'Phù hợp'}
-                                  </Badge>
-                                )}
-                              </div>
-                              
-                              {/* Hiển thị công thức Tượng Số nếu có */}
-                              {tuongSoData && smartRecommendations.energyNumber.recommended ? (
-                                <div className="space-y-2 flex-grow">
-                                  <p className="text-xs text-muted-foreground">
-                                    {smartRecommendations.energyNumber.reason}
-                                  </p>
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-xs text-muted-foreground">Quẻ ánh xạ:</span>
-                                    <Badge variant="outline" className="bg-transparent text-purple-700 border-purple-300">
-                                      {tuongSoData.guaName} ({tuongSoData.element})
-                                    </Badge>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-xs text-muted-foreground">Công thức:</span>
-                                    <span className="font-mono text-sm font-bold text-purple-700">
-                                      {tuongSoData.formula}
-                                    </span>
-                                  </div>
-                                  <p className="text-xs text-purple-600 italic">
-                                    {tuongSoData.usage}
-                                  </p>
-                                </div>
-                              ) : (
-                                <p className="text-xs text-muted-foreground flex-grow">
-                                  {smartRecommendations.energyNumber.reason}
-                                </p>
-                              )}
-                              
-                              {smartRecommendations.energyNumber.recommended && (
-  <Button
-  size="sm"
-  className="mt-3 w-full"
-  onClick={() => handleOpenPayment(3)}
-  >
-  <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-  Xem chi tiết công thức
-  </Button>
-                              )}
+                              <p className="mt-2 text-xs text-muted-foreground italic">Sap ra mat</p>
                             </div>
                           </div>
                         </>
@@ -900,6 +832,98 @@ function ResultsContent() {
 
                   </div>
                 )}
+                
+                {/* Gói bổ trợ: Tượng Số Bát Quái - Luôn hiển thị cho mọi quẻ */}
+                <div className="rounded-lg border border-purple-500/30 bg-gradient-to-br from-purple-500/5 to-purple-500/10 p-4">
+                  {(() => {
+                    const affectedOrgan = aiAnalysis?.treatmentOrigin?.affectedOrgan || '';
+                    const tuongSoData = generateTuongSoFromDiagnosis(affectedOrgan);
+                    
+                    return (
+                      <>
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="flex items-center gap-2 text-base font-semibold text-foreground">
+                            <Zap className="h-5 w-5 text-purple-600" />
+                            Goi bo tro: Tuong So Bat Quai
+                          </h3>
+                          <Badge variant="outline" className="bg-purple-500/10 text-purple-700 border-purple-500/30">
+                            Bo tro song song
+                          </Badge>
+                        </div>
+                        
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Lieu phap niem so ket hop voi 2 goi chinh de tang cuong hieu qua dieu tri. 
+                          Co the su dung doc lap hoac song song voi bai thuoc/bam huyet.
+                        </p>
+                        
+                        <div className="rounded-lg border border-purple-500/20 bg-background/50 p-4">
+                          <div className="flex flex-col md:flex-row md:items-center gap-4">
+                            {/* Thông tin công thức */}
+                            <div className="flex-grow space-y-2">
+                              {tuongSoData ? (
+                                <>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm text-muted-foreground">Que anh xa:</span>
+                                    <Badge variant="outline" className="bg-transparent text-purple-700 border-purple-300">
+                                      {tuongSoData.guaName} ({tuongSoData.element})
+                                    </Badge>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm text-muted-foreground">Cong thuc:</span>
+                                    <span className="font-mono text-lg font-bold text-purple-700">
+                                      {tuongSoData.formula}
+                                    </span>
+                                  </div>
+                                  <p className="text-xs text-purple-600 italic">
+                                    {tuongSoData.usage}
+                                  </p>
+                                </>
+                              ) : (
+                                <p className="text-sm text-muted-foreground">
+                                  Cong thuc so dua tren que tuong cua ban
+                                </p>
+                              )}
+                            </div>
+                            
+                            {/* Nút mở khóa */}
+                            <div className="flex-shrink-0">
+                              <Button
+                                size="lg"
+                                className="w-full md:w-auto bg-purple-600 hover:bg-purple-700"
+                                onClick={() => handleOpenPayment(3)}
+                              >
+                                <Sparkles className="mr-2 h-4 w-4" />
+                                Mo khoa huong dan chi tiet
+                              </Button>
+                            </div>
+                          </div>
+                          
+                          {/* Mô tả ngắn gọn lợi ích */}
+                          <div className="mt-4 pt-4 border-t border-purple-500/20">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+                              <div className="p-2 bg-purple-500/5 rounded">
+                                <p className="text-xs text-muted-foreground">Huong dan niem</p>
+                                <p className="text-sm font-medium text-foreground">Chi tiet</p>
+                              </div>
+                              <div className="p-2 bg-purple-500/5 rounded">
+                                <p className="text-xs text-muted-foreground">Thien dinh</p>
+                                <p className="text-sm font-medium text-foreground">Tuong tac</p>
+                              </div>
+                              <div className="p-2 bg-purple-500/5 rounded">
+                                <p className="text-xs text-muted-foreground">Hinh nen</p>
+                                <p className="text-sm font-medium text-foreground">Dien thoai</p>
+                              </div>
+                              <div className="p-2 bg-purple-500/5 rounded">
+                                <p className="text-xs text-muted-foreground">Am thanh</p>
+                                <p className="text-sm font-medium text-foreground">Huong dan</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })()}
+                </div>
 
                 {/* Cảnh báo nghiêm trọng */}
                 {(diagnostic.expertAnalysis.diseaseFlags.isCritical || 

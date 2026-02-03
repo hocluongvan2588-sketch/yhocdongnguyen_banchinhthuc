@@ -84,7 +84,15 @@ export default async function PricingPage() {
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                     <Badge className="bg-primary text-primary-foreground shadow-md">
                       <Star className="mr-1 h-3 w-3 fill-current" />
-                      Phổ biến nhất
+                      Pho bien nhat
+                    </Badge>
+                  </div>
+                )}
+                {pkg.service_type === 'tuong_so' && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <Badge className="bg-purple-600 text-white shadow-md">
+                      <Sparkles className="mr-1 h-3 w-3" />
+                      Goi bo tro
                     </Badge>
                   </div>
                 )}
