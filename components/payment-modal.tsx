@@ -249,7 +249,7 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
       {
         name: "VietQR",
         subtitle: "Mở bất kỳ app ngân hàng",
-        url: `https://dl.vietqr.io/pay?bankCode=${TIMO_BANK_CODE}&accountNumber=${accountNumber}&amount=${amount}&description=${encodeURIComponent(description)}`,
+        url: `https://dl.vietqr.io/pay?app=VietQR&bankCode=${TIMO_BANK_CODE}&accountNumber=${accountNumber}&amount=${amount}&description=${encodeURIComponent(description)}`,
         icon: "🏦",
         primary: true,
       },
@@ -286,7 +286,7 @@ Nội dung: ${deposit.payment_code}`
   // Fallback: VietQR link cho nút chính
   const generateBankingDeepLink = () => {
     if (!deposit) return "#"
-    return `https://dl.vietqr.io/pay?bankCode=${TIMO_BANK_CODE}&accountNumber=${deposit.payment_data?.account_number}&amount=${deposit.amount}&description=${encodeURIComponent(deposit.payment_code)}`
+    return `https://dl.vietqr.io/pay?app=VietQR&bankCode=${TIMO_BANK_CODE}&accountNumber=${deposit.payment_data?.account_number}&amount=${deposit.amount}&description=${encodeURIComponent(deposit.payment_code)}`
   }
 
   const handleRefreshStatus = async () => {
@@ -348,34 +348,33 @@ Nội dung: ${deposit.payment_code}`
   if (deposit) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-lg max-h-[90vh] flex flex-col p-0">
+        <DialogContent className="sm:max-w-lg max-h-[85vh] md:max-h-[90vh] flex flex-col p-0 gap-0">
           {/* Sticky Header - luôn hiển thị ở trên */}
-          <DialogHeader className="space-y-1 sm:space-y-2 px-3 sm:px-6 pt-4 sm:pt-6 pb-3 border-b bg-background sticky top-0 z-10">
-            <DialogTitle className="text-base sm:text-lg text-foreground">
-              {isMobile ? "Chuyển Khoản Thanh Toán" : "Quét Mã QR Để Thanh Toán"}
+          <DialogHeader className="space-y-1 px-4 sm:px-6 pt-3 sm:pt-6 pb-2 sm:pb-3 border-b bg-background sticky top-0 z-10 flex-shrink-0">
+            <DialogTitle className="text-sm sm:text-lg text-foreground leading-tight">
+              {isMobile ? "Thanh Toán" : "Quét Mã QR Để Thanh Toán"}
             </DialogTitle>
-            <DialogDescription className="text-xs sm:text-sm">{packageInfo.name}</DialogDescription>
+            <DialogDescription className="text-xs sm:text-sm">{packageInfo.name} - {packageInfo.price}</DialogDescription>
           </DialogHeader>
           
           {/* Scrollable Content Area */}
-          <div className="flex-1 overflow-y-auto px-3 sm:px-6 pb-4 sm:pb-6">
+          <div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-4 sm:pb-6 overscroll-contain">
 
-          <div className="space-y-3 sm:space-y-6 py-2 sm:py-4">
+          <div className="space-y-2.5 sm:space-y-6 py-3 sm:py-4">
             {isMobile ? (
               <>
                 {/* Mobile: Các nút mở app ngân hàng */}
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   {/* Nút chính - VietQR (hoạt động với mọi app ngân hàng) */}
                   <Button
                     onClick={() => (window.location.href = generateBankingDeepLink())}
-                    className="w-full h-14 text-base font-semibold bg-gradient-to-r from-primary to-primary/80"
-                    size="lg"
+                    className="w-full h-12 text-sm font-semibold bg-gradient-to-r from-primary to-primary/80"
                   >
-                    <Smartphone className="mr-2 h-5 w-5" />
+                    <Smartphone className="mr-2 h-4 w-4" />
                     Mở App Ngân Hàng
                   </Button>
                   
-                  <p className="text-xs text-center text-muted-foreground">
+                  <p className="text-[11px] text-center text-muted-foreground -mt-0.5">
                     Bấm nút trên để mở app ngân hàng của bạn
                   </p>
 
@@ -383,22 +382,22 @@ Nội dung: ${deposit.payment_code}`
                   <Button
                     onClick={handleCopyAll}
                     variant="outline"
-                    className="w-full h-12 text-sm font-medium border-2 bg-transparent"
+                    className="w-full h-10 text-xs font-medium border-2 bg-transparent"
                   >
-                    <Copy className="mr-2 h-4 w-4" />
-                    {copied === "all" ? "Đã Copy Thành Công!" : "Copy Toàn Bộ Thông Tin"}
+                    <Copy className="mr-2 h-3.5 w-3.5" />
+                    {copied === "all" ? "Đã Copy!" : "Copy Toàn Bộ Thông Tin"}
                   </Button>
 
                   {/* Các app phổ biến khác */}
-                  <div className="pt-2">
-                    <p className="text-xs text-muted-foreground mb-2 text-center">Hoặc mở trực tiếp:</p>
+                  <div className="pt-1">
+                    <p className="text-[10px] text-muted-foreground mb-1.5 text-center">Hoặc mở trực tiếp:</p>
                     <div className="grid grid-cols-2 gap-2">
                       {generateBankingDeepLinks().slice(1).map((bank) => (
                         <Button
                           key={bank.name}
                           variant="outline"
                           size="sm"
-                          className="h-10 text-xs bg-transparent"
+                          className="h-9 text-xs bg-transparent"
                           onClick={() => (window.location.href = bank.url)}
                         >
                           <span className="mr-1">{bank.icon}</span>
@@ -433,22 +432,20 @@ Nội dung: ${deposit.payment_code}`
               </>
             )}
 
-            <div className="space-y-2 sm:space-y-3 bg-primary/5 p-3 sm:p-4 rounded-lg border-2 border-primary/20">
-              <div className="text-center pb-1.5 sm:pb-2 border-b border-primary/20">
+            <div className="space-y-1.5 sm:space-y-3 bg-primary/5 p-2.5 sm:p-4 rounded-lg border border-primary/20">
+              <div className="text-center pb-1 sm:pb-2 border-b border-primary/20">
                 <p className="text-[10px] sm:text-xs text-muted-foreground font-medium">Thông tin chuyển khoản</p>
               </div>
 
-              <div className="space-y-2 sm:space-y-3">
+              <div className="space-y-1.5 sm:space-y-3">
                 <div>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">Ngân hàng</p>
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs sm:text-sm font-medium text-foreground">Timo (Viet Capital Bank)</p>
-                  </div>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5">Ngân hàng</p>
+                  <p className="text-xs sm:text-sm font-medium text-foreground">Timo (Viet Capital Bank)</p>
                 </div>
 
                 <div>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">Số tài khoản</p>
-                  <div className="flex items-center gap-1.5 sm:gap-2">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5">Số tài khoản</p>
+                  <div className="flex items-center gap-1.5">
                     <p className="font-mono text-xs sm:text-sm font-medium text-foreground flex-1 break-all">
                       {formatTimoAccountNumber(deposit.payment_data?.account_number || "")}
                     </p>
@@ -456,50 +453,48 @@ Nội dung: ${deposit.payment_code}`
                       size="sm"
                       variant="outline"
                       onClick={() => handleCopy(deposit.payment_data?.account_number || "", "account")}
-                      className="h-7 sm:h-9 px-2 sm:px-3 flex-shrink-0"
+                      className="h-7 sm:h-9 px-2 flex-shrink-0"
                     >
                       <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span className="ml-0.5 sm:ml-1 text-[10px] sm:text-xs">{copied === "account" ? "✓" : ""}</span>
                     </Button>
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">Tên chủ tài khoản</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5">Tên chủ tài khoản</p>
                   <p className="text-xs sm:text-sm font-medium text-foreground">{deposit.payment_data?.account_name}</p>
                 </div>
 
                 <div>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">Số tiền</p>
-                  <div className="flex items-center gap-1.5 sm:gap-2">
-                    <p className="text-lg sm:text-2xl font-bold text-primary flex-1">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5">Số tiền</p>
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-base sm:text-2xl font-bold text-primary flex-1">
                       {deposit.amount.toLocaleString("vi-VN")} VND
                     </p>
                     <Button 
                       size="sm" 
                       variant="outline" 
                       onClick={() => handleCopy(deposit.amount.toString(), "amount")}
-                      className="h-7 sm:h-9 px-2 sm:px-3 flex-shrink-0"
+                      className="h-7 sm:h-9 px-2 flex-shrink-0"
                     >
                       <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span className="ml-0.5 sm:ml-1 text-[10px] sm:text-xs">{copied === "amount" ? "✓" : ""}</span>
                     </Button>
                   </div>
                 </div>
 
-                <div className="pt-1.5 sm:pt-2 border-t-2 border-primary/30">
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">
+                <div className="pt-1 sm:pt-2 border-t border-primary/30">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5">
                     <span className="text-red-500 font-bold">*</span> Nội dung chuyển khoản (Bắt buộc)
                   </p>
-                  <div className="flex items-center gap-1.5 sm:gap-2 mt-0.5 sm:mt-1">
-                    <p className="font-mono font-bold text-sm sm:text-lg text-primary flex-1 bg-primary/10 px-2 sm:px-3 py-1.5 sm:py-2 rounded break-all">
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <p className="font-mono font-bold text-xs sm:text-lg text-primary flex-1 bg-primary/10 px-2 sm:px-3 py-1.5 sm:py-2 rounded break-all">
                       {deposit.payment_code}
                     </p>
                     <Button
                       size="sm"
                       variant="default"
                       onClick={() => handleCopy(deposit.payment_code, "code")}
-                      className="h-8 sm:h-10 px-2 sm:px-3 flex-shrink-0"
+                      className="h-8 sm:h-10 px-2 flex-shrink-0"
                     >
                       <Copy className="w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1" />
                       <span className="text-[10px] sm:text-xs">{copied === "code" ? "✓" : "Copy"}</span>
@@ -509,11 +504,11 @@ Nội dung: ${deposit.payment_code}`
               </div>
             </div>
 
-            {/* Instructions */}
-            <Alert className="border-primary/20">
-              <AlertDescription className="text-[11px] sm:text-sm leading-relaxed">
-                <p className="font-semibold mb-1 sm:mb-2 text-xs sm:text-sm">Hướng dẫn thanh toán:</p>
-                <ol className="list-decimal list-inside space-y-0.5 sm:space-y-1.5 text-[10px] sm:text-sm">
+            {/* Instructions - Compact */}
+            <Alert className="border-primary/20 py-2 sm:py-3">
+              <AlertDescription className="text-[10px] sm:text-sm leading-snug">
+                <p className="font-semibold mb-1 text-[11px] sm:text-sm">Hướng dẫn thanh toán:</p>
+                <ol className="list-decimal list-inside space-y-0.5 sm:space-y-1 text-[10px] sm:text-sm">
                   {isMobile ? (
                     <>
                       <li><strong>Cách 1:</strong> Bấm nút Mở App Ngân Hàng - thông tin sẽ được điền sẵn</li>
@@ -533,20 +528,20 @@ Nội dung: ${deposit.payment_code}`
             </Alert>
 
             {/* Status */}
-            <div className="flex items-center justify-between p-2 sm:p-3 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-              <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="flex items-center justify-between p-2 sm:p-3 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg border border-yellow-200 dark:border-yellow-800 -mb-1">
+              <div className="flex items-center gap-1.5">
                 <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 animate-pulse flex-shrink-0" />
-                <span className="text-[11px] sm:text-sm font-medium text-yellow-700 dark:text-yellow-400">Đang chờ thanh toán...</span>
+                <span className="text-[10px] sm:text-sm font-medium text-yellow-700 dark:text-yellow-400">Đang chờ thanh toán...</span>
               </div>
               <Button 
                 size="sm" 
                 variant="ghost" 
                 onClick={handleRefreshStatus} 
                 disabled={isChecking}
-                className="h-7 sm:h-8 px-1.5 sm:px-2 flex-shrink-0"
+                className="h-7 sm:h-8 px-1.5 flex-shrink-0"
               >
                 <RefreshCw className={`w-3 h-3 sm:w-4 sm:h-4 ${isChecking ? "animate-spin" : ""}`} />
-                <span className="ml-0.5 sm:ml-1 text-[10px] sm:text-xs">Kiểm tra</span>
+                <span className="ml-0.5 text-[10px] sm:text-xs">Kiểm tra</span>
               </Button>
             </div>
 
