@@ -361,76 +361,25 @@ Nội dung: ${deposit.payment_code}`
           <div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-4 sm:pb-6 overscroll-contain">
 
           <div className="space-y-2.5 sm:space-y-6 py-3 sm:py-4">
-            {isMobile ? (
-              <>
-                {/* Mobile: Các nút mở app ngân hàng */}
-                <div className="space-y-2.5">
-                  {/* Nút chính - VietQR (hoạt động với mọi app ngân hàng) */}
-                  <Button
-                    onClick={() => (window.location.href = generateBankingDeepLink())}
-                    className="w-full h-12 text-sm font-semibold bg-gradient-to-r from-primary to-primary/80"
-                  >
-                    <Smartphone className="mr-2 h-4 w-4" />
-                    Mở App Ngân Hàng
-                  </Button>
-                  
-                  <p className="text-[11px] text-center text-muted-foreground -mt-0.5">
-                    Bấm nút trên để mở app ngân hàng của bạn
-                  </p>
-
-                  {/* Nút copy tất cả thông tin - rất hữu ích cho mobile */}
-                  <Button
-                    onClick={handleCopyAll}
-                    variant="outline"
-                    className="w-full h-10 text-xs font-medium border-2 bg-transparent"
-                  >
-                    <Copy className="mr-2 h-3.5 w-3.5" />
-                    {copied === "all" ? "Đã Copy!" : "Copy Toàn Bộ Thông Tin"}
-                  </Button>
-
-                  {/* Các app phổ biến khác */}
-                  <div className="pt-1">
-                    <p className="text-[10px] text-muted-foreground mb-1.5 text-center">Hoặc mở trực tiếp:</p>
-                    <div className="grid grid-cols-2 gap-2">
-                      {generateBankingDeepLinks().slice(1).map((bank) => (
-                        <Button
-                          key={bank.name}
-                          variant="outline"
-                          size="sm"
-                          className="h-9 text-xs bg-transparent"
-                          onClick={() => (window.location.href = bank.url)}
-                        >
-                          <span className="mr-1">{bank.icon}</span>
-                          {bank.name}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
+            {/* QR Code - hiển thị cho cả mobile và desktop */}
+            <div className="flex justify-center bg-white p-4 rounded-lg">
+              {deposit.payment_data?.qr_url ? (
+                <img
+                  src={deposit.payment_data.qr_url || "/placeholder.svg"}
+                  alt="Mã QR thanh toán"
+                  className="w-48 h-48 sm:w-64 sm:h-64"
+                />
+              ) : (
+                <div className="w-48 h-48 sm:w-64 sm:h-64 flex items-center justify-center bg-muted">
+                  <QrCode className="w-12 h-12 text-muted-foreground" />
                 </div>
-              </>
-            ) : (
-              <>
-                {/* Desktop: Show QR Code */}
-                <div className="flex justify-center bg-white p-4 rounded-lg">
-                  {deposit.payment_data?.qr_url ? (
-                    <img
-                      src={deposit.payment_data.qr_url || "/placeholder.svg"}
-                      alt="Mã QR thanh toán"
-                      className="w-64 h-64"
-                    />
-                  ) : (
-                    <div className="w-64 h-64 flex items-center justify-center bg-muted">
-                      <QrCode className="w-12 h-12 text-muted-foreground" />
-                    </div>
-                  )}
-                </div>
+              )}
+            </div>
 
-                <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                  <Monitor className="w-4 h-4" />
-                  <span>Quét bằng app ngân hàng trên điện thoại</span>
-                </div>
-              </>
-            )}
+            <div className="flex items-center justify-center gap-2 text-xs sm:text-sm text-muted-foreground">
+              <QrCode className="w-4 h-4" />
+              <span>Quét mã QR bằng app ngân hàng</span>
+            </div>
 
             <div className="space-y-1.5 sm:space-y-3 bg-primary/5 p-2.5 sm:p-4 rounded-lg border border-primary/20">
               <div className="text-center pb-1 sm:pb-2 border-b border-primary/20">
@@ -509,15 +458,7 @@ Nội dung: ${deposit.payment_code}`
               <AlertDescription className="text-[10px] sm:text-sm leading-snug">
                 <p className="font-semibold mb-1 text-[11px] sm:text-sm">Hướng dẫn thanh toán:</p>
                 <ol className="list-decimal list-inside space-y-0.5 sm:space-y-1 text-[10px] sm:text-sm">
-                  {isMobile ? (
-                    <>
-                      <li><strong>Cách 1:</strong> Bấm nút Mở App Ngân Hàng - thông tin sẽ được điền sẵn</li>
-                      <li><strong>Cách 2:</strong> Bấm Copy Toàn Bộ rồi dán vào app ngân hàng</li>
-                      <li><strong>Cách 3:</strong> Mở app MoMo/ZaloPay và nhập thủ công</li>
-                    </>
-                  ) : (
-                    <li>Quét mã QR bằng app ngân hàng trên điện thoại</li>
-                  )}
+                  <li>Quét mã QR bằng app ngân hàng hoặc copy thông tin bên dưới</li>
                   <li>
                     <strong className="text-red-600 font-bold">Nội dung bắt buộc: {deposit.payment_code}</strong>
                   </li>
