@@ -22,7 +22,13 @@ SCHEMA JSON (TUÂN THỦ CHÍNH XÁC):
 ═══════════════════════════════════════════════════════════
 
 {
-  "summary": "string - Lấy từ đoạn đầu tiên của PHÂN TÍCH Y LÝ, 2-3 câu",
+  "patientInfo": {
+    "subject": "string - Đối tượng hỏi (banthan/cha/me/con/vo/chong/anhchiem)",
+    "gender": "string - Giới tính PHẢI KHỚP với input (Nam/Nữ)",
+    "age": "number - Tuổi PHẢI KHỚP với input",
+    "pronoun": "string - Cách xưng hô (bạn/cha bạn/mẹ bạn/con bạn/vợ bạn/chồng bạn/anh chị em bạn)"
+  },
+  "summary": "string - Lấy từ mục 【TÓM TẮT BỆNH TRẠNG】, 2-3 câu",
   "explanation": "string - Ghép 4 đoạn PHÂN TÍCH Y LÝ thành 1 chuỗi, ngăn cách bằng \\n\\n",
   "symptoms": ["string", "string", ...] - Lấy từ mục TRIỆU CHỨNG, 5-8 items,
   "emotionalConnection": {
@@ -40,12 +46,7 @@ SCHEMA JSON (TUÂN THỦ CHÍNH XÁC):
     "outlook": "string - Tiên lượng tổng quan",
     "recoveryTime": "string - Thời gian hồi phục ước tính",
     "improvementSigns": ["string", ...] - 2-3 items,
-    "warningSigns": ["string", ...] - 2-3 items,
-    "seasonalFactor": {
-      "currentSeason": "string - Mùa hiện tại (Xuân/Hạ/Thu/Đông)",
-      "compatibility": "string - Thuận mùa/Nghịch mùa/Trung hòa",
-      "explanation": "string - Giải thích ảnh hưởng của mùa đến tiên lượng (2-3 câu)"
-    }
+    "warningSigns": ["string", ...] - 2-3 items
   },
   "treatmentOrigin": {
     "affectedOrgan": "string - Tạng bệnh phát sinh (VD: Gan, Tâm, Tỳ, Phổi, Thận)",
@@ -82,6 +83,13 @@ SCHEMA JSON (TUÂN THỦ CHÍNH XÁC):
 QUY TẮC CHUYỂN ĐỔI:
 ═══════════════════════════════════════════════════════════
 
+0. "patientInfo": TRÍCH XUẤT TỪ MỤC 【THÔNG TIN BỆNH NHÂN】 - BẮT BUỘC CHÍNH XÁC 100%
+   - subject: Lấy từ "Đối tượng hỏi:" - chỉ lấy code (banthan/cha/me/con/vo/chong/anhchiem)
+   - gender: Lấy từ "Giới tính BỆNH NHÂN:" - PHẢI GIỮ NGUYÊN, KHÔNG ĐƯỢC THAY ĐỔI
+   - age: Lấy từ "Tuổi BỆNH NHÂN:" - PHẢI LÀ SỐ NGUYÊN, KHÔNG ĐƯỢC THAY ĐỔI
+   - pronoun: Lấy từ "Cách xưng hô:" - giữ nguyên giá trị
+   ⚠️ QUAN TRỌNG: Nếu nhầm giới tính hoặc tuổi, toàn bộ JSON sẽ VÔ GIÁ TRỊ
+
 1. "summary": Lấy từ mục 【TÓM TẮT BỆNH TRẠNG】
 2. "explanation": Ghép toàn bộ nội dung từ mục 【PHÂN TÍCH Y LÝ CHI TIẾT】 thành 1 STRING, ngăn cách đoạn bằng "\\n\\n"
 3. "symptoms": Trích xuất từng triệu chứng từ mục 【TRIỆU CHỨNG CÓ THỂ GẶP】
@@ -110,7 +118,8 @@ QUY TẮC NGHIÊM NGẶT:
 - "explanation" PHẢI là STRING, KHÔNG phải object
 - Tất cả giá trị boolean: true hoặc false (không viết hoa)
 - Không thêm field mới ngoài schema
-- Nếu thiếu thông tin, dùng giá trị mặc định hợp lý`;
+- Nếu thiếu thông tin: string → "", array → [], boolean → false
+- TUYỆT ĐỐI KHÔNG tự đoán hoặc sáng tạo dữ liệu không có trong nội dung`;
 }
 
 /**
@@ -133,5 +142,5 @@ export const JSON_FORMATTER_CONFIG = {
   // Config này giữ để reference, thực tế dùng Groq trực tiếp trong route
   model: 'groq/llama-3.3-70b-versatile',
   temperature: 0.05,
-  maxTokens: 2000,
+  maxTokens: 2600, // Tăng từ 2000 để tránh sát trần khi explanation dài
 };

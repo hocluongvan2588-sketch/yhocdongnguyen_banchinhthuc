@@ -22,8 +22,13 @@ function generateFallbackAnalysis(
   maihua: any,
   diagnostic: any,
   patientContext: any,
-  seasonInfo: any
+  seasonInfo: any,
+  subjectInfo?: { label: string; pronoun: string }
 ) {
+  // Đảm bảo thông tin cá nhân luôn chính xác trong fallback
+  const genderText = patientContext.gender === 'nam' ? 'Nam' : 'Nữ';
+  const subject = patientContext.subject || 'banthan';
+  const pronoun = subjectInfo?.pronoun || 'bạn';
   const upperTrigram = diagnostic.mapping?.upperTrigram;
   const lowerTrigram = diagnostic.mapping?.lowerTrigram;
   const movingLine = maihua.movingLine || 1;
@@ -67,7 +72,15 @@ Quan hệ Thể-Dụng là ${diagnostic.expertAnalysis?.tiDung?.relation || 'tư
 Quẻ Biến ${maihua.changedHexagram?.name || ''} cho thấy xu hướng ${severity === 'nặng' ? 'cần theo dõi chặt chẽ' : 'ổn định'}, ${severity !== 'nặng' ? 'nhưng cần thời gian để hồi phục' : 'cần can thiệp kịp thời'}. ${maihua.changedHexagram?.name || 'Quẻ biến'} biểu thị sự ${severity === 'nặng' ? 'chuyển biến cần theo dõi' : 'mềm dẻo và khả năng thích nghi'}, cho thấy bạn có thể tự điều chỉnh nếu được chăm sóc đúng cách. Tuy nhiên, cần chú ý đến việc duy trì lối sống lành mạnh để hỗ trợ quá trình hồi phục.`;
 
   return {
-    summary: `Tình trạng sức khỏe hiện tại của bạn được phản ánh qua Quẻ Chủ ${maihua.mainHexagram?.name || ''} và Hào ${movingLine} động, cho thấy các vấn đề liên quan đến ${diagnostic.mapping?.movingYao?.anatomy?.join(' và ') || 'vùng cơ thể'}. Mức độ bệnh được đánh giá là ${severity}, ${seasonRelation === 'thuận' ? `mùa ${season} thuận lợi cho điều trị` : 'cần chú ý theo dõi và chăm sóc'}.`,
+    // THÔNG TIN CÁ NHÂN - LUÔN CHÍNH XÁC
+    patientInfo: {
+      subject: subject,
+      gender: genderText,
+      age: patientContext.age,
+      pronoun: pronoun
+    },
+    
+    summary: `Tình trạng sức khỏe hiện tại của ${pronoun} được phản ánh qua Quẻ Chủ ${maihua.mainHexagram?.name || ''} và Hào ${movingLine} động, cho thấy các vấn đề liên quan đến ${diagnostic.mapping?.movingYao?.anatomy?.join(' và ') || 'vùng cơ thể'}. Mức độ bệnh được đánh giá là ${severity}, ${seasonRelation === 'thuận' ? `mùa ${season} thuận lợi cho điều trị` : 'cần chú ý theo dõi và chăm sóc'}.`,
     
     explanation: detailedExplanation,
     
@@ -213,12 +226,43 @@ export async function POST(req: Request) {
     const layer1Start = Date.now();
     console.log('[v0] Layer 1: Medical Analysis with NEW UX-focused prompt...');
     
-    // Build user prompt với context đầy đủ
+    // ═══════════════════════════════════════════════════════════
+    // XỬ LÝ THÔNG TIN CÁ NHÂN HÓA (CRITICAL - KHÔNG ĐƯỢC SAI)
+    // ═══════════════════════════════════════════════════════════
+    const subjectLabels: Record<string, { label: string; pronoun: string }> = {
+      'banthan': { label: 'Bản thân (người hỏi)', pronoun: 'bạn' },
+      'cha': { label: 'Cha của người hỏi', pronoun: 'cha bạn' },
+      'me': { label: 'Mẹ của người hỏi', pronoun: 'mẹ bạn' },
+      'con': { label: 'Con của người hỏi', pronoun: 'con bạn' },
+      'vo': { label: 'Vợ của người hỏi', pronoun: 'vợ bạn' },
+      'chong': { label: 'Chồng của người hỏi', pronoun: 'chồng bạn' },
+      'anhchiem': { label: 'Anh chị em của người hỏi', pronoun: 'anh/chị/em bạn' },
+    };
+    
+    const subject = patientContext.subject || 'banthan';
+    const subjectInfo = subjectLabels[subject] || subjectLabels['banthan'];
+    const genderText = patientContext.gender === 'nam' ? 'Nam' : 'Nữ';
+    const ageText = `${patientContext.age} tuổi`;
+    
+    console.log('[v0] Patient personalization:', {
+      subject,
+      gender: genderText,
+      age: ageText,
+      pronoun: subjectInfo.pronoun
+    });
+
+    // Build user prompt với context đầy đủ + KHÓA THÔNG TIN CÁ NHÂN
     const userPrompt = `
-# THÔNG TIN BỆNH NHÂN
-- Giới tính: ${patientContext.gender === 'nam' ? 'Nam' : 'Nữ'}
-- Tuổi: ${patientContext.age}
+# ═══════════════════════════════════════════════════════════
+# THÔNG TIN BỆNH NHÂN (BẮT BUỘC TUÂN THỦ - KHÔNG ĐƯỢC THAY ĐỔI)
+# ═══════════════════════════════════════════════════════════
+- Đối tượng hỏi: ${subjectInfo.label}
+- Giới tính BỆNH NHÂN: ${genderText} (KHÔNG ĐƯỢC NHẦM)
+- Tuổi BỆNH NHÂN: ${ageText} (KHÔNG ĐƯỢC NHẦM)
+- Cách xưng hô: "${subjectInfo.pronoun}"
 - Câu hỏi: ${patientContext.question || 'Chẩn đoán tổng quát'}
+
+⚠️ CẢNH BÁO: Bạn PHẢI sử dụng đúng giới tính "${genderText}" và tuổi "${ageText}" trong TOÀN BỘ phân tích. Nếu viết sai giới tính hoặc tuổi, toàn bộ phân tích sẽ VÔ GIÁ TRỊ.
 
 # KẾT QUẢ GIEO QUẺ
 - Quẻ chính: ${maihua.mainHexagram?.name || 'N/A'}
@@ -291,7 +335,7 @@ Hãy phân tích theo cấu trúc UX-friendly đã được hướng dẫn.`;
       
       try {
         // Sử dụng fallback analysis dựa trên dữ liệu đã có
-        const fallbackAnalysis = generateFallbackAnalysis(maihua, diagnostic, patientContext, seasonInfo);
+        const fallbackAnalysis = generateFallbackAnalysis(maihua, diagnostic, patientContext, seasonInfo, subjectInfo);
         const totalTime = Date.now() - startTime;
         
         console.log(`[v0] Fallback analysis generated in ${totalTime}ms`);
@@ -327,7 +371,7 @@ Hãy phân tích theo cấu trúc UX-friendly đã được hướng dẫn.`;
       model: 'llama-3.3-70b-versatile',
       prompt: jsonFormatterPrompt,
       temperature: 0.05, // Cực thấp để tăng tính deterministic
-      maxTokens: 2000, // Đủ cho JSON output
+      maxTokens: 2600, // Tăng từ 2000 để tránh sát trần khi explanation dài
     });
 
     const layer2Time = Date.now() - layer2Start;
@@ -356,6 +400,43 @@ Hãy phân tích theo cấu trúc UX-friendly đã được hướng dẫn.`;
       console.error('[v0] JSON parse error:', parseError);
       console.error('[v0] Raw JSON text:', jsonMatch[0].substring(0, 500));
       throw new Error('Failed to parse AI response - invalid JSON');
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // VALIDATION THÔNG TIN CÁ NHÂN (CRITICAL CHECK)
+    // ═══════════════════════════════════════════════════════════
+    if (analysis.patientInfo) {
+      const expectedGender = genderText;
+      const expectedAge = patientContext.age;
+      const actualGender = analysis.patientInfo.gender;
+      const actualAge = analysis.patientInfo.age;
+      
+      // Kiểm tra giới tính
+      if (actualGender && actualGender !== expectedGender) {
+        console.error('[v0] CRITICAL: Gender mismatch!', { expected: expectedGender, actual: actualGender });
+        // Tự động sửa lại giới tính
+        analysis.patientInfo.gender = expectedGender;
+        console.log('[v0] Auto-corrected gender to:', expectedGender);
+      }
+      
+      // Kiểm tra tuổi (cho phép sai lệch 1 tuổi do làm tròn)
+      if (actualAge && Math.abs(actualAge - expectedAge) > 1) {
+        console.error('[v0] CRITICAL: Age mismatch!', { expected: expectedAge, actual: actualAge });
+        // Tự động sửa lại tuổi
+        analysis.patientInfo.age = expectedAge;
+        console.log('[v0] Auto-corrected age to:', expectedAge);
+      }
+      
+      console.log('[v0] Patient info validated:', analysis.patientInfo);
+    } else {
+      // Nếu AI không trả về patientInfo, tự động thêm vào
+      analysis.patientInfo = {
+        subject: subject,
+        gender: genderText,
+        age: patientContext.age,
+        pronoun: subjectInfo.pronoun
+      };
+      console.log('[v0] Patient info auto-added:', analysis.patientInfo);
     }
 
     // Validate required fields with detailed logging

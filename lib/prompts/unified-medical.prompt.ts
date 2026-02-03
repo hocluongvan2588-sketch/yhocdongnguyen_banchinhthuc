@@ -197,6 +197,13 @@ BẢNG KẾT NỐI DỊCH HỌC - SINH LÝ HỌC
 YÊU CẦU TRẢ LỜI - VIẾT THEO CẤU TRÚC SAU (GIỮ NGUYÊN TIÊU ĐỀ):
 ══════════════════════════════════════════════════════════════════════════
 
+【THÔNG TIN BỆNH NHÂN】
+⚠️ BẮT BUỘC LẶP LẠI CHÍNH XÁC THÔNG TIN ĐÃ CUNG CẤP - KHÔNG ĐƯỢC THAY ĐỔI:
+- Đối tượng hỏi: ${subjectContext.label}
+- Giới tính BỆNH NHÂN: ${patientContext.gender}
+- Tuổi BỆNH NHÂN: ${patientContext.age} tuổi
+- Cách xưng hô: "${patientContext.subject === 'banthan' ? 'bạn' : subjectContext.label.toLowerCase().includes('cha') ? 'cha bạn' : subjectContext.label.toLowerCase().includes('mẹ') ? 'mẹ bạn' : subjectContext.label.toLowerCase().includes('con') ? 'con bạn' : subjectContext.label.toLowerCase().includes('vợ') ? 'vợ bạn' : subjectContext.label.toLowerCase().includes('chồng') ? 'chồng bạn' : 'anh/chị/em bạn'}"
+
 【TÓM TẮT BỆNH TRẠNG】
 Viết 2-3 câu tổng quan về tình trạng sức khỏe dựa trên Quẻ Chủ ${maihua.mainHexagram.name} và Hào ${maihua.movingLine} động. Nêu rõ mức độ ${diagnostic.expertAnalysis.tiDung.severity}.
 
@@ -316,5 +323,5 @@ export const UNIFIED_MEDICAL_CONFIG = {
   // Model được sử dụng qua openai('gpt-4o') trong route
   model: 'gpt-4o',
   temperature: 0.5, // Cân bằng sáng tạo và chính xác
-  maxTokens: 5000, // Đảm bảo output đầy đủ cho phân tích y học
+  maxTokens: 4000, // Đảm bảo output đầy đủ cho phân tích y học
 };

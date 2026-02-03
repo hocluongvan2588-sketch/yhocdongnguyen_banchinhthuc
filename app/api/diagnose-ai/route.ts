@@ -58,18 +58,38 @@ function constructPrompt(
   chiNgay?: string,
   element?: string,
   lunarYear?: string,
+  subject?: string,
 ): string {
+  // Xử lý thông tin cá nhân hóa
+  const genderText = gender === "male" ? "Nam" : gender === "female" ? "Nữ" : "Không rõ";
+  const subjectLabels: Record<string, { label: string; pronoun: string }> = {
+    'banthan': { label: 'Bản thân (người hỏi)', pronoun: 'bạn' },
+    'cha': { label: 'Cha của người hỏi', pronoun: 'cha bạn' },
+    'me': { label: 'Mẹ của người hỏi', pronoun: 'mẹ bạn' },
+    'con': { label: 'Con của người hỏi', pronoun: 'con bạn' },
+    'vo': { label: 'Vợ của người hỏi', pronoun: 'vợ bạn' },
+    'chong': { label: 'Chồng của người hỏi', pronoun: 'chồng bạn' },
+    'anhchiem': { label: 'Anh chị em của người hỏi', pronoun: 'anh/chị/em bạn' },
+  };
+  const subjectInfo = subjectLabels[subject || 'banthan'] || subjectLabels['banthan'];
+
   const anthropometricContext =
     gender || age || painLocation || userLocation || canNam
       ? `
-**Thông tin bệnh nhân:**
-${gender ? `- Giới tính: ${gender === "male" ? "Nam" : gender === "female" ? "Nữ" : "Không rõ"}` : ""}
-${age ? `- Tuổi: ${age} tuổi` : ""}
+**═══════════════════════════════════════════════════════════**
+**THÔNG TIN BỆNH NHÂN (BẮT BUỘC TUÂN THỦ - KHÔNG ĐƯỢC THAY ĐỔI)**
+**═══════════════════════════════════════════════════════════**
+${subject ? `- Đối tượng hỏi: ${subjectInfo.label}` : ""}
+${gender ? `- Giới tính BỆNH NHÂN: ${genderText} (KHÔNG ĐƯỢC NHẦM)` : ""}
+${age ? `- Tuổi BỆNH NHÂN: ${age} tuổi (KHÔNG ĐƯỢC NHẦM)` : ""}
+${subject ? `- Cách xưng hô: "${subjectInfo.pronoun}"` : ""}
 ${canNam && chiNam ? `- Can Chi Năm: ${canNam} ${chiNam}${lunarYear ? ` (Năm âm lịch: ${lunarYear})` : ""}` : ""}
 ${canNgay && chiNgay ? `- Can Chi Ngày: ${canNgay} ${chiNgay}` : ""}
 ${element ? `- Mệnh ngũ hành: ${element}` : ""}
 ${painLocation && painLocation !== "unknown" ? `- Vị trí đau: ${painLocation === "left" ? "Bên trái" : painLocation === "right" ? "Bên phải" : painLocation === "center" ? "Ở giữa" : painLocation === "whole" ? "Toàn thân" : "Không rõ"}` : ""}
 ${userLocation ? `- Địa lý: ${userLocation}` : ""}
+
+⚠️ CẢNH BÁO: Bạn PHẢI sử dụng đúng giới tính "${genderText}" và tuổi "${age}" trong TOÀN BỘ phân tích.
 `
       : ""
 
@@ -235,7 +255,10 @@ export async function POST(request: NextRequest) {
       chiNgay,
       element,
       lunarYear,
+      subject, // Đối tượng hỏi: banthan, cha, me, con, vo, chong, anhchiem
     } = body
+    
+    console.log('[v0] Patient personalization:', { subject, gender, age })
 
     if (
       upperTrigram === null ||
@@ -335,21 +358,22 @@ export async function POST(request: NextRequest) {
         1000,
       )
 
-      const userPrompt = constructPrompt(
-        rawCalculation,
-        healthConcern || "",
-        currentMonth || 1,
-        gender,
-        age,
-        painLocation,
-        userLocation,
-        canNam,
-        chiNam,
-        canNgay,
-        chiNgay,
-        element,
-        lunarYear,
-      )
+const userPrompt = constructPrompt(
+  rawCalculation,
+  healthConcern || "",
+  currentMonth || 1,
+  gender,
+  age,
+  painLocation,
+  userLocation,
+  canNam,
+  chiNam,
+  canNgay,
+  chiNgay,
+  element,
+  lunarYear,
+  subject, // Truyền subject để cá nhân hóa
+  )
 
       const systemPrompt = `${SYSTEM_INSTRUCTION}
 
