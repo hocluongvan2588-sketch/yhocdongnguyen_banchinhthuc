@@ -32,7 +32,10 @@ interface AIAnalysis {
   emotionalConnection: {
     emotion: string;
     organ: string;
-    explanation: string;
+    patientFeeling?: string; // Mô tả cảm xúc người bệnh đang trải qua
+    mechanismTCM?: string; // Cơ chế theo Đông Y
+    mechanismModern?: string; // Cơ chế theo Y học hiện đại
+    explanation?: string; // Fallback cho version cũ
   };
   diet: {
     shouldEat: string[];
@@ -395,18 +398,62 @@ export default function ResultsPage() {
                       <Heart className="h-5 w-5 text-pink-500" />
                       Mối liên hệ Cảm xúc - Bệnh lý
                     </h3>
-                    <div className="space-y-3">
+                    <div className="space-y-4">
+                      {/* Badges: Cảm xúc & Tạng */}
                       <div className="flex flex-wrap gap-2">
                         <Badge variant="outline" className="bg-pink-500/10 text-pink-700 border-pink-500/30">
-                          {aiAnalysis.emotionalConnection.emotion}
+                          Cảm xúc: {aiAnalysis.emotionalConnection.emotion}
                         </Badge>
-                        <Badge variant="outline" className="bg-transparent">
-                          Ảnh hưởng: {aiAnalysis.emotionalConnection.organ}
+                        <Badge variant="outline" className="bg-purple-500/10 text-purple-700 border-purple-500/30">
+                          Tạng bị ảnh hưởng: {aiAnalysis.emotionalConnection.organ}
                         </Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {aiAnalysis.emotionalConnection.explanation}
-                      </p>
+                      
+                      {/* Biểu hiện cảm xúc ở người bệnh - QUAN TRỌNG */}
+                      {aiAnalysis.emotionalConnection.patientFeeling && (
+                        <div className="rounded-md bg-pink-500/10 p-3 border-l-4 border-pink-500">
+                          <p className="text-sm font-medium text-pink-800 mb-1">Bạn có thể đang cảm thấy:</p>
+                          <p className="text-sm text-foreground leading-relaxed">
+                            {aiAnalysis.emotionalConnection.patientFeeling}
+                          </p>
+                        </div>
+                      )}
+                      
+                      {/* Cơ chế gây bệnh */}
+                      <div className="grid gap-3 md:grid-cols-2">
+                        {/* Đông Y */}
+                        {aiAnalysis.emotionalConnection.mechanismTCM && (
+                          <div className="rounded-md bg-amber-500/10 p-3">
+                            <p className="text-xs font-semibold text-amber-700 mb-1 flex items-center gap-1">
+                              <span>&#9775;</span> Theo Đông Y:
+                            </p>
+                            <p className="text-sm text-muted-foreground leading-relaxed">
+                              {aiAnalysis.emotionalConnection.mechanismTCM}
+                            </p>
+                          </div>
+                        )}
+                        
+                        {/* Y học hiện đại */}
+                        {aiAnalysis.emotionalConnection.mechanismModern && (
+                          <div className="rounded-md bg-blue-500/10 p-3">
+                            <p className="text-xs font-semibold text-blue-700 mb-1 flex items-center gap-1">
+                              <span>&#9763;</span> Theo Y học hiện đại:
+                            </p>
+                            <p className="text-sm text-muted-foreground leading-relaxed">
+                              {aiAnalysis.emotionalConnection.mechanismModern}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Fallback cho version cũ - hiển thị explanation nếu không có fields mới */}
+                      {!aiAnalysis.emotionalConnection.patientFeeling && 
+                       !aiAnalysis.emotionalConnection.mechanismTCM && 
+                       aiAnalysis.emotionalConnection.explanation && (
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {aiAnalysis.emotionalConnection.explanation}
+                        </p>
+                      )}
                     </div>
                   </div>
                 )}

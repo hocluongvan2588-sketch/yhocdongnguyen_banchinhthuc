@@ -194,6 +194,26 @@ BẢNG KẾT NỐI DỊCH HỌC - SINH LÝ HỌC
 | Hỏa khắc Kim | Viêm nhiễm, sốt (Hỏa) gây tổn thương phổi, đường hô hấp (Kim) |
 
 ══════════════════════════════════════════════════════════════════════════
+THẤT TÌNH - BẢNG LIÊN KẾT CẢM XÚC VÀ TẠNG PHỦ (RẤT QUAN TRỌNG)
+══════════════════════════════════════════════════════════════════════════
+Theo Y học cổ truyền, Thất tình (7 cảm xúc) ảnh hưởng trực tiếp đến Ngũ tạng:
+
+| Ngũ Hành | Tạng   | Cảm xúc chính | Biểu hiện khi mất cân bằng |
+|----------|--------|---------------|----------------------------|
+| MỘC      | Gan    | GIẬN (Nộ)     | Dễ cáu gắt, bực tức, khó kiềm chế, đau đầu, chóng mặt |
+| HỎA      | Tâm    | VUI QUÁ (Hỷ) | Hưng phấn quá độ, khó tập trung, mất ngủ, hồi hộp |
+| THỔ      | Tỳ     | LO NGHĨ (Tư) | Suy nghĩ nhiều, trằn trọc, ăn không ngon, chướng bụng |
+| KIM      | Phổi   | BUỒN (Bi)    | U sầu, bi quan, thở ngắn, hay thở dài, dễ khóc |
+| THỦY     | Thận   | SỢ (Khủng)   | Hay sợ hãi, bất an, tiểu đêm, lưng gối yếu, mỏi |
+
+CƠ CHẾ TÁC ĐỘNG (Y học hiện đại):
+- GIẬN → Tăng adrenaline, co mạch, tăng huyết áp, căng cơ
+- VUI QUÁ → Kích thích thần kinh giao cảm, loạn nhịp tim
+- LO NGHĨ → Giảm tiết dịch vị, co thắt cơ trơn đường tiêu hóa
+- BUỒN → Giảm miễn dịch, suy yếu hô hấp, hạ serotonin
+- SỢ → Tăng cortisol kéo dài, suy thận thượng thận, mất ngủ
+
+══════════════════════════════════════════════════════════════════════════
 YÊU CẦU TRẢ LỜI - VIẾT THEO CẤU TRÚC SAU (GIỮ NGUYÊN TIÊU ĐỀ):
 ══════════════════════════════════════════════════════════════════════════
 
@@ -222,10 +242,19 @@ Liệt kê 6-8 triệu chứng cụ thể (mỗi triệu chứng 1 dòng, bắt 
 - Phù hợp tuổi ${patientContext.age} và giới tính ${patientContext.gender}
 
 【MỐI LIÊN HỆ CẢM XÚC - BỆNH LÝ】
-Dựa vào Ngũ hành Dụng (${diagnostic.expertAnalysis.tiDung.dung.element}):
-- Cảm xúc chính: [Xác định cảm xúc - VD: Căng thẳng, Lo âu, Buồn bã, Sợ hãi, Căng thẳng]
-- Tạng phủ bị ảnh hưởng: [Tên tạng bị ảnh hưởng - VD: Gan, Tâm, Tỳ, Phổi, Thận]
-- Giải thích cơ chế: [CHỈ giải thích CƠ CHẾ sinh lý - KHÔNG đưa ra lời khuyên hành động. VD: "Theo y học cổ truyền, Gan chủ tình chí, khi căng thẳng làm Khí Gan uất, gây đau đầu, chóng mặt. Y học hiện đại cho thấy stress kéo dài tăng cortisol, làm co mạch máu và căng cơ." - 2-3 câu]
+⚠️ BẮT BUỘC: Phân tích cảm xúc CỤ THỂ dựa vào BẢNG THẤT TÌNH ở trên và Ngũ hành Dụng (${diagnostic.expertAnalysis.tiDung.dung.element}).
+
+- Cảm xúc có thể gây bệnh: [Xác định 1-2 cảm xúc CỤ THỂ từ Bảng Thất tình. VD: Nếu Dụng là Mộc → "GIẬN DỮ, CĂNG THẲNG"; Nếu Dụng là Thổ → "LO NGHĨ, SUY TƯ NHIỀU"; Nếu Dụng là Thủy → "SỢ HÃI, BẤT AN"]
+
+- Tạng phủ bị ảnh hưởng: [Tên tạng tương ứng với cảm xúc - VD: Gan (Mộc/Giận), Tâm (Hỏa/Vui quá), Tỳ (Thổ/Lo), Phổi (Kim/Buồn), Thận (Thủy/Sợ)]
+
+- Biểu hiện cảm xúc ở người bệnh: [Mô tả CỤ THỂ cảm xúc người bệnh có thể đang trải qua. VD: "Bạn có thể đang cảm thấy dễ cáu gắt, khó kiềm chế cảm xúc, hay bực tức vì những chuyện nhỏ" hoặc "Bạn có thể đang suy nghĩ nhiều, trằn trọc về công việc/gia đình, khó buông bỏ lo lắng"]
+
+- Cơ chế gây bệnh (Đông Y): [Giải thích theo Đông Y - 1-2 câu. VD: "Khi GIẬN DỮ kéo dài, Khí Gan bị uất kết, không sơ tiết được, dẫn đến Khí trệ Huyết ứ ở vùng vai gáy, gây đau cứng"]
+
+- Cơ chế gây bệnh (Y học hiện đại): [Giải thích theo Tây Y - 1-2 câu. VD: "Căng thẳng kích hoạt hệ thần kinh giao cảm, tăng tiết adrenaline và cortisol, gây co cơ và giảm lưu thông máu"]
+
+⚠️ LƯU Ý: KHÔNG đưa lời khuyên trong mục này - chỉ GIẢI THÍCH cơ chế. Lời khuyên sẽ ở mục Sinh hoạt.
 
 【CHẾ ĐỘ ĂN UỐNG】
 Dựa vào Ngũ hành cần bổ (${diagnostic.expertAnalysis.tiDung.ti.element}):

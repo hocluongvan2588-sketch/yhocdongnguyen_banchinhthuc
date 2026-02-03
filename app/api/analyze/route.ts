@@ -52,15 +52,37 @@ function generateFallbackAnalysis(
   ];
   
   // Tính toán cảm xúc từ quẻ
-  const emotionMap: Record<string, string> = {
-    'Mộc': 'Giận dữ, cáu gắt',
-    'Hỏa': 'Vui quá độ, hưng phấn',
-    'Thổ': 'Lo âu, suy nghĩ nhiều',
-    'Kim': 'Buồn bã, u sầu',
-    'Thủy': 'Sợ hãi, bất an'
+// Bảng Thất tình theo Ngũ hành (Y học cổ truyền)
+  const emotionDetailMap: Record<string, { emotion: string; feeling: string; tcmMechanism: string }> = {
+    'Mộc': { 
+      emotion: 'Giận dữ, căng thẳng',
+      feeling: 'dễ cáu gắt, bực tức vì những chuyện nhỏ, khó kiềm chế cơn nóng giận',
+      tcmMechanism: 'Gan chủ sơ tiết, khi Giận dữ làm Khí Gan thượng xung, không sơ tiết được, gây đau đầu, chóng mặt, tức ngực'
+    },
+    'Hỏa': { 
+      emotion: 'Hưng phấn quá độ, lo âu',
+      feeling: 'quá vui hoặc quá lo lắng, tâm trạng thất thường, khó tập trung',
+      tcmMechanism: 'Tâm chủ thần minh, khi Vui quá làm Tâm Khí tản mát, không tàng Thần được, gây mất ngủ, hồi hộp'
+    },
+    'Thổ': { 
+      emotion: 'Lo nghĩ, suy tư nhiều',
+      feeling: 'hay suy nghĩ nhiều, trằn trọc về công việc/gia đình, khó buông bỏ lo lắng',
+      tcmMechanism: 'Tỳ chủ vận hóa, khi Lo nghĩ quá làm Tỳ Khí uất kết, không vận hóa được, gây chán ăn, đầy bụng'
+    },
+    'Kim': { 
+      emotion: 'Buồn bã, u sầu',
+      feeling: 'buồn bã, bi quan, hay thở dài, cảm thấy mệt mỏi tinh thần',
+      tcmMechanism: 'Phế chủ khí, khi Buồn quá làm Phế Khí hao tán, không tuyên phát được, gây thở ngắn, dễ khóc'
+    },
+    'Thủy': { 
+      emotion: 'Sợ hãi, bất an',
+      feeling: 'hay lo sợ vô cớ, bất an, ngủ không yên giấc, dễ giật mình',
+      tcmMechanism: 'Thận chủ chí, khi Sợ hãi làm Thận Khí hạ hãm, không nạp khí được, gây tiểu đêm, lưng gối yếu'
+    }
   };
   const upperElement = upperTrigram?.element || 'Mộc';
-  const emotion = emotionMap[upperElement] || 'Căng thẳng';
+  const emotionDetail = emotionDetailMap[upperElement] || emotionDetailMap['Mộc'];
+  const emotion = emotionDetail.emotion;
   
   // Tạo explanation chi tiết hơn với 4 đoạn
   const detailedExplanation = `Quẻ Chủ ${maihua.mainHexagram?.name || ''} trong Dịch Học ám chỉ sự quan sát và chậm tiến triển, cho thấy tình trạng sức khỏe của bạn có thể đang bị ảnh hưởng bởi sự căng thẳng và áp lực kéo dài. Hào ${movingLine} động chỉ ra rằng vấn đề sức khỏe nằm ở tầng ${diagnostic.mapping?.movingYao?.bodyLevel || 'giữa'} của cơ thể, đặc biệt là vùng ${diagnostic.mapping?.movingYao?.anatomy?.join(', ') || 'ngực và lưng'}, có thể liên quan đến các cơ quan như ${affectedOrgan} và các tạng phủ liên quan.
@@ -89,8 +111,10 @@ Quẻ Biến ${maihua.changedHexagram?.name || ''} cho thấy xu hướng ${seve
     emotionalConnection: {
       emotion,
       organ: affectedOrgan,
-      westernExplanation: `Theo y học hiện đại, căng thẳng và cảm xúc tiêu cực ảnh hưởng đến hệ thần kinh tự chủ, gây rối loạn chức năng nội tạng.`,
-      advice: `Thực hành thiền định, hít thở sâu và giữ tâm trạng bình ổn để hỗ trợ ${affectedOrgan}.`
+      patientFeeling: `${pronoun === 'bạn' ? 'Bạn' : pronoun.charAt(0).toUpperCase() + pronoun.slice(1)} có thể đang cảm thấy ${emotionDetail.feeling}.`,
+      mechanismTCM: emotionDetail.tcmMechanism,
+      mechanismModern: `Theo Y học hiện đại, ${emotion.toLowerCase()} kéo dài kích hoạt hệ thần kinh giao cảm, tăng tiết cortisol và adrenaline, gây co mạch máu, căng cơ và rối loạn chức năng ${affectedOrgan}.`,
+      explanation: `${emotion} kéo dài ảnh hưởng đến ${affectedOrgan}, gây rối loạn chức năng. Cần điều hòa cảm xúc để hỗ trợ điều trị.`
     },
     
     diet: {

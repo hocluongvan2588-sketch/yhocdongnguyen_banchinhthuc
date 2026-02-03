@@ -32,9 +32,11 @@ SCHEMA JSON (TUÂN THỦ CHÍNH XÁC):
   "explanation": "string - Ghép 4 đoạn PHÂN TÍCH Y LÝ thành 1 chuỗi, ngăn cách bằng \\n\\n",
   "symptoms": ["string", "string", ...] - Lấy từ mục TRIỆU CHỨNG, 5-8 items,
   "emotionalConnection": {
-    "emotion": "string - Cảm xúc chính từ mục CẢM XÚC - BỆNH LÝ",
-    "organ": "string - Tạng phủ bị ảnh hưởng",
-    "explanation": "string - Giải thích cơ chế sinh lý (Đông + Tây y) - CHỈ giải thích, KHÔNG có lời khuyên"
+    "emotion": "string - Cảm xúc CỤ THỂ gây bệnh (VD: Giận dữ, Lo nghĩ, Sợ hãi, Buồn bã)",
+    "organ": "string - Tạng phủ bị ảnh hưởng (VD: Gan, Tỳ, Thận, Phổi)",
+    "patientFeeling": "string - Mô tả cảm xúc người bệnh đang trải qua (VD: 'Bạn có thể đang cảm thấy dễ cáu gắt...')",
+    "mechanismTCM": "string - Cơ chế theo Đông Y (VD: 'Khí Gan uất kết, không sơ tiết...')",
+    "mechanismModern": "string - Cơ chế theo Y học hiện đại (VD: 'Tăng cortisol, co mạch máu...')"
   },
   "diet": {
     "shouldEat": ["string - Thực phẩm + lý do", ...] - 4-5 items,
@@ -94,9 +96,11 @@ QUY TẮC CHUYỂN ĐỔI:
 2. "explanation": Ghép toàn bộ nội dung từ mục 【PHÂN TÍCH Y LÝ CHI TIẾT】 thành 1 STRING, ngăn cách đoạn bằng "\\n\\n"
 3. "symptoms": Trích xuất từng triệu chứng từ mục 【TRIỆU CHỨNG CÓ THỂ GẶP】
 4. "emotionalConnection": Trích xuất từ mục 【MỐI LIÊN HỆ CẢM XÚC - BỆNH LÝ】
-   - emotion: Từ dòng "Cảm xúc chính:"
-   - organ: Từ dòng "Tạng phủ bị ảnh hưởng:"
-   - explanation: Từ dòng "Giải thích cơ chế:" - CHỈ lấy giải thích, KHÔNG bao gồm lời khuyên hành động
+   - emotion: Từ dòng "Cảm xúc có thể gây bệnh:" - Lấy cảm xúc CỤ THỂ (VD: "Giận dữ", "Lo nghĩ", "Sợ hãi")
+   - organ: Từ dòng "Tạng phủ bị ảnh hưởng:" - Lấy tên tạng (VD: "Gan", "Tỳ", "Thận")
+   - patientFeeling: Từ dòng "Biểu hiện cảm xúc ở người bệnh:" - Lấy NGUYÊN VĂN mô tả cảm xúc
+   - mechanismTCM: Từ dòng "Cơ chế gây bệnh (Đông Y):" - Lấy giải thích theo Đông Y
+   - mechanismModern: Từ dòng "Cơ chế gây bệnh (Y học hiện đại):" - Lấy giải thích theo Tây Y
 5. "diet": Trích xuất từ mục 【CHẾ ĐỘ ĂN UỐNG】
 6. "lifestyle": Trích xuất từ mục 【LỜI KHUYÊN SINH HOẠT】
 7. "prognosis": Trích xuất từ mục 【TIÊN LƯỢNG & HỒI PHỤC】
