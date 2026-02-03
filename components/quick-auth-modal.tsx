@@ -16,10 +16,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 interface QuickAuthModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  redirectTo?: string // URL để redirect sau khi đăng nhập
 }
 
-export function QuickAuthModal({ open, onOpenChange }: QuickAuthModalProps) {
+export function QuickAuthModal({ open, onOpenChange, redirectTo }: QuickAuthModalProps) {
   const router = useRouter()
+  
+  // Lấy URL redirect - ưu tiên prop, sau đó là current URL
+  const getRedirectUrl = () => {
+    return redirectTo || window.location.pathname + window.location.search
+  }
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
 
@@ -37,14 +43,15 @@ export function QuickAuthModal({ open, onOpenChange }: QuickAuthModalProps) {
     setError("")
 
     try {
-      // Note: Form data should already be saved by parent component before opening this modal
-      // The parent component saves it in sessionStorage before calling setShowLoginModal(true)
+      // Lưu redirect URL vào sessionStorage trước khi chuyển sang Google
+      const targetRedirect = getRedirectUrl()
+      sessionStorage.setItem('auth-redirect-url', targetRedirect)
       
       const supabase = createClient()
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback?redirectTo=${encodeURIComponent(targetRedirect)}`,
         },
       })
 

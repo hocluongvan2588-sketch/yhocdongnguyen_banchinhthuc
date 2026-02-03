@@ -5,7 +5,8 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
   // Support both 'next' and 'redirectTo' params for flexibility
-  const next = searchParams.get('next') ?? searchParams.get('redirectTo') ?? '/';
+  // Nếu không có param, sẽ redirect về trang chủ (sessionStorage sẽ được check ở client)
+  const next = searchParams.get('next') ?? searchParams.get('redirectTo') ?? '/auth/redirect-handler';
 
   if (code) {
     const supabase = await createClient();
