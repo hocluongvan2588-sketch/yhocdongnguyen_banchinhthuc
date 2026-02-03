@@ -82,10 +82,32 @@ interface PhuongThuoc {
   do_uu_tien: number;
   is_active: boolean;
   created_at: string;
+  // Truong mapping voi Que
+  que_thuong: number | null; // 1-8: Can, Doai, Ly, Chan, Ton, Kham, Can, Khon
+  que_ha: number | null;     // 1-8: Can, Doai, Ly, Chan, Ton, Kham, Can, Khon
 }
 
 const NGU_HANH_OPTIONS = ['Kim', 'Mộc', 'Thủy', 'Hỏa', 'Thổ'];
 const TINH_OPTIONS = ['Hàn', 'Lương', 'Bình', 'Ôn', 'Nhiệt'];
+
+// 8 Trigram (Bat Quai) - dung de mapping bai thuoc voi que
+const TRIGRAM_OPTIONS = [
+  { value: 1, name: 'Can (Troi)', symbol: '☰', element: 'Kim' },
+  { value: 2, name: 'Doai (Dam)', symbol: '☱', element: 'Kim' },
+  { value: 3, name: 'Ly (Lua)', symbol: '☲', element: 'Hoa' },
+  { value: 4, name: 'Chan (Sam)', symbol: '☳', element: 'Moc' },
+  { value: 5, name: 'Ton (Gio)', symbol: '☴', element: 'Moc' },
+  { value: 6, name: 'Kham (Nuoc)', symbol: '☵', element: 'Thuy' },
+  { value: 7, name: 'Can (Nui)', symbol: '☶', element: 'Tho' },
+  { value: 8, name: 'Khon (Dat)', symbol: '☷', element: 'Tho' },
+];
+
+// Helper function: Lay ten que tu so
+const getTrigramName = (value: number | null) => {
+  if (!value) return null;
+  const trigram = TRIGRAM_OPTIONS.find(t => t.value === value);
+  return trigram ? `${trigram.symbol} ${trigram.name}` : null;
+};
 
 export default function MedicineAdminPage() {
   const [activeTab, setActiveTab] = useState('vi-thuoc');
@@ -136,6 +158,9 @@ export default function MedicineAdminPage() {
     muc_do_benh: '',
     do_uu_tien: 1,
     is_active: true,
+    // Mapping que
+    que_thuong: '',
+    que_ha: '',
   });
 
   const supabase = createClient();
@@ -221,6 +246,8 @@ export default function MedicineAdminPage() {
       muc_do_benh: '',
       do_uu_tien: 1,
       is_active: true,
+      que_thuong: '',
+      que_ha: '',
     });
     setEditingPhuongThuoc(null);
   };
@@ -267,6 +294,8 @@ export default function MedicineAdminPage() {
         muc_do_benh: item.muc_do_benh?.join(', ') || '',
         do_uu_tien: item.do_uu_tien,
         is_active: item.is_active,
+        que_thuong: item.que_thuong?.toString() || '',
+        que_ha: item.que_ha?.toString() || '',
       });
     } else {
       resetPhuongThuocForm();
@@ -355,6 +384,9 @@ export default function MedicineAdminPage() {
       muc_do_benh: parseArray(phuongThuocForm.muc_do_benh),
       do_uu_tien: phuongThuocForm.do_uu_tien,
       is_active: phuongThuocForm.is_active,
+      // Mapping que - luu so tu 1-8
+      que_thuong: phuongThuocForm.que_thuong ? parseInt(phuongThuocForm.que_thuong) : null,
+      que_ha: phuongThuocForm.que_ha ? parseInt(phuongThuocForm.que_ha) : null,
     };
 
     if (editingPhuongThuoc) {
@@ -564,6 +596,7 @@ export default function MedicineAdminPage() {
                       <TableHead className="w-[50px]">STT</TableHead>
                       <TableHead>Tên bài thuốc</TableHead>
                       <TableHead>Tên Hán</TableHead>
+                      <TableHead>Quẻ áp dụng</TableHead>
                       <TableHead>Ngũ hành</TableHead>
                       <TableHead>Tạng phủ</TableHead>
                       <TableHead className="text-center">Trạng thái</TableHead>
@@ -583,6 +616,23 @@ export default function MedicineAdminPage() {
                           </div>
                         </TableCell>
                         <TableCell className="text-sm italic">{item.ten_han || '-'}</TableCell>
+                        <TableCell>
+                          {item.que_thuong && item.que_ha ? (
+                            <div className="text-xs">
+                              <span className="font-medium">
+                                {getTrigramName(item.que_thuong)?.split(' ')[0]}
+                                {getTrigramName(item.que_ha)?.split(' ')[0]}
+                              </span>
+                              <span className="text-muted-foreground ml-1">
+                                ({item.que_thuong}_{item.que_ha})
+                              </span>
+                            </div>
+                          ) : (
+                            <Badge variant="outline" className="bg-amber-500/10 text-amber-700 border-amber-500/30">
+                              Chua gan
+                            </Badge>
+                          )}
+                        </TableCell>
                         <TableCell>
                           {item.ngu_hanh_chinh && (
                             <Badge variant="outline" className="bg-transparent">{item.ngu_hanh_chinh}</Badge>
@@ -828,18 +878,76 @@ export default function MedicineAdminPage() {
               </div>
             </div>
 
+            {/* Mapping Que - Quan trong */}
+            <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">☰</span>
+                <Label className="text-sm font-semibold">Que ap dung (Bat Quai)</Label>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Chon que de bai thuoc tu dong duoc goi y khi user co ket qua chan doan phu hop.
+                Moi que chi nen co 1 bai thuoc chinh.
+              </p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="que_thuong">Thuong Que (Que tren)</Label>
+                  <Select
+                    value={phuongThuocForm.que_thuong}
+                    onValueChange={(value) => setPhuongThuocForm({ ...phuongThuocForm, que_thuong: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Chon thuong que" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TRIGRAM_OPTIONS.map(t => (
+                        <SelectItem key={t.value} value={t.value.toString()}>
+                          {t.symbol} {t.name} ({t.element})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="que_ha">Ha Que (Que duoi)</Label>
+                  <Select
+                    value={phuongThuocForm.que_ha}
+                    onValueChange={(value) => setPhuongThuocForm({ ...phuongThuocForm, que_ha: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Chon ha que" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TRIGRAM_OPTIONS.map(t => (
+                        <SelectItem key={t.value} value={t.value.toString()}>
+                          {t.symbol} {t.name} ({t.element})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              {phuongThuocForm.que_thuong && phuongThuocForm.que_ha && (
+                <div className="text-sm text-center p-2 bg-background rounded border">
+                  Ma que: <strong>{phuongThuocForm.que_thuong}_{phuongThuocForm.que_ha}</strong>
+                  <span className="text-muted-foreground ml-2">
+                    (VD: 7_8 = Can tren Khon = San Dia Bac)
+                  </span>
+                </div>
+              )}
+            </div>
+
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="xuat_xu">Xuất xứ</Label>
+                <Label htmlFor="xuat_xu">Xuat xu</Label>
                 <Input
                   id="xuat_xu"
                   value={phuongThuocForm.xuat_xu}
                   onChange={(e) => setPhuongThuocForm({ ...phuongThuocForm, xuat_xu: e.target.value })}
-                  placeholder="VD: Tiểu Nhi Dược Chứng Trực Quyết"
+                  placeholder="VD: Tieu Nhi Duoc Chung Truc Quyet"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="do_uu_tien">Độ ưu tiên</Label>
+                <Label htmlFor="do_uu_tien">Do uu tien</Label>
                 <Input
                   id="do_uu_tien"
                   type="number"
