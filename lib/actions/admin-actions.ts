@@ -14,14 +14,18 @@ async function checkAdminAccess() {
     return { error: "Người dùng chưa đăng nhập", isAdmin: false }
   }
 
-  // Check if user has admin role
-  const { data: userData, error: userError } = await supabase
-    .from("users")
-    .select("is_admin")
-    .eq("email", user.email)
+  // Check if user has admin role (using profiles.role like other admin pages)
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
     .single()
 
-  if (userError || !userData?.is_admin) {
+  console.log('[v0] checkAdminAccess - user:', user.id);
+  console.log('[v0] checkAdminAccess - profile:', profile);
+
+  if (profileError || !profile || profile.role !== 'admin') {
+    console.log('[v0] checkAdminAccess - NOT ADMIN');
     return { error: "Bạn không có quyền truy cập trang quản trị", isAdmin: false }
   }
 
