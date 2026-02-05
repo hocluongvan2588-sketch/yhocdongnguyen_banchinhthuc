@@ -137,6 +137,14 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
     setIsCreating(true)
 
     try {
+      // Validate package price is loaded and not zero
+      if (!packageInfo.amount || packageInfo.amount === 0) {
+        console.log("[v0] Cannot create deposit - price not loaded yet or is zero")
+        setError("Đang tải thông tin giá, vui lòng đợi...")
+        setIsCreating(false)
+        return
+      }
+
       // Check authentication
       const { user } = await getCurrentUser()
 
