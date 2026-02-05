@@ -127,6 +127,7 @@ export async function updateSolution(
     description?: string
     unlock_cost?: number
     reference_source?: string
+    promo_message?: string
   },
 ) {
   const adminCheck = await checkAdminAccess()

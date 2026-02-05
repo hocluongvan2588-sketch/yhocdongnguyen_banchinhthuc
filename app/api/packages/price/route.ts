@@ -11,10 +11,10 @@ export async function GET(request: Request) {
 
   const supabase = await createClient()
 
-  // Query solutions table for package price
+  // Query solutions table for package price and promo message
   const { data: solution, error } = await supabase
     .from("solutions")
-    .select("unlock_cost")
+    .select("unlock_cost, promo_message")
     .eq("hexagram_key", packageId)
     .eq("solution_type", getTypeFromPackageId(packageId))
     .single()
@@ -26,6 +26,7 @@ export async function GET(request: Request) {
 
   return NextResponse.json({ 
     price: solution?.unlock_cost || 0,
+    promoMessage: solution?.promo_message || null,
     packageId 
   })
 }

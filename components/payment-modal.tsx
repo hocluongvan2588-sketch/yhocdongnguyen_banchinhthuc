@@ -57,6 +57,7 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
   const [isMobile, setIsMobile] = useState(false)
   const [needsLogin, setNeedsLogin] = useState(false)
   const [packagePrice, setPackagePrice] = useState<number | null>(null)
+  const [promoMessage, setPromoMessage] = useState<string | null>(null)
   const [loadingPrice, setLoadingPrice] = useState(false)
 
   useEffect(() => {
@@ -68,9 +69,9 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
-  // Fetch package price from database when modal opens
+  // Fetch package price and promo message from database when modal opens
   useEffect(() => {
-    const fetchPackagePrice = async () => {
+    const fetchPackageData = async () => {
       if (!packageNumber || !isOpen) return
       
       setLoadingPrice(true)
@@ -82,13 +83,16 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
         if (data.price !== undefined) {
           setPackagePrice(data.price)
         }
+        if (data.promoMessage) {
+          setPromoMessage(data.promoMessage)
+        }
       } catch (err) {
-        console.error('[v0] Error fetching package price:', err)
+        console.error('[v0] Error fetching package data:', err)
       }
       setLoadingPrice(false)
     }
     
-    fetchPackagePrice()
+    fetchPackageData()
   }, [isOpen, packageNumber])
 
   // Auto-create deposit when modal opens and price is loaded
@@ -389,6 +393,15 @@ Nội dung: ${deposit.payment_code}`
           <div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-4 sm:pb-6 overscroll-contain">
 
           <div className="space-y-2.5 sm:space-y-6 py-3 sm:py-4">
+            {/* Promo Message Banner */}
+            {promoMessage && (
+              <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 border-2 border-primary/30 rounded-lg p-3 sm:p-4">
+                <p className="text-xs sm:text-sm text-center font-medium text-primary leading-relaxed">
+                  {promoMessage}
+                </p>
+              </div>
+            )}
+
             {/* QR Code - hiển thị cho cả mobile và desktop */}
             <div className="flex justify-center bg-white p-4 rounded-lg">
               {deposit.payment_data?.qr_url ? (
