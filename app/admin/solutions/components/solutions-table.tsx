@@ -34,9 +34,13 @@ export function SolutionsTable() {
   async function loadSolutions() {
     setLoading(true)
     const result = await getAllSolutions()
+    console.log('[v0] SolutionsTable - getAllSolutions result:', result);
     if (result.solutions) {
+      console.log('[v0] SolutionsTable - solutions count:', result.solutions.length);
       // Show all solution types (prescription, acupoint, numerology)
       setSolutions(result.solutions)
+    } else {
+      console.log('[v0] SolutionsTable - NO SOLUTIONS or ERROR:', result.error);
     }
     setLoading(false)
   }
