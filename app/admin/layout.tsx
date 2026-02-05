@@ -23,7 +23,11 @@ export default async function AdminLayout({
     .eq('id', user.id)
     .single();
 
+  console.log('[v0] Admin layout - user:', user.id);
+  console.log('[v0] Admin layout - profile:', profile);
+
   if (!profile || profile.role !== 'admin') {
+    console.log('[v0] Admin layout - NOT ADMIN, redirecting to home');
     redirect('/');
   }
 
