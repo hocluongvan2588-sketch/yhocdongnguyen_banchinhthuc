@@ -14,10 +14,10 @@ interface BankAccount {
   id: string;
   bank_name: string;
   account_number: string;
-  account_name: string;
+  account_holder: string;
   branch: string | null;
   is_active: boolean;
-  is_default: boolean;
+  is_primary: boolean;
 }
 
 export default function AdminSettingsPage() {
@@ -37,7 +37,7 @@ export default function AdminSettingsPage() {
     const { data, error } = await supabase
       .from('bank_accounts')
       .select('*')
-      .order('is_default', { ascending: false });
+      .order('is_primary', { ascending: false });
 
     if (error) {
       console.error('Error fetching bank accounts:', error);
@@ -62,10 +62,10 @@ export default function AdminSettingsPage() {
           .insert({
             bank_name: editingBank.bank_name,
             account_number: editingBank.account_number,
-            account_name: editingBank.account_name,
+            account_holder: editingBank.account_holder,
             branch: editingBank.branch || null,
             is_active: editingBank.is_active ?? true,
-            is_default: editingBank.is_default ?? false,
+            is_primary: editingBank.is_primary ?? false,
           });
 
         if (error) throw error;
@@ -75,10 +75,10 @@ export default function AdminSettingsPage() {
           .update({
             bank_name: editingBank.bank_name,
             account_number: editingBank.account_number,
-            account_name: editingBank.account_name,
+            account_holder: editingBank.account_holder,
             branch: editingBank.branch || null,
             is_active: editingBank.is_active,
-            is_default: editingBank.is_default,
+            is_primary: editingBank.is_primary,
           })
           .eq('id', editingBank.id);
 
@@ -97,11 +97,11 @@ export default function AdminSettingsPage() {
     }
   };
 
-  const handleSetDefault = async (bankId: string) => {
-    // First, unset all defaults
-    await supabase.from('bank_accounts').update({ is_default: false }).neq('id', '');
-    // Then set the new default
-    await supabase.from('bank_accounts').update({ is_default: true }).eq('id', bankId);
+  const handleSetPrimary = async (bankId: string) => {
+    // First, unset all primary
+    await supabase.from('bank_accounts').update({ is_primary: false }).neq('id', '');
+    // Then set the new primary
+    await supabase.from('bank_accounts').update({ is_primary: true }).eq('id', bankId);
     await fetchBankAccounts();
   };
 
@@ -138,10 +138,10 @@ export default function AdminSettingsPage() {
                 setEditingBank({
                   bank_name: '',
                   account_number: '',
-                  account_name: '',
+                  account_holder: '',
                   branch: '',
                   is_active: true,
-                  is_default: false,
+                  is_primary: false,
                 });
                 setIsAddingNew(true);
               }}
@@ -170,7 +170,7 @@ export default function AdminSettingsPage() {
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <span className="font-medium">{bank.bank_name}</span>
-                      {bank.is_default && (
+                      {bank.is_primary && (
                         <Badge variant="default" className="text-xs">
                           Mặc định
                         </Badge>
@@ -182,7 +182,7 @@ export default function AdminSettingsPage() {
                       )}
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      {bank.account_number} - {bank.account_name}
+                      {bank.account_number} - {bank.account_holder}
                     </p>
                     {bank.branch && (
                       <p className="text-xs text-muted-foreground">Chi nhánh: {bank.branch}</p>
@@ -200,11 +200,11 @@ export default function AdminSettingsPage() {
                     >
                       Sửa
                     </Button>
-                    {!bank.is_default && (
+                    {!bank.is_primary && (
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleSetDefault(bank.id)}
+                        onClick={() => handleSetPrimary(bank.id)}
                         className="bg-transparent"
                       >
                         Đặt mặc định
@@ -248,9 +248,9 @@ export default function AdminSettingsPage() {
                     <div className="space-y-2">
                       <Label>Tên chủ tài khoản</Label>
                       <Input
-                        value={editingBank.account_name || ''}
+                        value={editingBank.account_holder || ''}
                         onChange={(e) =>
-                          setEditingBank({ ...editingBank, account_name: e.target.value })
+                          setEditingBank({ ...editingBank, account_holder: e.target.value })
                         }
                         placeholder="Tên in trên tài khoản"
                       />
