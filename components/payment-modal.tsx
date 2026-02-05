@@ -21,27 +21,25 @@ interface PaymentModalProps {
   moving: number
 }
 
-const PACKAGE_INFO = {
+// Package metadata (prices fetched from database)
+const PACKAGE_METADATA = {
   1: {
     name: "Gói Khai Huyệt",
-    price: "299.000đ",
-    amount: 299000,
     route: "/treatment/acupressure",
     solutionType: "acupoint" as const,
+    packageId: "package_1",
   },
   2: {
     name: "Gói Nam Dược",
-    price: "199.000đ",
-    amount: 199000,
     route: "/treatment/herbal",
     solutionType: "prescription" as const,
+    packageId: "package_2",
   },
   3: {
     name: "Gói Tượng Số",
-    price: "99.000đ",
-    amount: 99000,
     route: "/treatment/numerology",
     solutionType: "numerology" as const,
+    packageId: "package_3",
   },
 }
 
@@ -58,6 +56,8 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
   const [copied, setCopied] = useState<string | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [needsLogin, setNeedsLogin] = useState(false)
+  const [packagePrice, setPackagePrice] = useState<number | null>(null)
+  const [loadingPrice, setLoadingPrice] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -68,16 +68,44 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
-  // Auto-create deposit when modal opens
+  // Fetch package price from database when modal opens
   useEffect(() => {
-    if (isOpen && packageNumber && !deposit && !isCreating) {
+    const fetchPackagePrice = async () => {
+      if (!packageNumber || !isOpen) return
+      
+      setLoadingPrice(true)
+      try {
+        const metadata = PACKAGE_METADATA[packageNumber]
+        const response = await fetch(`/api/packages/price?packageId=${metadata.packageId}`)
+        const data = await response.json()
+        
+        if (data.price !== undefined) {
+          setPackagePrice(data.price)
+        }
+      } catch (err) {
+        console.error('[v0] Error fetching package price:', err)
+      }
+      setLoadingPrice(false)
+    }
+    
+    fetchPackagePrice()
+  }, [isOpen, packageNumber])
+
+  // Auto-create deposit when modal opens and price is loaded
+  useEffect(() => {
+    if (isOpen && packageNumber && !deposit && !isCreating && packagePrice !== null) {
       handleCreateDeposit()
     }
-  }, [isOpen, packageNumber])
+  }, [isOpen, packageNumber, packagePrice])
 
   if (!packageNumber) return null
 
-  const packageInfo = PACKAGE_INFO[packageNumber]
+  const packageMetadata = PACKAGE_METADATA[packageNumber]
+  const packageInfo = {
+    ...packageMetadata,
+    amount: packagePrice || 0,
+    price: packagePrice ? `${packagePrice.toLocaleString('vi-VN')}đ` : 'Đang tải...',
+  }
   
   // Hàm xử lý khi user cần đăng nhập để thanh toán
   const handleLoginForPayment = () => {
