@@ -91,11 +91,16 @@ export async function updatePaymentMethod(
  * Get all solutions (for admin management)
  */
 export async function getAllSolutions() {
+  console.log('[v0] getAllSolutions - START');
   const adminCheck = await checkAdminAccess()
+  console.log('[v0] getAllSolutions - adminCheck result:', adminCheck);
+  
   if (!adminCheck.isAdmin) {
+    console.log('[v0] getAllSolutions - FAILED admin check:', adminCheck.error);
     return { error: adminCheck.error }
   }
 
+  console.log('[v0] getAllSolutions - Admin check PASSED, fetching solutions...');
   const supabase = await createClient()
 
   const { data: solutions, error } = await supabase
@@ -104,10 +109,11 @@ export async function getAllSolutions() {
     .order("hexagram_key")
 
   if (error) {
-    console.error("[v0] Error fetching solutions:", error)
-    return { error: "Không thể tải danh sách gói dịch vụ" }
+    console.error("[v0] getAllSolutions - Supabase error:", error)
+    return { error: "Không thể tải danh sách gói dịch vụ: " + error.message }
   }
 
+  console.log('[v0] getAllSolutions - SUCCESS, solutions count:', solutions?.length);
   return { solutions }
 }
 
