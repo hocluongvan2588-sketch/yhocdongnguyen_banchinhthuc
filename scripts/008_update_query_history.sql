@@ -1,7 +1,7 @@
 -- ═══════════════════════════════════════════════════════════
 -- UPDATE QUERY HISTORY TABLE STRUCTURE
 -- Thêm các cột mới cho lưu trữ đơn giản hơn
--- ═══════════════════════════════════════════════════════════
+-- ══════════════════════════════════════════════════════��════
 
 -- Drop existing table and recreate with better structure
 DROP TABLE IF EXISTS public.query_history CASCADE;

@@ -1,5 +1,5 @@
 /**
- * Cơ sở Lý luận và Kiến thức Nền tảng
+ * C�� sở Lý luận và Kiến thức Nền tảng
  * Mai Hoa Dịch Số - Hệ thống Chẩn đoán Sức khỏe
  * 
  * File này tổng hợp các kiến thức lý thuyết cốt lõi từ tài liệu nghiên cứu

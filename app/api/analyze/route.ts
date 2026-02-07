@@ -90,7 +90,7 @@ Hào ${movingLine} nằm ở ${diagnostic.mapping?.movingYao?.bodyLevel || 'tầ
 
 Quan hệ Thể-Dụng là ${diagnostic.expertAnalysis?.tiDung?.relation || 'tương sinh'}, cho thấy sự ${diagnostic.expertAnalysis?.tiDung?.relation === 'tương sinh' ? 'hỗ trợ' : 'mất cân bằng'} giữa các hệ thống trong cơ thể. Về sinh lý học, điều này có thể biểu hiện qua sự rối loạn tiêu hóa và căng thẳng thần kinh, ảnh hưởng đến chức năng của các cơ quan như ${affectedOrgan} và ${motherOrgan}. Cần chú ý điều hòa cảm xúc và duy trì lối sống lành mạnh.
 
-Quẻ Biến ${maihua.changedHexagram?.name || ''} cho thấy xu hướng ${severity === 'nặng' ? 'cần theo dõi chặt chẽ' : 'ổn định'}, ${severity !== 'nặng' ? 'nhưng cần thời gian để hồi phục' : 'cần can thiệp kịp thời'}. ${maihua.changedHexagram?.name || 'Quẻ biến'} biểu thị sự ${severity === 'nặng' ? 'chuyển biến cần theo dõi' : 'mềm dẻo và khả năng thích nghi'}, cho thấy bạn có thể tự điều chỉnh nếu được chăm sóc đúng cách. Tuy nhiên, cần chú ý đến việc duy trì lối sống lành mạnh để hỗ trợ quá trình hồi phục.`;
+Quẻ Biến ${maihua.changedHexagram?.name || ''} cho thấy xu hướng ${severity === 'nặng' ? 'cần theo dõi chặt chẽ' : 'ổn định'}, ${severity !== 'nặng' ? 'nhưng cần thời gian để hồi phục' : 'cần can thiệp kịp thời'}. ${maihua.changedHexagram?.name || 'Quẻ biến'} biểu thị sự ${severity === 'nặng' ? 'chuyển biến cần theo dõi' : 'm��m dẻo và khả năng thích nghi'}, cho thấy bạn có thể tự điều chỉnh nếu được chăm sóc đúng cách. Tuy nhiên, cần chú ý đến việc duy trì lối sống lành mạnh để hỗ trợ quá trình hồi phục.`;
 
   return {
     // THÔNG TIN CÁ NHÂN - LUÔN CHÍNH XÁC
@@ -536,7 +536,7 @@ export async function POST(req: Request) {
         analysis.emotionalConnection = {
           emotion: emotionMap[upperElement] || 'Căng thẳng',
           organ: organMap[upperElement] || 'Gan',
-          patientFeeling: `${subjectInfo.pronoun === 'bạn' ? 'Bạn' : subjectInfo.pronoun.charAt(0).toUpperCase() + subjectInfo.pronoun.slice(1)} có thể đang trải qua cảm xúc tiêu cực ảnh hưởng đến sức khỏe.`,
+          patientFeeling: `${subjectInfo.pronoun === 'bạn' ? 'B���n' : subjectInfo.pronoun.charAt(0).toUpperCase() + subjectInfo.pronoun.slice(1)} có thể đang trải qua cảm xúc tiêu cực ảnh hưởng đến sức khỏe.`,
           mechanismTCM: `Cảm xúc ảnh hưởng đến ${organMap[upperElement]}, gây rối loạn khí huyết.`,
           mechanismModern: 'Căng thẳng kéo dài kích hoạt hệ thần kinh giao cảm, tăng cortisol, ảnh hưởng đến các cơ quan nội tạng.'
         };

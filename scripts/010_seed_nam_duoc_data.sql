@@ -194,7 +194,7 @@ INSERT INTO public.nam_duoc_vi_thuoc (
   ARRAY['cay', 'đắng'],
   ARRAY['Tâm', 'Can', 'Phế'],
   'Khai uất kết, thông kinh nguyệt, lương huyết',
-  ARRAY['Đau bụng', 'Nhọt', 'Kinh nguyệt không đều'],
+  ARRAY['Đau bụng', 'Nh���t', 'Kinh nguyệt không đều'],
   ARRAY['Củ'],
   'Thái miếng phơi khô.'
 ),

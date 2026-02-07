@@ -28,7 +28,7 @@ export const BAGUA_SYMBOLS = [
   "☰", // Càn
   "☱", // Đoài
   "☲", // Ly
-  "☳", // Chấn
+  "☳", // Ch��n
   "☴", // Tốn
   "☵", // Khảm
   "☶", // Cấn
@@ -79,7 +79,7 @@ export const HEXAGRAM_64: Record<number, { name: string; chinese: string; meanin
   31: { name: "Hỏa Thiên Đại Hữu", chinese: "火天大有", meaning: "Đại hữu, phổi tim" },
   32: { name: "Hỏa Trạch Khuê", chinese: "火澤睽", meaning: "Xa cách, bất đồng" },
   33: { name: "Thuần Ly", chinese: "離", meaning: "Hỏa - Tim, mắt" },
-  34: { name: "Hỏa Lôi Phệ Hạp", chinese: "火雷噬嗑", meaning: "Nhai cắn, dạ dày gan" },
+  34: { name: "Hỏa Lôi Ph�� Hạp", chinese: "火雷噬嗑", meaning: "Nhai cắn, dạ dày gan" },
   35: { name: "Hỏa Phong Đỉnh", chinese: "火風鼎", meaning: "Cái vạc, tỳ gan" },
   36: { name: "Hỏa Thủy Vị Tế", chinese: "火水未濟", meaning: "Chưa hoàn thành, tim thận" },
   37: { name: "Hỏa Sơn Lữ", chinese: "火山旅", meaning: "Du lịch, tỳ tim" },

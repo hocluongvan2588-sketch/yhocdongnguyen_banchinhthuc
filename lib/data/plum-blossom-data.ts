@@ -53,7 +53,7 @@ export const PLUM_BLOSSOM_TRIGRAMS: Record<string, TrigramAttributes> = {
     lines: [true, true, true],
     weather: ["Trời", "Băng", "Mưa đá"], // 天、冰、雹、霰
     geography: ["Kinh đô", "Đại quận", "Nơi cao"], // 京都、大郡、高亢之所
-    people: ["Quân", "Phụ", "Đại nhân", "Lão nhân", "Quan viên"], // 君、父、大人、老人、宦官
+    people: ["Quân", "Phụ", "Đại nhân", "Lão nhân", "Quan viên"], // 君���父、大人、老人、宦官
     affairs: ["Cương kiện", "Dũng võ", "Quyết đoán"], // 刚健勇武、果决
     objects: ["Kim ngọc", "Châu bảo", "Vật tròn"], // 金玉、宝珠、圆物
     buildings: ["Công sở", "Lầu đài", "Nhà cao"], // 公厕、楼台、高堂

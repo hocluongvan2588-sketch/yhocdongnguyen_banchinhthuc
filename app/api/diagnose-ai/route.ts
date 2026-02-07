@@ -103,7 +103,7 @@ ${anthropometricContext}
 PHONG CÁCH VIẾT BẮT BUỘC:
 - Mở đầu mỗi phần bằng 1 câu trấn an, gần gũi ("ôm người đọc")
 - Chia nhỏ đoạn, mỗi ý 2-3 câu. KHÔNG viết đoạn dài liền mạch.
-- KHÔNG dùng từ: "phức tạp", "viêm loét", "trào ngược", "nghiêm trọng", "nặng", "biến chứng"
+- KHÔNG dùng t���: "phức tạp", "viêm loét", "trào ngược", "nghiêm trọng", "nặng", "biến chứng"
 - Thay bằng: "dễ kéo dài", "kích ứng niêm mạc", "dịch vị lên cao", "cần chú ý", "cần lưu ý", "diễn tiến kéo dài"
 - Khi dùng thuật ngữ Đông y → giải thích ngay trong ngoặc. VD: "Tỳ (hệ tiêu hóa trung tâm)"
 - Giọng điệu: ấm áp, gần gũi, như bác sĩ gia đình nói chuyện

@@ -313,7 +313,7 @@ function NumerologyContent() {
               <Card className="border-border/50 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-foreground">Hướng Dẫn Chi Tiết</CardTitle>
-                  <CardDescription>Cách thực hiện đúng để đạt hiệu quả tối ưu</CardDescription>
+                  <CardDescription>Cách thực hiện đ��ng để đạt hiệu quả tối ưu</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* How to Chant */}
