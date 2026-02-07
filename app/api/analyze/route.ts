@@ -2,7 +2,7 @@ import { generateText } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 import { createGroq } from '@ai-sdk/groq';
 import { buildUnifiedMedicalPrompt, UNIFIED_MEDICAL_CONFIG } from '@/lib/prompts/unified-medical.prompt';
-import { buildDynamicPrompt } from '@/lib/ai/dynamic-prompt-builder';
+import { buildDynamicMedicalPrompt } from '@/lib/ai/dynamic-prompt-builder';
 import {
   buildJsonFormatterPrompt,
   JSON_FORMATTER_CONFIG,
@@ -11,6 +11,7 @@ import {
   getSeasonInfo,
   analyzeSeasonRelation,
 } from '@/lib/utils/lunar-calendar';
+import { buildDynamicPrompt } from '@/lib/ai/dynamic-prompt-builder'; // Declare the variable before using it
 
 const openai = createOpenAI();
 
@@ -335,7 +336,7 @@ export async function POST(req: Request) {
     let userPrompt: string;
     try {
       console.log('[v0] Attempting to load dynamic prompt from database...');
-      userPrompt = await buildDynamicPrompt('diagnosis', unifiedPromptInput);
+      userPrompt = await buildDynamicMedicalPrompt(unifiedPromptInput);
       console.log(`[v0] ✅ Loaded dynamic prompt from database, length: ${userPrompt.length} chars`);
     } catch (error) {
       console.log('[v0] ⚠️ Failed to load dynamic prompt, using hardcoded fallback:', error);
