@@ -504,23 +504,26 @@ function ResultsContent() {
                   <div className="rounded-lg border border-pink-500/20 bg-pink-500/5 p-4">
                     <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-foreground">
                       <Heart className="h-5 w-5 text-pink-500" />
-                      Mối liên hệ Cảm xúc - Bệnh lý
+                      Cảm xúc liên quan thế nào đến gốc bệnh?
                     </h3>
                     <div className="space-y-4">
-                      {/* Badges: Cảm xúc & Tạng */}
+                      {/* Badges: Cam xuc That Tinh & Tang */}
                       <div className="flex flex-wrap gap-2">
-                        <Badge variant="outline" className="bg-pink-500/10 text-pink-700 border-pink-500/30">
-                          Cảm xúc: {aiAnalysis.emotionalConnection.emotion}
-                        </Badge>
-                        <Badge variant="outline" className="bg-purple-500/10 text-purple-700 border-purple-500/30">
-                          Tạng bị ảnh hưởng: {aiAnalysis.emotionalConnection.organ}
-                        </Badge>
+                        {aiAnalysis.emotionalConnection.emotion && (
+                          <Badge variant="outline" className="bg-pink-500/10 text-pink-700 border-pink-500/30">
+                            Cảm xúc gốc: {aiAnalysis.emotionalConnection.emotion}
+                          </Badge>
+                        )}
+                        {aiAnalysis.emotionalConnection.organ && (
+                          <Badge variant="outline" className="bg-purple-500/10 text-purple-700 border-purple-500/30">
+                            Tạng bị ảnh hưởng: {aiAnalysis.emotionalConnection.organ}
+                          </Badge>
+                        )}
                       </div>
                       
-                      {/* Biểu hiện cảm xúc ở người bệnh - QUAN TRỌNG */}
+                      {/* Biểu hiện cảm xúc ở người bệnh - CÁ NHÂN HÓA */}
                       {aiAnalysis.emotionalConnection.patientFeeling && (
                         <div className="rounded-md bg-pink-500/10 p-3 border-l-4 border-pink-500">
-                          <p className="text-sm font-medium text-pink-800 mb-1">Bạn có thể đang cảm thấy:</p>
                           <p className="text-sm text-foreground leading-relaxed">
                             {aiAnalysis.emotionalConnection.patientFeeling}
                           </p>
@@ -554,12 +557,12 @@ function ResultsContent() {
                         )}
                       </div>
                       
-                      {/* Fallback cho version cũ - hiển thị explanation nếu không có fields mới */}
+                      {/* Fallback cho version cu */}
                       {!aiAnalysis.emotionalConnection.patientFeeling && 
                        !aiAnalysis.emotionalConnection.mechanismTCM && 
-                       aiAnalysis.emotionalConnection.explanation && (
+                       (aiAnalysis.emotionalConnection as Record<string, unknown>).explanation && (
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                          {aiAnalysis.emotionalConnection.explanation}
+                          {String((aiAnalysis.emotionalConnection as Record<string, unknown>).explanation)}
                         </p>
                       )}
                     </div>

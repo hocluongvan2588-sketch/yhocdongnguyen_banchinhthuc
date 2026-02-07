@@ -211,7 +211,7 @@ CƠ CHẾ TÁC ĐỘNG (Y học hiện đại):
 - VUI QUÁ → Kích thích thần kinh giao cảm, loạn nhịp tim
 - LO NGHĨ → Giảm tiết dịch vị, co thắt cơ trơn đường tiêu hóa
 - BUỒN → Giảm miễn dịch, suy yếu hô hấp, hạ serotonin
-- SỢ → Tăng cortisol kéo dài, suy thận thượng thận, mất ngủ
+- SỢ → Tăng cortisol kéo dài, suy th��n thượng thận, mất ngủ
 
 ══════════════════════════════════════════════════════════════════════════
 PHONG CÁCH VIẾT - UX TÂM LÝ BỆNH NHÂN (BẮT BUỘC TUÂN THỦ)
@@ -252,31 +252,32 @@ YÊU CẦU TRẢ LỜI - VIẾT THEO CẤU TRÚC SAU (GIỮ NGUYÊN TIÊU ĐỀ)
 - Cách xưng hô: "${patientContext.subject === 'banthan' ? 'bạn' : subjectContext.label.toLowerCase().includes('cha') ? 'cha bạn' : subjectContext.label.toLowerCase().includes('mẹ') ? 'mẹ bạn' : subjectContext.label.toLowerCase().includes('con') ? 'con bạn' : subjectContext.label.toLowerCase().includes('vợ') ? 'vợ bạn' : subjectContext.label.toLowerCase().includes('chồng') ? 'chồng bạn' : 'anh/chị/em bạn'}"
 
 【TÓM TẮT BỆNH TRẠNG】
-Viết 3-4 câu theo công thức:
-- Câu 1: Mô tả lại cảm giác cơ thể bằng ngôn ngữ đời thường (KHÔNG dùng thuật ngữ y khoa/dịch lý)
-- Câu 2: Đánh giá mức độ + liên quan đến hệ nào trong cơ thể
-- Câu 3: Giải thích ngắn gọn mối liên hệ thân-tâm
-- Câu 4: "Nói gọn lại, cơ thể [pronoun] đang báo hiệu [tóm tắt vấn đề chính]"
+⚠️ MỤC ĐÍCH: Đây là câu "ÔM NGƯỜI ĐỌC" đầu tiên. Viết ngắn, ấm, gần gũi. KHÔNG phân tích sâu ở đây.
+Viết 2-3 câu theo công thức:
+- Câu 1: Nhắc lại CẢM GIÁC cơ thể bằng ngôn ngữ đời thường, kèm 1-2 từ khóa in đậm. KHÔNG liệt kê triệu chứng.
+- Câu 2: Nêu MỨC ĐỘ + HỆ liên quan (1 câu ngắn).
+- Câu 3: "Nói gọn lại, cơ thể [pronoun] đang báo hiệu [1 cụm từ tóm gốc vấn đề]."
 
-VD MẪU: "Bạn đang có cảm giác nóng rát, cồn cào ở vùng trên rốn, đôi lúc kèm theo khó chịu và đầy hơi. Tình trạng này ở mức cần chú ý, liên quan đến hệ tiêu hóa và nhịp căng thẳng tinh thần. Khi nhịp độ thân và tâm chưa ổn thì dạ dày thường là nơi phản ứng sớm nhất. Nói gọn lại, cơ thể bạn đang báo hiệu tiêu hóa bị kích thích do lệch nhịp sống và cảm xúc."
+VD MẪU: "[Pronoun] đang cảm thấy đau mỏi vai gáy, điều này khiến [pronoun] **khó chịu và hạn chế vận động**. Tình trạng ở mức trung bình, liên quan đến hệ cơ xương và sự căng thẳng tinh thần. Nói gọn lại, cơ thể [pronoun] đang báo hiệu sự mất cân bằng giữa nhịp sống và khả năng phục hồi."
+
+⚠️ TUYỆT ĐỐI KHÔNG: Viết dài 4-5 câu, không giải thích cơ chế, không nhắc Đông y/Tây y ở phần này.
 
 【PHÂN TÍCH Y LÝ (Đông - Tây y kết hợp)】
-⚠️ CHIA THÀNH 2 PHẦN RÕ RÀNG, mỗi phần 2-3 câu ngắn:
+⚠️ BẮT ĐẦU BẰNG PHÂN TÍCH NGAY, KHÔNG LẶP LẠI TRIỆU CHỨNG TỪ TÓM TẮT BỆNH TRẠNG.
+Mở đầu = 1 câu chuyển tiếp nhẹ, VD: "[Pronoun] đang cảm thấy [triệu chứng], điều này có thể khiến [pronoun] cảm thấy [cảm xúc]. Tình trạng này ở mức [mức độ], liên quan đến [hệ]. Nói gọn lại, cơ thể [pronoun] đang báo hiệu [tóm tắt]."
+
+CHIA THÀNH 2 PHẦN RÕ RÀNG, mỗi phần 3-4 câu:
 
 PHẦN 1 - "Theo y học hiện đại":
-Giải thích cơ chế bằng ngôn ngữ sinh lý học dễ hiểu. VD:
-"Khi bạn stress, hệ thần kinh tự chủ kích hoạt mạnh, làm dạ dày tiết dịch nhiều hơn.
-Ăn uống thất thường, ngủ muộn hoặc lo nghĩ kéo dài sẽ khiến niêm mạc dạ dày dễ sinh nóng rát."
+Giải thích CƠ CHẾ SINH LÝ cụ thể, KHÔNG lặp mô tả triệu chứng. VD:
+"Khi [pronoun] căng thẳng kéo dài, hệ thần kinh giao cảm hoạt động quá mức, khiến các cơ vùng cổ-vai co cứng liên tục. Tư thế ngồi lâu làm giảm lưu lượng máu đến vùng này, dẫn đến thiếu oxy mô cơ và tích tụ acid lactic. Điều này giải thích vì sao [pronoun] thấy đau mỏi tăng vào cuối ngày."
 
 PHẦN 2 - "Theo ngôn ngữ Đông y":
 Dịch sang khái niệm Đông y, PHẢI giải thích thuật ngữ ngay trong ngoặc. VD:
-"Biểu hiện này gọi là Tỳ - Vị vận hóa chưa thuận. Khi Tỳ (hệ tiêu hóa trung tâm) yếu nhịp, thức ăn không được chuyển hóa êm, sinh ra nóng và đầy. Hiểu đơn giản: nguồn nuôi và nhịp điều phối của nó đang rối."
-
-SAU ĐÓ kết nối với quẻ ${maihua.mainHexagram.name}:
-"Trong Đông y, đây là biểu hiện của [thuật ngữ] - [giải thích đơn giản]. Theo quẻ ${maihua.mainHexagram.name}, [phân tích Thể-Dụng bằng ngôn ngữ dễ hiểu]. Mùa [X] thuận lợi cho việc điều chỉnh."
+"Biểu hiện này có thể gọi là khí trệ (khí không lưu thông) ở vùng kinh Đởm và kinh Bàng quang. Khi Gan (tạng điều tiết khí huyết) bị căng vì cảm xúc, khí không sơ tiết được, gây ứ ở vai gáy. Theo quẻ ${maihua.mainHexagram.name}, Thể thuộc ${diagnostic.expertAnalysis.tiDung.ti.element}, Dụng thuộc ${diagnostic.expertAnalysis.tiDung.dung.element} — cho thấy sự tiêu hao năng lượng từ [hệ A] sang [hệ B]."
 
 KẾT ĐOẠN (BẮT BUỘC 1-2 câu trấn an):
-"Tình trạng hiện tại cần chú ý nhưng chưa đến mức khó xử lý. Nếu được điều chỉnh sớm, [pronoun] có thể giảm bớt triệu chứng và giúp cơ thể ổn định sớm hơn."
+"Tình trạng hiện tại cần chú ý nhưng nếu được điều chỉnh đúng cách, [pronoun] có thể giảm bớt triệu chứng và giúp cơ thể ổn định sớm hơn."
 
 【KẾT LUẬN: BỆNH TỪ TẠNG NÀO PHÁT SINH】
 Viết theo format sau:
@@ -318,10 +319,17 @@ Nhóm 4 - Nhịp sinh hoạt: "Ngủ trước 23h. Không bỏ bữa. Không ăn
 
 【CẢM XÚC LIÊN QUAN THẾ NÀO ĐẾN GỐC BỆNH?】
 ⚠️ BẮT BUỘC: Dựa vào BẢNG THẤT TÌNH và Ngũ hành Dụng (${diagnostic.expertAnalysis.tiDung.dung.element}).
+⚠️ CẢM XÚC PHẢI LÀ 1 TRONG 5 LOẠI CHÍNH THEO THẤT TÌNH: Giận (Nộ), Vui quá (Hỷ), Lo nghĩ (Tư), Buồn (Bi), Sợ (Khủng).
+   KHÔNG dùng từ chung chung như "căng thẳng", "stress", "áp lực" — phải QUY VỀ gốc cảm xúc Thất Tình.
 
-Theo Ngũ hành:
-- [Tạng] liên quan đến [cảm xúc cụ thể từ Bảng Thất tình]
-- Khi [cảm xúc] kéo dài, nó khắc [tạng bệnh] mạnh hơn
+Format BẮT BUỘC:
+- Cảm xúc có thể gây bệnh: [1 trong 5 loại Thất Tình — VD: "Lo nghĩ (Tư)"]
+- Tạng phủ bị ảnh hưởng: [Tạng tương ứng — VD: "Tỳ"]
+- Biểu hiện cảm xúc ở người bệnh: Viết CÁ NHÂN HÓA, liên kết cảm xúc với tình huống sống CỤ THỂ của người bệnh. KHÔNG viết chung chung.
+  VD TỐT: "Khi [pronoun] hay suy nghĩ nhiều, trằn trọc về công việc hoặc gia đình, cơ thể chuyển nỗi lo thành cảm giác đầy bụng, ăn không ngon. Đây là phản ứng rất thường gặp — tâm lo thì Tỳ (tiêu hóa) mệt theo."
+  VD XẤU (KHÔNG viết kiểu này): "Bạn có thể đang cảm thấy khó chịu và hạn chế vận động" — đây là mô tả triệu chứng, KHÔNG phải cảm xúc.
+- Cơ chế gây bệnh (Đông Y): Giải thích 2-3 câu theo cơ chế Thất Tình → Tạng. VD: "Lo nghĩ kéo dài làm Tỳ khí uất kết, mất khả năng vận hóa. Thức ăn không được tiêu hóa thuận, sinh đầy trướng."
+- Cơ chế gây bệnh (Y học hiện đại): Giải thích 2-3 câu bằng sinh lý học. VD: "Lo lắng kéo dài kích hoạt trục HPA, tăng cortisol, giảm tiết dịch vị và co thắt cơ trơn đường tiêu hóa. Điều này giải thích vì sao người hay lo thường gặp vấn đề dạ dày."
 
 KẾT BẰNG 1 CÂU NHẸ NHÀNG (BẮT BUỘC):
 VD: "Nên mỗi khi [pronoun] lo hoặc ép mình quá, [hệ bệnh] thường phản ứng trước tiên. Muốn [bộ phận] êm, trước hết tâm phải dịu."

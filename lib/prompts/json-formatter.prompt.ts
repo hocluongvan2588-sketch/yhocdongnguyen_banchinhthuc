@@ -49,11 +49,11 @@ SCHEMA JSON (TUÂN THỦ CHÍNH XÁC):
   "explanation": "string - Ghép 4 đoạn PHÂN TÍCH Y LÝ thành 1 chuỗi, ngăn cách bằng \\n\\n",
   "symptoms": ["string", "string", ...] - Lấy từ mục TRIỆU CHỨNG, 5-8 items,
   "emotionalConnection": {
-    "emotion": "string - Cảm xúc CỤ THỂ gây bệnh (VD: Giận dữ, Lo nghĩ, Sợ hãi, Buồn bã)",
-    "organ": "string - Tạng phủ bị ảnh hưởng (VD: Gan, Tỳ, Thận, Phổi)",
-    "patientFeeling": "string - Mô tả cảm xúc người bệnh đang trải qua (VD: 'Bạn có thể đang cảm thấy dễ cáu gắt...')",
-    "mechanismTCM": "string - Cơ chế theo Đông Y (VD: 'Khí Gan uất kết, không sơ tiết...')",
-    "mechanismModern": "string - Cơ chế theo Y học hiện đại (VD: 'Tăng cortisol, co mạch máu...')"
+    "emotion": "string - Cảm xúc PHẢI là 1 trong 5 loại Thất Tình: Giận (Nộ) / Vui quá (Hỷ) / Lo nghĩ (Tư) / Buồn (Bi) / Sợ (Khủng). KHÔNG dùng 'căng thẳng', 'stress', 'áp lực'.",
+    "organ": "string - Tạng phủ bị ảnh hưởng theo Thất Tình (VD: Gan, Tỳ, Thận, Phổi, Tâm)",
+    "patientFeeling": "string - Mô tả cảm xúc CÁ NHÂN HÓA liên kết với tình huống sống cụ thể, KHÔNG mô tả triệu chứng thể chất. VD: 'Khi bạn hay suy nghĩ nhiều, trằn trọc về công việc, cơ thể chuyển nỗi lo thành cảm giác đầy bụng.'",
+    "mechanismTCM": "string - Giải thích 2-3 câu theo cơ chế Thất Tình → Tạng. VD: 'Lo nghĩ kéo dài làm Tỳ khí uất kết, mất khả năng vận hóa. Thức ăn không tiêu hóa thuận, sinh đầy trướng.'",
+    "mechanismModern": "string - Giải thích 2-3 câu bằng sinh lý học. VD: 'Lo lắng kéo dài kích hoạt trục HPA, tăng cortisol, giảm tiết dịch vị và co thắt cơ trơn đường tiêu hóa.'"
   },
   "diet": {
     "shouldEat": ["string - Thực phẩm + lý do", ...] - 4-5 items,
@@ -112,12 +112,12 @@ QUY TẮC CHUYỂN ĐỔI:
 1. "summary": Lấy từ mục 【TÓM TẮT BỆNH TRẠNG】
 2. "explanation": Ghép toàn bộ nội dung từ mục 【PHÂN TÍCH Y LÝ CHI TIẾT】 thành 1 STRING, ngăn cách đoạn bằng "\\n\\n"
 3. "symptoms": Trích xuất từng triệu chứng từ mục 【TRIỆU CHỨNG CÓ THỂ GẶP】
-4. "emotionalConnection": Trích xuất từ mục 【MỐI LIÊN HỆ CẢM XÚC - BỆNH LÝ】
-   - emotion: Từ dòng "Cảm xúc có thể gây bệnh:" - Lấy cảm xúc CỤ THỂ (VD: "Giận dữ", "Lo nghĩ", "Sợ hãi")
+4. "emotionalConnection": Trích xuất từ mục 【CẢM XÚC LIÊN QUAN THẾ NÀO ĐẾN GỐC BỆNH?】
+   - emotion: Từ dòng "Cảm xúc có thể gây bệnh:" - PHẢI là 1 trong 5 loại Thất Tình: "Giận (Nộ)"/"Lo nghĩ (Tư)"/"Buồn (Bi)"/"Sợ (Khủng)"/"Vui quá (Hỷ)". Nếu source viết "căng thẳng" → QUY VỀ gốc Thất Tình gần nhất (thường là "Lo nghĩ (Tư)" hoặc "Giận (Nộ)")
    - organ: Từ dòng "Tạng phủ bị ảnh hưởng:" - Lấy tên tạng (VD: "Gan", "Tỳ", "Thận")
-   - patientFeeling: Từ dòng "Biểu hiện cảm xúc ở người bệnh:" - Lấy NGUYÊN VĂN mô tả cảm xúc
-   - mechanismTCM: Từ dòng "Cơ chế gây bệnh (Đông Y):" - Lấy giải thích theo Đông Y
-   - mechanismModern: Từ dòng "Cơ chế gây bệnh (Y học hiện đại):" - Lấy giải thích theo Tây Y
+   - patientFeeling: Từ dòng "Biểu hiện cảm xúc ở người bệnh:" - Lấy NGUYÊN VĂN. Phải là mô tả CẢM XÚC + TÌNH HUỐNG SỐNG, KHÔNG phải triệu chứng thể chất.
+   - mechanismTCM: Từ dòng "Cơ chế gây bệnh (Đông Y):" - Lấy giải thích 2-3 câu theo Đông Y
+   - mechanismModern: Từ dòng "Cơ chế gây bệnh (Y học hiện đại):" - Lấy giải thích 2-3 câu theo sinh lý học
 5. "diet": Trích xuất từ mục 【CHẾ ĐỘ ĂN UỐNG】
 6. "lifestyle": Trích xuất từ mục 【LỜI KHUYÊN SINH HOẠT】
 7. "prognosis": Trích xuất từ mục 【TIÊN LƯỢNG & HỒI PHỤC】
