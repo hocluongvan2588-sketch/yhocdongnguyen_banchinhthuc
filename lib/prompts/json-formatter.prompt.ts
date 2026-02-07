@@ -45,8 +45,8 @@ SCHEMA JSON (TUÂN THỦ CHÍNH XÁC):
     "age": "number - Tuổi PHẢI KHỚP với input",
     "pronoun": "string - Cách xưng hô (bạn/cha bạn/mẹ bạn/con bạn/vợ bạn/chồng bạn/anh chị em bạn)"
   },
-  "summary": "string - Lấy từ mục 【TÓM TẮT BỆNH TRẠNG】, 2-3 câu",
-  "explanation": "string - Ghép 4 đoạn PHÂN TÍCH Y LÝ thành 1 chuỗi, ngăn cách bằng \\n\\n",
+  "summary": "string - Lấy từ mục 【TÓM TẮT BỆNH TRẠNG】, chỉ 2-3 câu ngắn tóm cảm giác + mức độ + báo hiệu",
+  "explanation": "string - Ghép đoạn PHÂN TÍCH Y LÝ thành 1 chuỗi, ngăn cách bằng \\n\\n. KHÔNG được bắt đầu bằng mô tả triệu chứng giống summary. Phải mở bằng câu chuyển tiếp phân tích rồi vào cơ chế.",
   "symptoms": ["string", "string", ...] - Lấy từ mục TRIỆU CHỨNG, 5-8 items,
   "emotionalConnection": {
     "emotion": "string - Cảm xúc PHẢI là 1 trong 5 loại Thất Tình: Giận (Nộ) / Vui quá (Hỷ) / Lo nghĩ (Tư) / Buồn (Bi) / Sợ (Khủng). KHÔNG dùng 'căng thẳng', 'stress', 'áp lực'.",
@@ -109,8 +109,9 @@ QUY TẮC CHUYỂN ĐỔI:
    - pronoun: Lấy từ "Cách xưng hô:" - giữ nguyên giá trị
    ⚠️ QUAN TRỌNG: Nếu nhầm giới tính hoặc tuổi, toàn bộ JSON sẽ VÔ GIÁ TRỊ
 
-1. "summary": Lấy từ mục 【TÓM TẮT BỆNH TRẠNG】
-2. "explanation": Ghép toàn bộ nội dung từ mục 【PHÂN TÍCH Y LÝ CHI TIẾT】 thành 1 STRING, ngăn cách đoạn bằng "\\n\\n"
+1. "summary": Lấy từ mục 【TÓM TẮT BỆNH TRẠNG】 - Chỉ 2-3 câu ngắn, tóm cảm giác + mức độ + báo hiệu gì.
+2. "explanation": Ghép toàn bộ nội dung từ mục 【PHÂN TÍCH Y LÝ (Đông - Tây y kết hợp)】 thành 1 STRING, ngăn cách đoạn bằng "\\n\\n".
+   ⚠️ TUYỆT ĐỐI KHÔNG ĐƯỢC bắt đầu bằng câu mô tả triệu chứng giống summary. Phải bắt đầu bằng câu chuyển tiếp phân tích (VD: "Vì sao lại đau ở vùng này?") rồi đi thẳng vào cơ chế.
 3. "symptoms": Trích xuất từng triệu chứng từ mục 【TRIỆU CHỨNG CÓ THỂ GẶP】
 4. "emotionalConnection": Trích xuất từ mục 【CẢM XÚC LIÊN QUAN THẾ NÀO ĐẾN GỐC BỆNH?】
    - emotion: Từ dòng "Cảm xúc có thể gây bệnh:" - PHẢI là 1 trong 5 loại Thất Tình: "Giận (Nộ)"/"Lo nghĩ (Tư)"/"Buồn (Bi)"/"Sợ (Khủng)"/"Vui quá (Hỷ)". Nếu source viết "căng thẳng" → QUY VỀ gốc Thất Tình gần nhất (thường là "Lo nghĩ (Tư)" hoặc "Giận (Nộ)")
