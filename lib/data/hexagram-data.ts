@@ -360,7 +360,7 @@ export const HEXAGRAMS: HexagramData[] = [
     lowerTrigram: 5,
     chinese: "雷风恒",
     vietnamese: "Lôi Phong Hằng",
-    meaning: "恒���有成",
+    meaning: "恒心有成",
     image: "雷风，恒。君子以立不易方",
   },
 

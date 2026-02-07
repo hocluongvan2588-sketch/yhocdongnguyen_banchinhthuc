@@ -175,7 +175,7 @@ INSERT INTO public.nam_duoc_vi_thuoc (
   'moc', ARRAY['Can', 'Tỳ'], 'on', ARRAY['cay', 'đắng'], ARRAY['Can', 'Tỳ'],
   'Hành khí hoạt huyết, thông kinh chỉ thống, giải độc tiêu viêm',
   ARRAY['Đau dạ dày', 'Viêm gan', 'Vết thương', 'Đau bụng kinh'],
-  'Sắc uống hoặc bôi ngoài', '3-10g/ngày', ARRAY['Người có thai', '��ang chảy máu'],
+  'Sắc uống hoặc bôi ngoài', '3-10g/ngày', ARRAY['Người có thai', 'Đang chảy máu'],
   ARRAY['Thân rễ']
 ),
 -- Vị thuốc Thủy (Thận, Bàng quang)

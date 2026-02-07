@@ -181,7 +181,7 @@ export default function PrivacyPage() {
                   thông báo cho bạn về các thay đổi quan trọng qua email hoặc thông báo trên website.
                 </p>
                 <p>
-                  Việc bạn tiếp tục sử dụng dịch vụ sau khi chính sách ��ược cập nhật đồng nghĩa với việc 
+                  Việc bạn tiếp tục sử dụng dịch vụ sau khi chính sách được cập nhật đồng nghĩa với việc 
                   bạn chấp nhận các thay đổi đó.
                 </p>
               </CardContent>

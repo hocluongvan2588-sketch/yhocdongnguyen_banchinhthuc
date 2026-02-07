@@ -260,7 +260,7 @@ export function analyzeSymptomAndSuggest(symptoms: string[]): {
  * | Cơ xương khớp        | Huyệt      | Thuốc      | Số         |
  * | Mãn tính             | Huyệt      | Số         | Thuốc      |
  * | Cảm xúc/Stress       | Số         | Huyệt      | Thuốc      |
- * | Mãn t��nh/Phòng ngừa  | Số         | Huyệt      | Thuốc      |
+ * | Mãn tính/Phòng ngừa  | Số         | Huyệt      | Thuốc      |
  * | Thuận mùa            | Số         | Huyệt      | Thuốc      |
  */
 

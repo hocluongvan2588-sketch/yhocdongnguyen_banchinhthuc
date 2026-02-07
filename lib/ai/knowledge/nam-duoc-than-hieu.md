@@ -69,7 +69,7 @@ Dữ liệu này được trích xuất từ "Nam dược thần hiệu" của T
 ### T009 - Trạch tả
 **Vị & Khí:** Vị ngọt/mặn, tính hàn  
 **Ngũ Hành:** Thủy  
-**Quẻ Tư��ng Ứng:** Khảm  
+**Quẻ Tương Ứng:** Khảm  
 **Chủ Trị:** Lợi tiểu, thanh nhiệt, trị thủy thũng, đái dắt, tiêu chảy.  
 **Ghi chú:** Giúp đào thải thấp nhiệt ra ngoài qua đường bài tiết.
 
@@ -618,7 +618,7 @@ Dữ liệu này được trích xuất từ "Nam dược thần hiệu" của T
 - Hành (củ trắng) 3 củ (Tá)
 - Cam thảo 3g (Sứ)
 
-#### Bài 2: Thanh Nhiệt Giải Biểu (Cảm m��o phong nhiệt)
+#### Bài 2: Thanh Nhiệt Giải Biểu (Cảm mạo phong nhiệt)
 - Bạc hà 8g (Quân)
 - Kinh giới 8g (Thần)
 - Cát cánh 6g (Tá)

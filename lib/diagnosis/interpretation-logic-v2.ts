@@ -314,7 +314,7 @@ function analyzeKneePain(
   if (relation === "用生體") {
     analysis += `Theo quẻ của bạn, ${organ.organ} đang được hỗ trợ tốt từ bên ngoài. Tuy nhiên, đau gối có thể do:\n\n`
     analysis += `1. **Khí huyết lưu thông chưa đến khớp:** Dù ${organ.organ} khỏe nhưng khí huyết chưa xuống đến gối đủ mạnh.\n`
-    analysis += `2. **Phong hàn thấp khí xâm nhập:** Thời tiết lạnh, ẩm l��m tắc kinh lạc ở gối (風寒濕邪).\n`
+    analysis += `2. **Phong hàn thấp khí xâm nhập:** Thời tiết lạnh, ẩm làm tắc kinh lạc ở gối (風寒濕邪).\n`
     analysis += `3. **Gan Thận bất túc:** Gan chủ gân, Thận chủ cốt, nếu hai tạng này yếu thì gối dễ đau.\n\n`
 
     analysis += `**Triệu chứng thường kèm theo:**\n`
@@ -347,7 +347,7 @@ function analyzeKneePain(
     analysis += `- Có thể cần uống thuốc hoặc châm cứu để hỗ trợ\n\n`
 
     analysis += `**Xử lý tạm thời:**\n`
-    analysis += `1. **Hạn chế vận đ��ng:** Tránh leo cầu thang, đi bộ quá nhiều\n`
+    analysis += `1. **Hạn chế vận động:** Tránh leo cầu thang, đi bộ quá nhiều\n`
     analysis += `2. **Chườm nóng:** 2-3 lần/ngày, mỗi lần 20 phút\n`
     analysis += `3. **Nâng cao chân khi nằm:** Giúp giảm sưng và đau\n\n`
   } else if (relation === "體生用") {
@@ -449,7 +449,7 @@ function analyzeHeadache(
 
     analysis += `**Xử lý tạm thời:**\n`
     analysis += `1. **Hạn chế vận động:** Tránh làm việc căng thẳng, nghỉ ngơi nhiều hơn\n`
-    analysis += `2. **Chườm nóng:** 2-3 lần/ngày, m��i lần 20 phút\n`
+    analysis += `2. **Chườm nóng:** 2-3 lần/ngày, mỗi lần 20 phút\n`
     analysis += `3. **Nâng cao chân khi nằm:** Giúp giảm sưng và đau\n\n`
   } else if (relation === "體生用") {
     analysis += `Theo quẻ của bạn, ${bodyInfo?.organs} đang tiêu hao năng lượng ra bên ngoài. Đau đầu có thể do:\n\n`

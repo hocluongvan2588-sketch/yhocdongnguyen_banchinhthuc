@@ -223,7 +223,7 @@ INSERT INTO public.nam_duoc_phuong_thuoc (
   'kim',
   ARRAY['Phế'],
   '[
-    {"ten": "G���ng sống", "lieu_luong": "40g", "vai_tro": "quan"},
+    {"ten": "Gừng sống", "lieu_luong": "40g", "vai_tro": "quan"},
     {"ten": "Hành trắng", "lieu_luong": "14 củ", "vai_tro": "than"}
   ]'::jsonb,
   'Giã nát cả hai vị',

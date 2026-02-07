@@ -87,7 +87,7 @@ INSERT INTO solutions (
 ('7_2_0', 'prescription', 'Bài thuốc Sơn Địa Bác (Bổ Trung Ích Khí)', 'Trị sa dạ dày, cơ nhục yếu bủng.', 199000, 'Hoàng kỳ, Nhân sâm, Bạch truật, Thăng ma.', 'Kinh Tỳ', 'Sắc uống buổi sáng.', 'Nam Dược Thần Hiệu - Chương VI'),
 
 -- NHÓM ĐOÀI (KIM)
-('2_2_0', 'prescription', 'Bài thuốc Đoài Vi Trạch (Cam Thảo Tế T��n)', 'Trị hôi miệng, lở loét lưỡi.', 199000, 'Cam thảo, Tế tân, Hoàng liên.', 'Kinh Tâm, Miệng', 'Ngậm và súc miệng.', 'Nam Dược Thần Hiệu - Chương VIII'),
+('2_2_0', 'prescription', 'Bài thuốc Đoài Vi Trạch (Cam Thảo Tế Tân)', 'Trị hôi miệng, lở loét lưỡi.', 199000, 'Cam thảo, Tế tân, Hoàng liên.', 'Kinh Tâm, Miệng', 'Ngậm và súc miệng.', 'Nam Dược Thần Hiệu - Chương VIII'),
 ('2_1_0', 'prescription', 'Bài thuốc Trạch Thiên Quải (Thông Phế Chỉ Khái)', 'Trị ho có đờm, ngực tức.', 199000, 'Bán hạ, Trần bì, Cát cánh.', 'Kinh Phế', 'Sắc uống.', 'Nam Dược Thần Hiệu - Chương VIII'),
 ('2_3_0', 'prescription', 'Bài thuốc Trạch Hỏa Cách (Tả Hỏa Nhuận Phế)', 'Trị ho ra máu, phổi nóng.', 199000, 'A giao, Sinh địa, Ngẫu tiết.', 'Kinh Phế', 'Sắc uống.', 'Nam Dược Thần Hiệu - Chương VIII'),
 ('2_4_0', 'prescription', 'Bài thuốc Trạch Lôi Tùy (Điều Hòa Can Phế)', 'Trị ho do tức giận (Can hỏa phạm phế).', 199000, 'Sài hồ, Bạch thược, Cát cánh.', 'Kinh Can, Kinh Phế', 'Sắc uống.', 'Nam Dược Thần Hiệu - Chương VIII'),

@@ -399,7 +399,7 @@ FORMAT OUTPUT BẮT BUỘC:
 > ([Dịch nghĩa - VD: Thấy Gan bệnh, biết Gan sẽ ảnh hưởng Tỳ, nên trước hết phải bồi Tỳ])
 
 Không chỉ [giảm triệu chứng], mà cần:
-- **Bổ [Tạng bi���u hiện]** ([cách bổ - VD: tạng mẹ sinh Thổ là Hỏa - ăn thức ăn ấm, tránh lạnh])
+- **Bổ [Tạng biểu hiện]** ([cách bổ - VD: tạng mẹ sinh Thổ là Hỏa - ăn thức ăn ấm, tránh lạnh])
 - **[Điều chỉnh Tạng gốc]** ([cách điều chỉnh - VD: Sơ Gan giải uất - để Gan không còn "ép" Tỳ Vị])
 
 "Đúc kết:"

@@ -514,7 +514,7 @@ ${useElement === "Mộc" ? "Mộc (Gan) đang quá thịnh khắc Thổ → gân
    - **Huyết Hải** (mặt trong đầu gối, lõm trên xương bánh chè 2 tấc): Bấm 3-5 phút, hết đau ngay
    - **Dương Lăng Tuyền** (dưới đầu gối mặt ngoài, lõm xương): Bấm mạnh 2-3 phút
    - **Tam Âm Giao** (trên cổ chân trong 3 tấc): Bấm 2 phút để bổ Gan Tỳ Thận
-   - **Túc Tam Lý** (dư���i đầu gối 3 tấc mặt ngoài): Bấm để bổ khí huyết
+   - **Túc Tam Lý** (dưới đầu gối 3 tấc mặt ngoài): Bấm để bổ khí huyết
 
 3. **Đắp thuốc nam:**
    - Rượu gừng + tinh dầu bạc hà: thoa và massage nhẹ
@@ -574,7 +574,7 @@ ${useElement === "Mộc" ? "Mộc (Gan) đang quá thịnh khắc Thổ → gân
 - Đau nhiều hơn khi mệt, chiều tối
 - Khó đứng lâu, khó leo cầu thang
 
-**Nguyên nhân sâu xa:** Cơ thể đang trong tình trạng "hư ch��ng" - thiếu khí huyết nuôi dưỡng gân cốt.`,
+**Nguyên nhân sâu xa:** Cơ thể đang trong tình trạng "hư chứng" - thiếu khí huyết nuôi dưỡng gân cốt.`,
       advice: `**PHỤC HỒI NĂNG LƯỢNG:**
 
 1. **Nghỉ ngơi tuyệt đối:** Giảm vận động, ngủ sớm trước 22h

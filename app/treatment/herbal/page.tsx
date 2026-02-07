@@ -870,7 +870,7 @@ function HerbalContent() {
                             <p className="leading-relaxed flex items-start gap-2">
                               <ChevronRight className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
                               <span>
-                                K��t hợp <span className="font-semibold">lý thuyết Ngũ Hành</span> tương sinh tương khắc để điều hòa âm dương
+                                Kết hợp <span className="font-semibold">lý thuyết Ngũ Hành</span> tương sinh tương khắc để điều hòa âm dương
                               </span>
                             </p>
                             <p className="leading-relaxed flex items-start gap-2">

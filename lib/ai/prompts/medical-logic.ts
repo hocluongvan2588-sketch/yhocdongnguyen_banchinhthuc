@@ -161,7 +161,7 @@ E. Hòa (cùng hành) = Ổn định
 **Trường hợp 5: Bệnh ở Gan (Mộc)**
 - Tạng bệnh: Gan (Mộc) - Cáu gắt, đau đầu, căng cơ
 - Tạng mẹ cần bổ: **Thận (Thủy)** - Vì Thủy sinh Mộc
-- Giải thích: "Thận là gốc của sự sống. Khi Thận khỏe, tinh huyết đủ, Gan sẽ được nu��i dưỡng, cảm xúc ổn định và cơ bắp thư giãn"
+- Giải thích: "Thận là gốc của sự sống. Khi Thận khỏe, tinh huyết đủ, Gan sẽ được nuôi dưỡng, cảm xúc ổn định và cơ bắp thư giãn"
 
 **Hướng điều trị tổng hợp (Template):**
 "Hướng điều trị: Bồi bổ [Tạng mẹ] để gián tiếp hỗ trợ [Tạng bệnh]. Cụ thể: [3-4 phương pháp] như [ăn uống], [massage huyệt], [điều chỉnh sinh hoạt], và [thảo dược nếu cần]"

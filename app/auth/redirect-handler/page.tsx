@@ -53,7 +53,7 @@ export default function RedirectHandlerPage() {
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background to-primary/5">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-muted-foreground">Đang chuy���n hướng...</p>
+          <p className="text-muted-foreground">Đang chuyển hướng...</p>
         </div>
       </div>
     }>

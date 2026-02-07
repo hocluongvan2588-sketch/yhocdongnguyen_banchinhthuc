@@ -493,7 +493,7 @@ const BAT_TRACH_MATRIX: Record<CungPhi, BatTrachStar[]> = {
       quality: "Đại Hung",
     },
   ],
-  ��oài: [
+  Đoài: [
     {
       star: "Sinh Khí",
       direction: "Tây Bắc",

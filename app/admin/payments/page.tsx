@@ -714,7 +714,7 @@ export default function AdminPaymentsPage() {
                   <Building2 className="mx-auto h-12 w-12 text-muted-foreground/50" />
                   <h3 className="mt-4 text-lg font-medium">Chưa có tài khoản nào</h3>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Thêm tài khoản ngân hàng để bắt ��ầu nhận thanh toán
+                    Thêm tài khoản ngân hàng để bắt đầu nhận thanh toán
                   </p>
                 </div>
               ) : (

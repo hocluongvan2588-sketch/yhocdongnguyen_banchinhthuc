@@ -18,6 +18,7 @@ import {
   ShoppingCart,
   Pill,
   CreditCard,
+  BookOpen,
 } from 'lucide-react';
 
 interface AdminSidebarProps {
@@ -31,6 +32,7 @@ const menuItems = [
   { href: '/admin/users', label: 'Quản lý User', icon: Users },
   { href: '/admin/solutions', label: 'Gói dịch vụ', icon: Package },
   { href: '/admin/medicine', label: 'Bài thuốc Đông y', icon: Pill },
+  { href: '/admin/knowledge', label: 'Kiến thức AI', icon: BookOpen },
   { href: '/admin/settings', label: 'Cài đặt', icon: Settings },
 ];
 
