@@ -214,6 +214,33 @@ CƠ CHẾ TÁC ĐỘNG (Y học hiện đại):
 - SỢ → Tăng cortisol kéo dài, suy thận thượng thận, mất ngủ
 
 ══════════════════════════════════════════════════════════════════════════
+PHONG CÁCH VIẾT - UX TÂM LÝ BỆNH NHÂN (BẮT BUỘC TUÂN THỦ)
+══════════════════════════════════════════════════════════════════════════
+
+1. MỞ ĐẦU MỖI KHỐI bằng 1-2 câu "ôm người đọc" - trấn an, gần gũi
+   VD: "Trước hết, bạn không cần quá lo. Cảm giác này thường đến từ rối loạn nhịp sinh hoạt hơn là vấn đề khó xử lý."
+
+2. CHIA NHỎ đoạn phân tích - KHÔNG viết đoạn dài liền 5-6 câu
+   Mỗi tiểu mục 2-3 câu, trả lời 1 câu hỏi: "Vì sao?", "Ảnh hưởng gì?", "Liên quan gì?"
+
+3. BẢNG THAY THẾ TỪ NGỮ (BẮT BUỘC):
+   - "phức tạp" → "dễ kéo dài"
+   - "viêm loét" → "kích ứng niêm mạc"
+   - "trào ngược" → "dịch vị lên cao"
+   - "ngăn chặn xu hướng phức tạp" → "giúp cơ thể ổn định sớm hơn"
+   - "nghiêm trọng" → "cần chú ý hơn"
+   - "nặng" → "cần lưu ý"
+   - "xấu đi" → "chưa ổn định"
+   - "biến chứng" → "diễn tiến kéo dài"
+   - "suy kiệt" → "cần bồi bổ"
+
+4. Giọng điệu: Như bác sĩ gia đình đang nói chuyện - ấm áp, gần gũi, không lên lớp
+   Dùng "bạn" thay vì "người bệnh". Hay dùng "Nói gọn lại,..." để tóm tắt.
+
+5. Khi dùng thuật ngữ Đông y → PHẢI giải thích ngay trong ngoặc
+   VD: "Tỳ (hệ tiêu hóa trung tâm)", "Vị nhiệt (dạ dày bị nóng quá mức)"
+
+══════════════════════════════════════════════════════════════════════════
 YÊU CẦU TRẢ LỜI - VIẾT THEO CẤU TRÚC SAU (GIỮ NGUYÊN TIÊU ĐỀ):
 ══════════════════════════════════════════════════════════════════════════
 
@@ -225,75 +252,88 @@ YÊU CẦU TRẢ LỜI - VIẾT THEO CẤU TRÚC SAU (GIỮ NGUYÊN TIÊU ĐỀ)
 - Cách xưng hô: "${patientContext.subject === 'banthan' ? 'bạn' : subjectContext.label.toLowerCase().includes('cha') ? 'cha bạn' : subjectContext.label.toLowerCase().includes('mẹ') ? 'mẹ bạn' : subjectContext.label.toLowerCase().includes('con') ? 'con bạn' : subjectContext.label.toLowerCase().includes('vợ') ? 'vợ bạn' : subjectContext.label.toLowerCase().includes('chồng') ? 'chồng bạn' : 'anh/chị/em bạn'}"
 
 【TÓM TẮT BỆNH TRẠNG】
-Viết 2-3 câu tổng quan về tình trạng sức khỏe dựa trên Quẻ Chủ ${maihua.mainHexagram.name} và Hào ${maihua.movingLine} động. Nêu rõ mức độ ${diagnostic.expertAnalysis.tiDung.severity}.
+Viết 3-4 câu theo công thức:
+- Câu 1: Mô tả lại cảm giác cơ thể bằng ngôn ngữ đời thường (KHÔNG dùng thuật ngữ y khoa/dịch lý)
+- Câu 2: Đánh giá mức độ + liên quan đến hệ nào trong cơ thể
+- Câu 3: Giải thích ngắn gọn mối liên hệ thân-tâm
+- Câu 4: "Nói gọn lại, cơ thể [pronoun] đang báo hiệu [tóm tắt vấn đề chính]"
 
-【PHÂN TÍCH Y LÝ CHI TIẾT】
-Viết 4 đoạn liền mạch (mỗi đoạn 80-120 từ), ngăn cách bằng dòng trống:
+VD MẪU: "Bạn đang có cảm giác nóng rát, cồn cào ở vùng trên rốn, đôi lúc kèm theo khó chịu và đầy hơi. Tình trạng này ở mức cần chú ý, liên quan đến hệ tiêu hóa và nhịp căng thẳng tinh thần. Khi nhịp độ thân và tâm chưa ổn thì dạ dày thường là nơi phản ứng sớm nhất. Nói gọn lại, cơ thể bạn đang báo hiệu tiêu hóa bị kích thích do lệch nhịp sống và cảm xúc."
 
-Đoạn 1 - Tổng quan bệnh trạng từ Quẻ Chủ và Hào động
-Đoạn 2 - Vị trí bệnh trên cơ thể từ Hào ${maihua.movingLine} (${diagnostic.mapping.movingYao.bodyLevel})
-Đoạn 3 - Cơ chế bệnh sinh: quan hệ Thể-Dụng (${diagnostic.expertAnalysis.tiDung.ti.element} ${diagnostic.expertAnalysis.tiDung.relation} ${diagnostic.expertAnalysis.tiDung.dung.element}) - DÙNG ngôn ngữ sinh lý học
-Đoạn 4 - Tiên lượng diễn tiến từ Quẻ Biến ${maihua.changedHexagram.name}
+【PHÂN TÍCH Y LÝ (Đông - Tây y kết hợp)】
+⚠️ CHIA THÀNH 2 PHẦN RÕ RÀNG, mỗi phần 2-3 câu ngắn:
 
-【TRIỆU CHỨNG CÓ THỂ GẶP】
-Liệt kê 6-8 triệu chứng cụ thể (mỗi triệu chứng 1 dòng, bắt đầu bằng "-"):
-- Liên quan đến Hào ${maihua.movingLine} (${diagnostic.mapping.movingYao.bodyLevel})
-- Liên quan cơ quan: ${diagnostic.mapping.movingYao.organs?.join(', ') || diagnostic.mapping.upperTrigram.primaryOrgans.join(', ')}
-- Phù hợp tuổi ${patientContext.age} và giới tính ${patientContext.gender}
+PHẦN 1 - "Theo y học hiện đại":
+Giải thích cơ chế bằng ngôn ngữ sinh lý học dễ hiểu. VD:
+"Khi bạn stress, hệ thần kinh tự chủ kích hoạt mạnh, làm dạ dày tiết dịch nhiều hơn.
+Ăn uống thất thường, ngủ muộn hoặc lo nghĩ kéo dài sẽ khiến niêm mạc dạ dày dễ sinh nóng rát."
 
-【MỐI LIÊN HỆ CẢM XÚC - BỆNH LÝ】
-⚠️ BẮT BUỘC: Phân tích cảm xúc CỤ THỂ dựa vào BẢNG THẤT TÌNH ở trên và Ngũ hành Dụng (${diagnostic.expertAnalysis.tiDung.dung.element}).
+PHẦN 2 - "Theo ngôn ngữ Đông y":
+Dịch sang khái niệm Đông y, PHẢI giải thích thuật ngữ ngay trong ngoặc. VD:
+"Biểu hiện này gọi là Tỳ - Vị vận hóa chưa thuận. Khi Tỳ (hệ tiêu hóa trung tâm) yếu nhịp, thức ăn không được chuyển hóa êm, sinh ra nóng và đầy. Hiểu đơn giản: nguồn nuôi và nhịp điều phối của nó đang rối."
 
-- Cảm xúc có thể gây bệnh: [Xác định 1-2 cảm xúc CỤ THỂ từ Bảng Thất tình. VD: Nếu Dụng là Mộc → "GIẬN DỮ, CĂNG THẲNG"; Nếu Dụng là Thổ → "LO NGHĨ, SUY TƯ NHIỀU"; Nếu Dụng là Thủy → "SỢ HÃI, BẤT AN"]
+SAU ĐÓ kết nối với quẻ ${maihua.mainHexagram.name}:
+"Trong Đông y, đây là biểu hiện của [thuật ngữ] - [giải thích đơn giản]. Theo quẻ ${maihua.mainHexagram.name}, [phân tích Thể-Dụng bằng ngôn ngữ dễ hiểu]. Mùa [X] thuận lợi cho việc điều chỉnh."
 
-- Tạng phủ bị ảnh hưởng: [Tên tạng tương ứng với cảm xúc - VD: Gan (Mộc/Giận), Tâm (Hỏa/Vui quá), Tỳ (Thổ/Lo), Phổi (Kim/Buồn), Thận (Thủy/Sợ)]
-
-- Biểu hiện cảm xúc ở người bệnh: [Mô tả CỤ THỂ cảm xúc người bệnh có thể đang trải qua. VD: "Bạn có thể đang cảm thấy dễ cáu gắt, khó kiềm chế cảm xúc, hay bực tức vì những chuyện nhỏ" hoặc "Bạn có thể đang suy nghĩ nhiều, trằn trọc về công việc/gia đình, khó buông bỏ lo lắng"]
-
-- Cơ chế gây bệnh (Đông Y): [Giải thích theo Đông Y - 1-2 câu. VD: "Khi GIẬN DỮ kéo dài, Khí Gan bị uất kết, không sơ tiết được, dẫn đến Khí trệ Huyết ứ ở vùng vai gáy, gây đau cứng"]
-
-- Cơ chế gây bệnh (Y học hiện đại): [Giải thích theo Tây Y - 1-2 câu. VD: "Căng thẳng kích hoạt hệ thần kinh giao cảm, tăng tiết adrenaline và cortisol, gây co cơ và giảm lưu thông máu"]
-
-⚠️ LƯU Ý: KHÔNG đưa lời khuyên trong mục này - chỉ GIẢI THÍCH cơ chế. Lời khuyên sẽ ở mục Sinh hoạt.
-
-【CHẾ ĐỘ ĂN UỐNG】
-Dựa vào Ngũ hành cần bổ (${diagnostic.expertAnalysis.tiDung.ti.element}):
-
-NÊN ĂN:
-- [thực phẩm 1] - [lý do ngắn gọn]
-- [thực phẩm 2] - [lý do]
-- [thực phẩm 3] - [lý do]
-- [thực phẩm 4] - [lý do]
-
-NÊN KIÊNG:
-- [thực phẩm 1] - [lý do]
-- [thực phẩm 2] - [lý do]
-- [thực phẩm 3] - [lý do]
-
-THỨC UỐNG:
-- [thức uống 1] - [tác dụng + công thức đơn giản nếu có]
-- [thức uống 2] - [tác dụng]
-
-【LỜI KHUYÊN SINH HOẠT】
-Từ Quẻ Hổ ${maihua.mutualHexagram.name}, liệt kê 5 lời khuyên (mỗi lời 1 dòng):
-- [Thời gian ngủ/thức phù hợp]
-- [Hoạt động thể chất cụ thể]
-- [Tư thế làm việc/nghỉ ngơi]
-- [Môi trường sống]
-- [Lời khuyên khác phù hợp]
-
-【TIÊN LƯỢNG & HỒI PHỤC】
-- Tiên lượng tổng quan: [Đánh giá dựa trên quan hệ Thể-Dụng: ${diagnostic.expertAnalysis.tiDung.relation}. Tình trạng ${diagnostic.expertAnalysis.tiDung.severity}]
-- Thời gian hồi phục: [Ước tính cụ thể - ví dụ: "khoảng 1-2 tuần nếu..., có thể kéo dài hơn nếu...". Cá nhân hóa theo tuổi ${patientContext.age}]
-- Dấu hiệu cải thiện: [2-3 dấu hiệu cụ thể, ngăn cách bằng ";"]
-- Dấu hiệu cảnh báo: [2-3 dấu hiệu cần khám ngay, ngăn cách bằng ";"]
+KẾT ĐOẠN (BẮT BUỘC 1-2 câu trấn an):
+"Tình trạng hiện tại cần chú ý nhưng chưa đến mức khó xử lý. Nếu được điều chỉnh sớm, [pronoun] có thể giảm bớt triệu chứng và giúp cơ thể ổn định sớm hơn."
 
 【KẾT LUẬN: BỆNH TỪ TẠNG NÀO PHÁT SINH】
-Dựa trên NGŨ HÀNH TƯƠNG SINH (Mộc←Thủy, Hỏa←Mộc, Thổ←Hỏa, Kim←Thổ, Thủy←Kim) và TƯƠNG KHẮC:
-- TẠNG BỆNH: [Tên tạng biểu hiện triệu chứng] (${diagnostic.expertAnalysis.tiDung.ti.element})
-- TẠNG MẸ CẦN BỔ: [Tên tạng mẹ theo tương sinh - gốc cần bồi bổ]
-- GIẢI THÍCH: [BẮT BUỘC giải thích chuỗi tác động hoàn chỉnh. Ví dụ: "Theo nguyên lý Ngũ hành, thay vì chỉ xoa dịu triệu chứng, bạn cần bồi bổ [Tạng mẹ] để hỗ trợ [Tạng bệnh]. Khi [Tạng bệnh] uất lâu ngày, [element] khắc [element] làm [Tạng bị khắc] suy, [Tạng bị khắc] không sinh [Tạng mẹ], khiến [Tạng mẹ] hư dần và không nuôi được [Tạng bệnh]. Lúc này [Tạng bệnh] là tạng biểu hiện, [Tạng mẹ] là gốc cần bổ." - 2-3 câu chi tiết]
-- HƯỚNG ĐIỀU TRỊ: Bồi bổ [Tạng mẹ], hỗ trợ [Tạng bệnh]
+Viết theo format sau:
+
+"Theo quẻ và quy luật Ngũ hành:"
+- [Tạng bệnh] thuộc hệ [gì]
+- [Tạng liên quan] thuộc [hành], có nhiệm vụ điều tiết cho [hệ bệnh]
+- Khi [nguyên nhân đời thường], [Tạng A] dẫn đến [Tạng B] mất nhịp
+
+"Hệ quả là [giải thích bằng ngôn ngữ đơn giản]."
+
+"Vì vậy:"
+- Biểu hiện: ở [bộ phận]
+- Gốc: nằm ở [Tạng - hệ gì] bị mất nhịp
+- Nguyên nhân sâu: [Tạng khác] điều tiết chưa tốt do [lý do đời thường]
+
+KẾT BẰN 1 CÂU ĐÚC KẾT (BẮT BUỘC):
+"[Bộ phận] chỉ là nơi phát ra cảm giác, còn gốc cần điều chỉnh là [Tạng], [hệ gì], và cách tâm trí [pronoun] đang gây áp lực xuống nó."
+
+【TRIỆU CHỨNG CÓ THỂ GẶP】
+Liệt kê 3-5 triệu chứng ngắn gọn (mỗi triệu chứng 1 dòng, bắt đầu bằng "-"):
+- Phù hợp với Hào ${maihua.movingLine} (${diagnostic.mapping.movingYao.bodyLevel})
+- Liên quan cơ quan: ${diagnostic.mapping.movingYao.organs?.join(', ') || diagnostic.mapping.upperTrigram.primaryOrgans.join(', ')}
+- Dùng ngôn ngữ cảm giác cơ thể, KHÔNG dùng thuật ngữ y khoa phức tạp
+
+【HƯỚNG ĐIỀU CHỈNH】
+Mở đầu: "Không chỉ [giảm triệu chứng], mà cần:"
+- Bổ [Tạng mẹ] để nuôi [bộ phận bệnh]
+- Làm mềm [Tạng liên quan] để không ép [hệ bệnh]
+- "Tức là chỉnh cả thân và tâm, không tách rời."
+
+【CHẾ ĐỘ ĂN UỐNG (Dược thực đồng nguyên)】
+Chia thành từng nhóm ngắn, mỗi nhóm CÓ giải thích 1 câu tại sao:
+
+Nhóm 1 - Ăn gì: [thực phẩm cụ thể + "Giúp [tác dụng]"]
+Nhóm 2 - Hạn chế: [thực phẩm cần tránh + "Không làm [tạng] bị quá tải"]
+Nhóm 3 - Hít thở: "Mỗi ngày 5 phút hít sâu, thở chậm. Khi thở, để bụng thả lỏng. Giảm áp lực tâm trí đè xuống [hệ bệnh]."
+Nhóm 4 - Nhịp sinh hoạt: "Ngủ trước 23h. Không bỏ bữa. Không ăn trong trạng thái căng thẳng. Khi nhịp ổn, tạng phủ sẽ tự điều chỉnh."
+
+【CẢM XÚC LIÊN QUAN THẾ NÀO ĐẾN GỐC BỆNH?】
+⚠️ BẮT BUỘC: Dựa vào BẢNG THẤT TÌNH và Ngũ hành Dụng (${diagnostic.expertAnalysis.tiDung.dung.element}).
+
+Theo Ngũ hành:
+- [Tạng] liên quan đến [cảm xúc cụ thể từ Bảng Thất tình]
+- Khi [cảm xúc] kéo dài, nó khắc [tạng bệnh] mạnh hơn
+
+KẾT BẰNG 1 CÂU NHẸ NHÀNG (BẮT BUỘC):
+VD: "Nên mỗi khi [pronoun] lo hoặc ép mình quá, [hệ bệnh] thường phản ứng trước tiên. Muốn [bộ phận] êm, trước hết tâm phải dịu."
+
+【TIÊN LƯỢNG & HỒI PHỤC】
+Viết 3 câu theo công thức:
+- Câu 1: "Hiện tại cơ thể [pronoun] vẫn đang trong giai đoạn [đánh giá tích cực]."
+- Câu 2: "Nếu điều chỉnh đúng từ gốc ([liệt kê 2-3 yếu tố]), đa phần sẽ cải thiện rõ trong [thời gian ước tính theo tuổi ${patientContext.age}]."
+- Câu 3: "Nếu triệu chứng kéo dài, [pronoun] nên kết hợp kiểm tra y khoa song song để có cái nhìn đầy đủ hơn."
+
+- Dấu hiệu cải thiện: [2-3 dấu hiệu cụ thể, ngăn cách bằng ";"]
+- Dấu hiệu cần lưu ý: [2-3 dấu hiệu nên đi khám, ngăn cách bằng ";"]
 
 【YẾU TỐ MÙA ẢNH HƯỞNG】
 ${seasonInfo ? `
@@ -327,12 +367,15 @@ NĂNG LƯỢNG SỐ:
 NGUYÊN TẮC BẮT BUỘC:
 ══════════════════════════════════════════════════════════════════════════
 - GIỮ NGUYÊN tất cả tiêu đề trong 【】
-- Mọi nhận định PHẢI nêu rõ: Quẻ nào, Hào nào, Ngũ hành nào
-- Dùng ngôn ngữ văn hóa Đông phương, dễ hiểu cho người bình thường
-- Cá nhân hóa theo tuổi ${patientContext.age} và giới tính ${patientContext.gender}
+- Luôn MỞ ĐẦU mỗi khối bằng câu trấn an, gần gũi ("ôm người đọc")
+- Chia nhỏ đoạn - KHÔNG viết đoạn dài 5-6 câu liền mạch
+- Dùng BẢNG THAY THẾ TỪ NGỮ ở trên - TUYỆT ĐỐI không dùng từ gây lo lắng
+- Khi dùng thuật ngữ Đông y → PHẢI giải thích ngay trong ngoặc
+- Cá nhân hóa theo tuổi ${patientContext.age} và giới tính ${patientContext.gender} (lồng vào phân tích, KHÔNG viết mục riêng)
+- Giọng điệu: ấm áp, gần gũi, như bác sĩ gia đình nói chuyện
 - KHÔNG thêm tiêu đề mới, KHÔNG bỏ sót mục nào
 - Luôn nhấn mạnh đây là triết học văn hóa, KHÔNG phải y tế chính thống
-- ⚠️ ĐỐI TƯỢNG HỎI: ${subjectContext.perspective}. Xưng hô và lời khuyên phải phù hợp với ngữ cảnh này.`;
+- ⚠️ ĐỐI TƯỢNG HỎI: ${subjectContext.perspective}. Xưng hô và lời khuyên phải phù hợp.`;
 }
 
 /**

@@ -100,13 +100,21 @@ ${anthropometricContext}
 **Cơ quan:** ${rawData.affectedOrgans.primary}, ${rawData.affectedOrgans.secondary}
 **Tháng:** ${currentMonth}
 
+PHONG CÁCH VIẾT BẮT BUỘC:
+- Mở đầu mỗi phần bằng 1 câu trấn an, gần gũi ("ôm người đọc")
+- Chia nhỏ đoạn, mỗi ý 2-3 câu. KHÔNG viết đoạn dài liền mạch.
+- KHÔNG dùng từ: "phức tạp", "viêm loét", "trào ngược", "nghiêm trọng", "nặng", "biến chứng"
+- Thay bằng: "dễ kéo dài", "kích ứng niêm mạc", "dịch vị lên cao", "cần chú ý", "cần lưu ý", "diễn tiến kéo dài"
+- Khi dùng thuật ngữ Đông y → giải thích ngay trong ngoặc. VD: "Tỳ (hệ tiêu hóa trung tâm)"
+- Giọng điệu: ấm áp, gần gũi, như bác sĩ gia đình nói chuyện
+
 Phân tích ngắn gọn theo 6 phần, mỗi phần 50-80 từ:
-1. TỔNG QUAN - Kết luận chính 
-2. CƠ CHẾ - Nguyên nhân từ quẻ
-3. TRIỆU CHỨNG - Biểu hiện cụ thể
-4. THỜI ĐIỂM - Tháng nào tốt/xấu
-5. XỬ LÝ NGAY - 3 điều cần làm
-6. PHÁC ĐỒ - Hướng điều trị dài hạn`
+1. TỔNG QUAN - Mô tả cảm giác cơ thể + mức độ + kết luận gọn
+2. CƠ CHẾ - Y học hiện đại (2 câu) + Đông y (2 câu, giải thích thuật ngữ)
+3. TRIỆU CHỨNG - Biểu hiện cụ thể bằng ngôn ngữ cảm giác
+4. THỜI ĐIỂM - Tháng nào thuận/nghịch, giải thích tại sao
+5. XỬ LÝ NGAY - 3 điều cụ thể, dễ làm, có lý do
+6. PHÁC ĐỒ - Chỉnh cả thân và tâm, hướng điều chỉnh từ gốc`
 }
 
 async function generateTextWithOpenAI(systemPrompt: string, userPrompt: string): Promise<string> {

@@ -23,7 +23,7 @@ B. Thể sinh Dụng = Cần chú ý
 
 C. Dụng khắc Thể = Cần quan tâm hơn
 - Triệu chứng đang tác động đến cơ thể
-- Tình trạng có xu hướng phức tạp nếu không xử lý, nhưng vẫn điều chỉnh được nếu kịp thời
+- Tình trạng có xu hướng kéo dài nếu không xử lý, nhưng vẫn điều chỉnh được nếu kịp thời
 
 D. Thể khắc Dụng = Trung bình
 - Cơ thể đang tự chống lại bệnh
@@ -56,9 +56,9 @@ E. Hòa (cùng hành) = Ổn định
 
 **Đánh giá quẻ biến:**
 - Quẻ biến tốt hơn quẻ chính → Đang cải thiện
-- Quẻ biến xấu hơn → Có xu hướng phức tạp nếu không điều chỉnh
-- KHÔNG dùng: "Bệnh sẽ nặng thêm", "Tình trạng xấu đi"
-- Nên dùng: "Cần điều chỉnh sớm để tránh phức tạp thêm"
+- Quẻ biến xấu hơn → Có xu hướng kéo dài nếu không điều chỉnh
+- KHÔNG dùng: "Bệnh sẽ nặng thêm", "Tình trạng xấu đi", "phức tạp"
+- Nên dùng: "Cần điều chỉnh sớm để giúp cơ thể ổn định sớm hơn"
 
 ## 4. MÙA VÀ KHÍ HẬU
 
@@ -113,8 +113,9 @@ E. Hòa (cùng hành) = Ổn định
 ## 7. XỬ LÝ QUẺ CỔ (Hào động nhiều)
 
 **Khi có >= 4 hào động:**
-- KHÔNG nói: "Bệnh mãn tính, âm ỉ, khó điều trị"
+- KHÔNG nói: "Bệnh mãn tính, âm ỉ, khó điều trị", "phức tạp", "nghiêm trọng"
 - Nên nói: "Tình trạng dễ kéo dài nếu không thay đổi lối sống, nhưng có thể cải thiện tốt khi xử lý đúng từ sớm"
+- Luôn mở đầu bằng câu trấn an trước khi phân tích
 
 **Đánh giá quẻ cổ:**
 - Nhiều hào động = Nhiều khía cạnh cần quan tâm

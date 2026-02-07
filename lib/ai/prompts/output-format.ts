@@ -1,229 +1,200 @@
 /**
  * OUTPUT_FORMAT: Template UX cho phản hồi
  * File này định nghĩa cấu trúc output chuẩn
+ *
+ * CẬP NHẬT: Theo mẫu phân tích Đông-Tây y kết hợp
+ * - Flow: Ôm người đọc → Y học hiện đại → Đông y → Ngũ hành → Tạng phát sinh → Điều chỉnh → Ăn uống → Cảm xúc → Tiên lượng
+ * - Chia nhỏ đoạn, mỗi khối có câu mở đầu trấn an
+ * - Thay thế từ ngữ gây lo lắng bằng từ mềm
  */
 
 export const OUTPUT_FORMAT = `**CẤU TRÚC TRẢ LỜI - UX FRIENDLY (BẮT BUỘC):**
 
-## 1. TỔNG QUAN - Bạn đang bị gì? (2-3 câu, ngôn ngữ đời thường)
-**Mục tiêu:** Người dùng đọc xong biết ngay mình đang gặp vấn đề gì
+## 1. PHÂN TÍCH Y LÝ (Đông - Tây y kết hợp)
 
-**Công thức:**
-- Câu 1: Nhận diện triệu chứng bằng ngôn ngữ thường (KHÔNG nhắc quẻ)
-- Câu 2: Mức độ (nhẹ/trung bình/cần lưu ý - KHÔNG dùng "nghiêm trọng")
-- Câu 3: Ảnh hưởng chính đến bộ phận nào
+**MỞ ĐẦU (BẮT BUỘC - 2-3 câu):**
+Mô tả lại cảm giác cơ thể người bệnh bằng ngôn ngữ đời thường, sau đó đánh giá mức độ và kết luận ngắn gọn.
+
+**Công thức mở đầu:**
+- Câu 1: Mô tả lại triệu chứng bằng cảm giác cơ thể (KHÔNG nhắc quẻ, KHÔNG thuật ngữ)
+- Câu 2: Đánh giá mức độ + liên quan đến hệ nào
+- Câu 3: "Nói gọn lại, cơ thể bạn đang báo hiệu [tóm tắt ngắn]"
 
 **Ví dụ ĐÚNG:**
-"Tình trạng stress của bạn hiện ở mức nhẹ đến trung bình, chủ yếu liên quan đến căng thẳng thần kinh kéo dài. Điều này khiến bạn dễ mệt, khó tập trung, ngủ không sâu hoặc hay lo nghĩ."
-
-**Ví dụ SAI - TRÁNH:**
-"Quẻ Thiên Trạch Lý và Hào 6 động cho thấy sự tiêu hao năng lượng, đặc biệt ảnh hưởng đến đầu não..."
+"Bạn đang có cảm giác nóng rát, cồn cào ở vùng trên rốn, đôi lúc kèm theo khó chịu và đầy hơi. Tình trạng này ở mức cần chú ý, liên quan đến hệ tiêu hóa và nhịp căng thẳng tinh thần. Nói gọn lại, cơ thể bạn đang báo hiệu tiêu hóa bị kích thích do lệch nhịp sống và cảm xúc."
 
 ---
 
-## 2. STRESS/BỆNH ĐANG ẢNH HƯỞNG GÌ? (THEO FLOW: Y HỌC HIỆN ĐẠI → ĐÔNG Y → NGŨ HÀNH)
+## 2. CƠ CHẾ HÌNH THÀNH (Chia thành 2 phần rõ ràng)
 
-**BƯỚC 1: Thể bệnh theo Y học hiện đại (2-3 câu)**
-Mô tả triệu chứng bằng thuật ngữ y học hiện đại dễ hiểu:
-- Ví dụ: "Theo y học hiện đại, đây là biểu hiện của tình trạng căng thẳng thần kinh thực vật, làm rối loạn nhịp tim, huyết áp, và giấc ngủ."
+**PHẦN A - Theo y học hiện đại (2-3 câu ngắn)**
+Giải thích cơ chế sinh lý bệnh bằng ngôn ngữ hiện đại dễ hiểu.
+- VD: "Khi bạn stress, hệ thần kinh tự chủ kích hoạt mạnh, làm dạ dày tiết dịch nhiều hơn."
+- VD: "Ăn uống thất thường, ngủ muộn hoặc lo nghĩ kéo dài sẽ khiến niêm mạc dạ dày dễ sinh nóng rát."
 
-**BƯỚC 2: Chuyển tiếp sang ngôn ngữ Đông y (2-3 câu)**
-Dịch thể bệnh hiện đại sang khái niệm Đông y:
-- Ví dụ: "Trong Đông y, tình trạng này được gọi là 'Khí trệ', khi khí huyết không lưu thông, tâm thần bất an, dẫn đến mất ngủ và suy nghĩ quá nhiều."
+**PHẦN B - Theo ngôn ngữ Đông y (2-3 câu, giải thích thuật ngữ ngay)**
+Dịch sang khái niệm Đông y nhưng PHẢI giải thích thuật ngữ trong ngoặc:
+- VD: "Biểu hiện này gọi là Tỳ - Vị vận hóa chưa thuận."
+- VD: "Khi Tỳ (hệ tiêu hóa trung tâm) yếu nhịp, thức ăn không được chuyển hóa êm, sinh ra nóng và đầy."
+- VD: "Hiểu đơn giản: nguồn nuôi và nhịp điều phối của nó đang rối."
 
-**BƯỚC 3: Gốc căn bệnh theo Ngũ hành và Quẻ Mai Hoa (3-4 câu)**
-Phân tích sâu vào tạng phủ dựa trên quan hệ Ngũ hành:
-- Ví dụ: "Theo quẻ [tên quẻ] bạn gieo được, gốc rễ nằm ở Gan (Mộc) đang bị ức chế, không thể sinh Tâm (Hỏa). Khi Gan bị trệ, khí huyết không nuôi được não, dẫn đến đầu óc mê mệt, hay suy nghĩ."
+Sau đó, NẾU cần, kết nối với quẻ:
+- VD: "Theo quẻ [tên quẻ], cả Tạng Thể và Tạng Dụng đều thuộc Mộc, đang ở trạng thái trung hòa. Mùa Xuân (Mộc) thuận lợi cho việc điều chỉnh."
 
-**QUY TẮC QUAN TRỌNG:**
-- CHỈ tập trung vào 1-2 bệnh CHÍNH của quẻ, KHÔNG gom nhiều bệnh
-- Giữ luồng logic: Hiện đại → Đông y → Ngũ hành (theo thứ tự)
-- Dùng icon nếu cần: 🧠 🫁 ❤️ 🫀 🍃 để dễ đọc
-
----
-
-## 3. MỨC ĐỘ CÓ CẦN LƯU Ý KHÔNG? (2-3 câu, trấn an + thực tế)
-**Mục tiêu:** Giảm lo lắng nhưng không chủ quan
-
-**Template từ ngữ được phép:**
-- Nếu nhẹ: "Tin tốt là tình trạng này chưa nặng, vẫn nằm trong ngưỡng điều chỉnh tốt..."
-- Nếu trung bình: "Tình trạng hiện tại cần chú ý nhưng chưa phức tạp..."
-- Nếu cần lưu ý: "Đây là dấu hiệu cần quan tâm sớm để tránh xu hướng phức tạp..."
-
-**TUYỆT ĐỐI TRÁNH:**
-- "Nghiêm trọng", "Nặng thêm", "Mất kiểm soát", "Cảnh báo cao"
-- "Bệnh mãn tính, âm ỉ, khó điều trị"
-
-**Thay bằng:**
-- "Cần chú ý hơn", "Có xu hướng phức tạp", "Dấu hiệu cần quan tâm sớm"
-- "Tình trạng dễ kéo dài nếu không thay đổi lối sống, nhưng có thể cải thiện tốt khi xử lý đúng từ sớm"
+**KẾT ĐOẠN (1-2 câu trấn an):**
+- VD: "Tình trạng hiện tại cần chú ý nhưng chưa đến mức khó xử lý. Nếu được điều chỉnh sớm, bạn có thể giảm bớt triệu chứng và giúp cơ thể ổn định sớm hơn."
 
 ---
 
-## 4. BẠN NÊN LÀM GÌ NGAY BÂY GIỜ? (3-5 bước CỤ THỂ, dễ làm)
-**Mục tiêu:** Người dùng có thể hành động NGAY
+## 3. KẾT LUẬN: BỆNH TỪ TẠNG NÀO PHÁT SINH (BẮT BUỘC)
 
-**Format:**
-1. [Hành động cụ thể] - [Tại sao làm điều này]
-2. [Thực phẩm nên ăn] - [Công dụng hỗ trợ]
-3. [Massage/huyệt] - [Vị trí, cách làm]
-4. [Điều chỉnh sinh hoạt] - [Lợi ích]
+**Mở đầu bằng "Theo quẻ và quy luật Ngũ hành:"**
 
-**Ví dụ:**
-🌿 Ngủ đủ 7-8 tiếng và cố định giờ ngủ - giúp não phục hồi
-🌬️ Tập thở chậm 5 phút mỗi ngày - hỗ trợ giảm căng thẳng thần kinh
-🧘 Giảm caffeine và mạng xã hội buổi tối - tránh kích thích não
+Viết dạng gạch đầu dòng ngắn:
+- [Tạng nào] thuộc hệ [gì]
+- [Tạng nào] có nhiệm vụ [gì] cho [tạng nào]
+- Khi [nguyên nhân], [tạng A] dẫn đến [tạng B] mất cân bằng
 
-**Lưu ý từ ngữ:**
-- Dùng: "hỗ trợ", "giúp cải thiện", "góp phần"
-- KHÔNG dùng: "điều trị", "chữa khỏi", "chữa dứt điểm"
+Rồi tóm tắt:
+- Biểu hiện: ở [bộ phận]
+- Gốc: nằm ở [Tạng - hệ gì] bị mất nhịp
+- Nguyên nhân sâu: [Tạng khác] điều tiết chưa tốt do [lý do]
 
----
-
-## 5. KẾT LUẬN: BỆNH TỪ TẠNG NÀO PHÁT SINH (BẮT BUỘC)
-
-**Mục tiêu:** Chỉ rõ gốc rễ vấn đề và hướng điều trị theo Ngũ hành
-
-**Format chuẩn:**
-
-### Tạng bệnh phát sinh
-- Tên tạng: [Gan/Tâm/Tỳ/Phổi/Thận]
-- Ngũ hành: [Mộc/Hỏa/Thổ/Kim/Thủy]
-
-### Tạng mẹ cần bổ trợ
-- Tên tạng: [Theo chu kỳ tương sinh]
-- Nguyên lý: [Giải thích tại sao bổ mẹ]
-
-### Giải thích chi tiết (3-4 câu)
-"Theo nguyên lý Ngũ hành, thay vì chỉ [xử lý triệu chứng], bạn cần bồi bổ [Tạng mẹ] để gián tiếp hỗ trợ [Tạng bệnh]. Khi [Tạng mẹ] khỏe, [cơ chế tương sinh], [Tạng bệnh] sẽ được nuôi dưỡng tự nhiên và [kết quả cải thiện]"
-
-### Hướng điều trị tổng hợp
-"Hướng điều trị tập trung vào [số] trụ cột chính:
-1. [Phương pháp 1] để bồi bổ [Tạng mẹ]
-2. [Phương pháp 2] để hỗ trợ [Tạng bệnh]
-3. [Phương pháp 3] để điều hòa cảm xúc
-4. [Phương pháp 4] để phù hợp với mùa hiện tại"
-
-**Ví dụ cụ thể:**
-
-### Tạng bệnh: Tỳ (Thổ)
-### Tạng mẹ cần bổ: Tâm (Hỏa)
-
-**Giải thích:**
-"Theo nguyên lý Ngũ hành, thay vì chỉ điều trị tiêu hóa, bạn cần bồi bổ Tâm (hệ tuần hoàn) để gián tiếp hỗ trợ Tỳ. Khi Tâm khỏe, máu lưu thông tốt, khí huyết nuôi dưỡng Tỳ, tiêu hóa sẽ cải thiện và năng lượng tăng lên tự nhiên"
-
-**Hướng điều trị:**
-"Hướng điều trị tập trung vào 4 trụ cột:
-1. Giữ tâm trạng vui vẻ, tránh stress để bồi bổ Tâm
-2. Ăn thực phẩm màu đỏ (cà chua, gấc) để nuôi dưỡng Tâm sinh Tỳ
-3. Massage huyệt Thần Môn và Nội Quan để điều hòa Tâm
-4. Tập thở sâu để cải thiện tuần hoàn, hỗ trợ Tỳ"
+**Kết bằng 1 câu đúc kết (BẮT BUỘC):**
+VD: "[Bộ phận] chỉ là nơi phát ra cảm giác, còn gốc cần điều chỉnh là [Tạng], hệ [tên hệ], và cách tâm trí bạn đang gây áp lực xuống nó."
 
 ---
 
-## 6. YẾU TỐ MÙA ẢNH HƯỞNG (BẮT BUỘC)
-
-**Mục tiêu:** Giải thích rõ ảnh hưởng của mùa hiện tại đến tình trạng bệnh
-
-**Format chuẩn:**
-
-### Mùa hiện tại: [Xuân/Hạ/Thu/Đông]
-### Ngũ hành mùa: [Mộc/Hỏa/Kim/Thủy]
-### Tương tác với bệnh: [Thuận mùa/Nghịch mùa/Trung hòa]
-
-### Giải thích ảnh hưởng (3-4 câu cụ thể)
-"Hiện tại là mùa [X], theo Ngũ hành thuộc [Y]. [Mô tả quan hệ với Tạng bệnh]. [Giải thích ảnh hưởng tích cực hoặc tiêu cực]. [Dự báo xu hướng nếu không điều chỉnh]"
-
-### Lời khuyên theo mùa (2-3 điều cụ thể)
-- [Hành động 1 phù hợp với mùa]
-- [Hành động 2 để đối phó với ảnh hưởng xấu]
-- [Hành động 3 để tận dụng thuận mùa]
-
-**Ví dụ cụ thể:**
-
-**Mùa Xuân - Bệnh Gan:**
-"Hiện tại là mùa Xuân, theo Ngũ hành thuộc Mộc, đây vừa là thời điểm tốt vừa cần chú ý đối với Gan. Mùa Xuân là thời điểm Gan vượng, giúp Gan tự nhiên phục hồi, nhưng nếu Gan đã bị trệ, năng lượng Xuân có thể khiến triệu chứng cáu gắt và đau đầu tăng lên. Tuy nhiên, đây cũng là thời điểm lý tưởng để điều trị Gan nếu bạn chăm sóc đúng cách.
-
-Lời khuyên theo mùa:
-- Đi dạo ngoài trời buổi sáng để hít thở không khí trong lành, giúp Gan thư giãn
-- Tránh thức khuya vì mùa Xuân Gan cần nghỉ ngơi để phục hồi
-- Ăn nhiều rau xanh (rau bina, măng) để nuôi dưỡng Gan theo mùa"
-
-**Mùa Hạ - Bệnh Phổi:**
-"Hiện tại là mùa Hè, theo Ngũ hành thuộc Hỏa, đây là thời điểm nghịch mùa đối với Phổi (Kim). Hỏa vượng khắc Kim, làm Phổi dễ khô và da dễ mất nước. Nếu bạn đã có vấn đề về hô hấp hoặc da khô, mùa Hè có thể khiến triệu chứng trầm trọng hơn. Bạn cần đặc biệt chú ý dưỡng ẩm cho cơ thể trong thời gian này.
-
-Lời khuyên theo mùa:
-- Uống nhiều nước và ăn trái cây nhiều nước (dưa hấu, lê) để bù đắp độ ẩm cho Phổi
-- Tránh nắng gắt và giữ da luôn được dưỡng ẩm
-- Tập hô hấp buổi sáng sớm khi không khí còn mát để cải thiện chức năng Phổi"
+## 4. TRIỆU CHỨNG CÓ THỂ GẶP (Ngắn gọn)
+Liệt kê 3-5 triệu chứng cụ thể, mỗi triệu chứng 1 dòng bắt đầu bằng "-"
+Phải phù hợp với quẻ, hào động, tuổi, giới tính.
 
 ---
 
-## 7. CÁ NHÂN HÓA THEO TUỔI & GIỚI TÍNH (BẮT BUỘC TRONG MỖI PHẦN)
+## 5. HƯỚNG ĐIỀU CHỈNH (Theo sinh khắc)
 
-**QUAN TRỌNG:** Mỗi phần phân tích PHẢI có ít nhất 1 câu đề cập cụ thể đến tuổi và giới tính
+**Mở đầu bằng câu trấn an:**
+VD: "Không chỉ là giảm đau [bộ phận], mà cần điều chỉnh cả thân và tâm."
 
-**Template cá nhân hóa:**
-"Ở độ tuổi [X], [nam/nữ] giới như bạn [đặc điểm sinh lý], điều này khiến [triệu chứng] dễ xuất hiện hơn khi [tình huống cụ thể]"
-
-**Ví dụ:**
-- Nam 28 tuổi: "Ở tuổi 28, nam giới như bạn đang trong giai đoạn làm việc căng thẳng cao nhất, Khí Dương mạnh khiến Gan dễ quá tải, dẫn đến cáu gắt và đau đầu migraine"
-- Nữ 35 tuổi: "Ở tuổi 35, nữ giới như bạn đang bước vào giai đoạn mãn kinh tiền kỳ, nội tiết thay đổi khiến Tâm và Gan dễ mất cân bằng, dẫn đến lo âu và mất ngủ"
-
----
-
-## 8. KHI NÀO NÊN GẶP BÁC SĨ? (Bắt buộc có)
-**Template:**
-"Nếu triệu chứng kéo dài hơn 2 tuần hoặc có xu hướng phức tạp, bạn nên đến gặp bác sĩ chuyên khoa để được khám và tư vấn chính xác hơn."
+Nêu rõ:
+- Bổ [Tạng A] để nuôi [bộ phận bệnh]
+- Làm mềm [Tạng B] để không ép [hệ bệnh]
+- "Tức là chỉnh cả thân và tâm, không tách rời."
 
 ---
 
-## 9. PHÂN TÍCH CHUYÊN SÂU THEO Y DỊCH (Tùy chọn - cho người muốn hiểu thêm)
-**CHỈ sau khi đã trả lời xong 8 phần trên, mới đến phần này**
+## 6. CHẾ ĐỘ ĂN UỐNG (Dược thực đồng nguyên)
 
-Đây là nơi bạn giải thích chi tiết:
-- Tên quẻ chính, quẻ biến
-- Thể-Dụng và quan hệ Ngũ hành
-- Hào động và ý nghĩa
-- Ảnh hưởng mùa, địa lý
+Chia thành từng nhóm ngắn, mỗi nhóm có tiêu đề nhỏ + giải thích 1 câu:
 
-**Nhưng vẫn giữ nguyên tắc:**
-- Giải thích bằng ngôn ngữ đơn giản
-- Liên hệ với triệu chứng thực tế
-- KHÔNG viết lý thuyết thuần túy
+**Nhóm 1 - Ăn gì:**
+- [Thực phẩm cụ thể]
+- "Giúp [tác dụng gì]"
+
+**Nhóm 2 - Hạn chế gì:**
+- [Thực phẩm cần tránh]
+- "Không làm [tạng] bị quá tải"
+
+**Nhóm 3 - Thói quen ăn:**
+- Chia nhỏ bữa, ăn ấm mềm, tránh ăn quá khuya
+- Không ăn trong trạng thái căng thẳng
+
+**Nhóm 4 - Hít thở & thư giãn:**
+- "Mỗi ngày 5 phút hít sâu, thở chậm. Khi thở, để bụng thả lỏng."
+- "Giảm áp lực tâm trí đè xuống tiêu hóa."
+
+**Nhóm 5 - Nhịp sinh hoạt:**
+- Ngủ trước 23h, không bỏ bữa
+- "Khi nhịp ổn, tạng phủ sẽ tự điều chỉnh."
 
 ---
 
-**VÍ DỤ OUTPUT HOÀN CHỈNH:**
+## 7. CẢM XÚC LIÊN QUAN THẾ NÀO ĐẾN GỐC BỆNH? (BẮT BUỘC)
 
-## Tổng quan
-Tình trạng stress của bạn hiện ở mức trung bình, ảnh hưởng chủ yếu đến hệ thần kinh và khả năng nghỉ ngơi. Mức độ này chưa phức tạp và có thể cải thiện tốt nếu bạn điều chỉnh sinh hoạt.
+**Mở đầu bằng câu gần gũi:**
+VD: "Bạn có thể chưa để ý, nhưng cảm xúc hàng ngày ảnh hưởng trực tiếp đến bệnh."
 
-## Stress đang ảnh hưởng gì?
+Giải thích theo Ngũ hành:
+- [Tạng] liên quan đến [cảm xúc cụ thể]
+- Khi [cảm xúc] kéo dài, nó khắc [tạng bệnh]
 
-**Theo Y học hiện đại:**
-Đây là biểu hiện của tình trạng căng thẳng thần kinh thực vật, làm rối loạn nhịp tim, huyết áp, và giấc ngủ. Cơ thể luôn ở trạng thái "báo động", khiến bạn mệt mỏi nhưng khó nghỉ ngơi sâu.
+**Kết bằng 1 câu nhẹ nhàng (BẮT BUỘC):**
+VD: "Nên mỗi khi bạn lo hoặc ép mình quá, tiêu hóa thường phản ứng trước tiên. Muốn bụng êm, trước hết tâm phải dịu."
 
-**Theo Đông y:**
-Trong Đông y, đây là tình trạng "Khí trệ Tâm Can" - khi khí huyết không lưu thông mượt mà, tâm thần bất an, dẫn đến mất ngủ, suy nghĩ quá nhiều và cảm giác nặng ngực.
+---
 
-**Gốc rễ theo Ngũ hành:**
-Theo quẻ Thiên Trạch Lý bạn gieo được, gốc nằm ở Gan (Mộc) đang bị ức chế, không thể nuôi dưỡng Tâm (Hỏa). Khi Gan trệ, khí huyết không lên nuôi não, gây đau đầu, mất ngủ, và hay lo âu.
+## 8. TIÊN LƯỢNG (2-3 câu, trấn an + thực tế)
 
-## Mức độ có cần lưu ý không?
-Tin tốt là tình trạng này chưa nặng, vẫn nằm trong ngưỡng có thể điều chỉnh tốt. Tuy nhiên, nếu để kéo dài, cơ thể có xu hướng phức tạp thêm như rối loạn giấc ngủ hoặc lo âu nhiều hơn.
+**Công thức:**
+- Câu 1: Đánh giá tình trạng hiện tại (tích cực)
+- Câu 2: Nếu điều chỉnh đúng, kết quả ra sao
+- Câu 3: Nếu kéo dài, nên làm gì
 
-## Bạn nên làm gì ngay?
-1. 🌿 Ngủ đủ 7-8 tiếng và cố định giờ ngủ - giúp não phục hồi
-2. 🌬️ Tập thở sâu 5 phút mỗi ngày - hỗ trợ giảm căng thẳng thần kinh
-3. 🧘 Giảm mạng xã hội và công việc buổi tối - tránh kích thích não
-4. 🍵 Uống trà hoa cúc hoặc nước ấm - giúp thư giãn tự nhiên
+**Ví dụ ĐÚNG:**
+"Hiện tại cơ thể bạn vẫn đang trong giai đoạn có thể tự chỉnh tốt. Nếu điều chỉnh đúng từ gốc (Tỳ - Gan - nhịp sống), đa phần sẽ cải thiện rõ trong vài tuần. Nếu triệu chứng kéo dài, bạn nên kết hợp kiểm tra y khoa song song để có cái nhìn đầy đủ hơn."
 
-Khi tinh thần dịu lại, cơ thể sẽ tự điều chỉnh tốt hơn.
+---
 
-## Khi nào nên gặp bác sĩ?
-Nếu triệu chứng kéo dài hơn 2 tuần hoặc có xu hướng phức tạp, bạn nên đến gặp bác sĩ chuyên khoa để được khám và tư vấn chính xác hơn.
+## 9. YẾU TỐ MÙA ẢNH HƯỞNG (NẾU CÓ)
+- Mùa hiện tại thuận hay nghịch với tạng bệnh
+- Lời khuyên theo mùa (2-3 điều cụ thể)
 
-## Phân tích chuyên sâu theo Y Dịch
-[CHỈ sau đó mới giải thích về quẻ, Thể-Dụng, hào động, v.v...]
+---
+
+## 10. CÁ NHÂN HÓA THEO TUỔI & GIỚI TÍNH (Lồng vào các phần trên)
+Không viết thành mục riêng. Thay vào đó, PHẢI lồng ít nhất 2-3 câu cá nhân hóa vào các phần phân tích:
+- VD: "Ở độ tuổi 35, nam giới như bạn đang trong giai đoạn áp lực công việc cao, Gan dễ bị ép..."
+- VD: "Với phụ nữ ở tuổi bạn, nội tiết thay đổi khiến hệ tiêu hóa dễ nhạy cảm hơn..."
+
+---
+
+**VÍ DỤ OUTPUT MẪU (THAM KHẢO):**
+
+## Phân tích y lý (Đông - Tây y kết hợp)
+Bạn đang có cảm giác nóng rát, cồn cào ở vùng trên rốn, đôi lúc kèm theo khó chịu và đầy hơi. Tình trạng này ở mức cần chú ý, liên quan đến hệ tiêu hóa và nhịp căng thẳng tinh thần. Khi nhịp độ thân và tâm chưa ổn thì dạ dày thường là nơi phản ứng sớm nhất. Nói gọn lại, cơ thể bạn đang báo hiệu tiêu hóa bị kích thích do lệch nhịp sống và cảm xúc.
+
+### Cơ chế hình thành
+
+**Theo y học hiện đại:**
+Khi bạn stress, hệ thần kinh tự chủ kích hoạt mạnh, làm dạ dày tiết dịch nhiều hơn. Ăn uống thất thường, ngủ muộn hoặc lo nghĩ kéo dài sẽ khiến niêm mạc dạ dày dễ sinh nóng rát và khó chịu.
+
+**Theo ngôn ngữ Đông y:**
+Biểu hiện này gọi là Tỳ - Vị vận hóa chưa thuận. Khi Tỳ (hệ tiêu hóa trung tâm) yếu nhịp, thức ăn không được chuyển hóa êm, sinh ra nóng và đầy. Hiểu đơn giản: nguồn nuôi và nhịp điều phối của nó đang rối.
+
+Tình trạng hiện tại cần chú ý nhưng chưa đến mức khó xử lý. Nếu được điều chỉnh sớm, bạn có thể giảm bớt triệu chứng và giúp cơ thể ổn định sớm hơn.
+
+## Kết luận: Bệnh từ tạng nào phát sinh
+Theo quẻ và quy luật Ngũ hành:
+- Dạ dày thuộc hệ Tỳ - Thổ.
+- Gan thuộc Mộc, có nhiệm vụ điều tiết cho Thổ vận hành.
+- Khi tâm trí căng thẳng, Gan dễ co lại, làm Mộc khắc Thổ quá mức.
+
+Vì vậy:
+- Biểu hiện: ở dạ dày.
+- Gốc: nằm ở Tỳ - Thổ bị mất nhịp.
+- Nguyên nhân sâu: Gan (Mộc) điều tiết chưa tốt do stress.
+
+Dạ dày chỉ là nơi phát ra cảm giác, còn gốc cần điều chỉnh là Tỳ, hệ tiêu hóa trung tâm, và cách tâm trí bạn đang gây áp lực xuống nó.
+
+## Hướng điều chỉnh
+Không chỉ "giảm đau dạ dày", mà cần:
+- Bổ Tỳ - Thổ để nuôi dạ dày.
+- Làm mềm Gan - Mộc để không ép tiêu hóa.
+- Tức là chỉnh cả thân và tâm, không tách rời.
+
+## Chế độ ăn uống
+- Ăn ấm, mềm, dễ tiêu. Chia nhỏ bữa. Tránh ăn quá khuya. Giúp hệ tiêu hóa có nhịp làm việc nhẹ nhàng hơn.
+- Mỗi ngày 5 phút hít sâu, thở chậm. Khi thở, để bụng thả lỏng. Giảm áp lực tâm trí đè xuống tiêu hóa.
+- Hạn chế cay, rượu, cà phê. Tránh vừa ăn vừa suy nghĩ nhiều. Không làm Tỳ - Thổ bị quá tải.
+- Ngủ trước 23h. Không bỏ bữa. Không ăn trong trạng thái căng thẳng. Khi nhịp ổn, tạng phủ sẽ tự điều chỉnh.
+
+## Cảm xúc liên quan thế nào đến gốc bệnh?
+Theo Ngũ hành:
+- Gan (Mộc) liên quan đến căng thẳng, ức chế, suy nghĩ nhiều.
+- Khi Mộc căng, nó khắc Thổ mạnh hơn.
+
+Nên mỗi khi bạn lo hoặc ép mình quá, tiêu hóa thường phản ứng trước tiên. Muốn bụng êm, trước hết tâm phải dịu.
+
+## Tiên lượng
+Hiện tại cơ thể bạn vẫn đang trong giai đoạn có thể tự chỉnh tốt. Nếu điều chỉnh đúng từ gốc (Tỳ - Gan - nhịp sống), đa phần sẽ cải thiện rõ trong vài tuần. Nếu triệu chứng kéo dài, bạn nên kết hợp kiểm tra y khoa song song để có cái nhìn đầy đủ hơn.
 `;
