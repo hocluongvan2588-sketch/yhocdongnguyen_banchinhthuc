@@ -2,6 +2,7 @@ import { generateText } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 import { createGroq } from '@ai-sdk/groq';
 import { buildUnifiedMedicalPrompt, UNIFIED_MEDICAL_CONFIG } from '@/lib/prompts/unified-medical.prompt';
+import { buildDynamicPrompt } from '@/lib/ai/dynamic-prompt-builder';
 import {
   buildJsonFormatterPrompt,
   JSON_FORMATTER_CONFIG,
@@ -330,8 +331,17 @@ export async function POST(req: Request) {
       namDuocInfo: undefined, // Sẽ bổ sung khi có NamDuocEngine
     };
 
-    const userPrompt = buildUnifiedMedicalPrompt(unifiedPromptInput);
-    console.log(`[v0] Built unified expert prompt, length: ${userPrompt.length} chars`);
+    // Thử load prompt từ database trước, fallback về hardcoded prompt
+    let userPrompt: string;
+    try {
+      console.log('[v0] Attempting to load dynamic prompt from database...');
+      userPrompt = await buildDynamicPrompt('diagnosis', unifiedPromptInput);
+      console.log(`[v0] ✅ Loaded dynamic prompt from database, length: ${userPrompt.length} chars`);
+    } catch (error) {
+      console.log('[v0] ⚠️ Failed to load dynamic prompt, using hardcoded fallback:', error);
+      userPrompt = buildUnifiedMedicalPrompt(unifiedPromptInput);
+      console.log(`[v0] Built hardcoded unified prompt, length: ${userPrompt.length} chars`);
+    }
 
     let layer1Result;
     const MAX_RETRIES = 2;

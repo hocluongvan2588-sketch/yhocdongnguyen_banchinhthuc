@@ -19,6 +19,7 @@ import {
   Pill,
   CreditCard,
   BookOpen,
+  BrainCircuit,
 } from 'lucide-react';
 
 interface AdminSidebarProps {
@@ -33,6 +34,7 @@ const menuItems = [
   { href: '/admin/solutions', label: 'Gói dịch vụ', icon: Package },
   { href: '/admin/medicine', label: 'Bài thuốc Đông y', icon: Pill },
   { href: '/admin/knowledge', label: 'Kiến thức AI', icon: BookOpen },
+  { href: '/admin/prompts', label: 'Prompts AI', icon: BrainCircuit },
   { href: '/admin/settings', label: 'Cài đặt', icon: Settings },
 ];
 
