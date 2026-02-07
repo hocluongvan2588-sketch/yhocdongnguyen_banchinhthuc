@@ -720,7 +720,32 @@ function ResultsContent() {
                   </div>
                 )}
 
-                {/* Gợi ý dịch vụ chuyên sâu - 2 gói chính */}
+                {/* === KHỐI CHUYỂN TIẾP: Từ phân tích → Hành động === */}
+                <div className="rounded-xl border border-primary/20 bg-gradient-to-b from-background to-primary/5 p-5 space-y-4">
+                  <h3 className="text-lg font-bold text-foreground leading-snug">
+                    Bạn đã thấy rõ gốc tạng và chiều lệch khí.
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Nếu chỉ dừng ở việc &ldquo;biết&rdquo;, cơ thể vẫn sẽ tự vận hành theo quán tính cũ. 
+                    Khí huyết lệch lâu sẽ khó hồi. Bước quan trọng nhất lúc này là can thiệp đúng chỗ, đúng thời điểm.
+                  </p>
+                  <div className="flex flex-col gap-1.5 pl-4 border-l-2 border-primary/30">
+                    <p className="text-sm text-foreground">
+                      <span className="font-semibold">Thông khí</span> &mdash; để không ứ
+                    </p>
+                    <p className="text-sm text-foreground">
+                      <span className="font-semibold">Điều tạng</span> &mdash; để không lệch
+                    </p>
+                    <p className="text-sm text-foreground">
+                      <span className="font-semibold">Dẫn khí</span> &mdash; để không tái
+                    </p>
+                  </div>
+                  <p className="text-xs text-primary/80 italic">
+                    Điều chỉnh sớm giúp cơ thể tự cân bằng nhanh hơn, tránh tình trạng kéo dài.
+                  </p>
+                </div>
+
+                {/* === LỘ TRÌNH ĐIỀU CHỈNH THEO QUẺ === */}
                 {aiAnalysis.serviceRecommendations && (
                   <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-4">
                     {(() => {
@@ -736,15 +761,15 @@ function ResultsContent() {
                       
                       return (
                         <>
-                          <h3 className="mb-4 flex items-center gap-2 text-base font-semibold text-foreground">
+                          <h3 className="mb-2 flex items-center gap-2 text-base font-semibold text-foreground">
                             <Sparkles className="h-5 w-5 text-primary" />
-                            Gợi ý dịch vụ chuyên sâu
-                            <span className="text-xs font-normal text-muted-foreground ml-2">
-                              (Dựa trên tiên lượng và tình trạng)
-                            </span>
+                            Lộ trình điều chỉnh theo quẻ
                           </h3>
+                          <p className="text-xs text-muted-foreground mb-4">
+                            Mỗi gói giải quyết một phần khác nhau của quẻ &mdash; chọn theo nhu cầu của bạn
+                          </p>
                           <div className="grid gap-3 md:grid-cols-2">
-                            {/* Bài thuốc Đông y */}
+                            {/* Bài thuốc Đông y - Bồi bổ tạng phủ */}
                             <div className={`rounded-lg border p-3 flex flex-col ${
                               smartRecommendations.herbalMedicine.recommended 
                                 ? smartRecommendations.herbalMedicine.priority === 'high'
@@ -752,13 +777,13 @@ function ResultsContent() {
                                   : 'border-green-500/30 bg-green-500/5'
                                 : 'border-border/50 bg-muted/20 opacity-60'
                             }`}>
-                              <div className="flex items-center gap-2 mb-2">
+                              <div className="flex items-center gap-2 mb-1">
                                 <Pill className={`h-5 w-5 ${
                                   smartRecommendations.herbalMedicine.recommended 
                                     ? 'text-green-600' 
                                     : 'text-muted-foreground'
                                 }`} />
-                                <h4 className="font-semibold text-sm text-foreground">Bài thuốc Đông y</h4>
+                                <h4 className="font-semibold text-sm text-foreground">Gói Nam Dược</h4>
                                 {smartRecommendations.herbalMedicine.recommended && (
                                   <Badge className={`ml-auto text-xs ${
                                     smartRecommendations.herbalMedicine.priority === 'high' 
@@ -769,28 +794,31 @@ function ResultsContent() {
                                   </Badge>
                                 )}
                               </div>
-                              <p className="text-xs text-muted-foreground mb-1">
-                                {smartRecommendations.herbalMedicine.reason}
+                              <Badge variant="outline" className="w-fit text-[10px] mb-2 bg-transparent border-green-500/30 text-green-700">
+                                Bồi bổ tạng phủ &bull; Điều chỉnh sâu
+                              </Badge>
+                              <p className="text-xs text-muted-foreground mb-1 leading-relaxed">
+                                Bài thảo dược được pha chế riêng theo ngũ hành cá nhân, hỗ trợ bồi bổ tạng gốc và điều hòa toàn diện. Phù hợp khi cần điều chỉnh sâu về tạng phủ.
                               </p>
-                              {smartRecommendations.herbalMedicine.recommended && (
+                              {smartRecommendations.herbalMedicine.recommended && smartRecommendations.herbalMedicine.detailedReason && (
                                 <p className="text-xs text-green-700 italic flex-grow">
                                   {smartRecommendations.herbalMedicine.detailedReason}
                                 </p>
                               )}
                               {smartRecommendations.herbalMedicine.recommended && (
                                 <Button
-  size="sm"
-  variant="outline"
-  className="mt-3 w-full border-green-500/50 text-green-700 hover:bg-green-500/10 bg-transparent"
-  onClick={() => handleOpenPayment(1)}
-  >
-  <Pill className="mr-1.5 h-3.5 w-3.5" />
-  Xem bài thuốc phù hợp
-  </Button>
+                                  size="sm"
+                                  variant="outline"
+                                  className="mt-3 w-full border-green-500/50 text-green-700 hover:bg-green-500/10 bg-transparent"
+                                  onClick={() => handleOpenPayment(1)}
+                                >
+                                  <Pill className="mr-1.5 h-3.5 w-3.5" />
+                                  Chọn lộ trình này
+                                </Button>
                               )}
                             </div>
 
-                            {/* Huyệt vị */}
+                            {/* Huyệt vị - Thông khí */}
                             <div className={`rounded-lg border p-3 flex flex-col ${
                               smartRecommendations.acupressure.recommended 
                                 ? smartRecommendations.acupressure.priority === 'high'
@@ -798,13 +826,13 @@ function ResultsContent() {
                                   : 'border-blue-500/30 bg-blue-500/5'
                                 : 'border-border/50 bg-muted/20 opacity-60'
                             }`}>
-                              <div className="flex items-center gap-2 mb-2">
+                              <div className="flex items-center gap-2 mb-1">
                                 <Target className={`h-5 w-5 ${
                                   smartRecommendations.acupressure.recommended 
                                     ? 'text-blue-600' 
                                     : 'text-muted-foreground'
                                 }`} />
-                                <h4 className="font-semibold text-sm text-foreground">Huyệt vị bấm/châm</h4>
+                                <h4 className="font-semibold text-sm text-foreground">Gói Khai Huyệt</h4>
                                 {smartRecommendations.acupressure.recommended && (
                                   <Badge className={`ml-auto text-xs ${
                                     smartRecommendations.acupressure.priority === 'high' 
@@ -815,10 +843,13 @@ function ResultsContent() {
                                   </Badge>
                                 )}
                               </div>
-                              <p className="text-xs text-muted-foreground mb-1">
-                                {smartRecommendations.acupressure.reason}
+                              <Badge variant="outline" className="w-fit text-[10px] mb-2 bg-transparent border-blue-500/30 text-blue-700">
+                                Thông khí &bull; Giảm ứ trệ
+                              </Badge>
+                              <p className="text-xs text-muted-foreground mb-1 leading-relaxed">
+                                Tác động trực tiếp vào kinh lạc liên quan đến tạng chủ trong quẻ, giúp thông khí huyết, giảm uất trệ và hỗ trợ cơ thể tự hồi phục nhanh hơn.
                               </p>
-                              {smartRecommendations.acupressure.recommended && (
+                              {smartRecommendations.acupressure.recommended && smartRecommendations.acupressure.detailedReason && (
                                 <p className="text-xs text-blue-700 italic flex-grow">
                                   {smartRecommendations.acupressure.detailedReason}
                                 </p>
@@ -833,7 +864,7 @@ function ResultsContent() {
                   </div>
                 )}
                 
-                {/* Gói bổ trợ: Tượng Số Bát Quái - Luôn hiển thị cho mọi quẻ */}
+                {/* Gói bổ trợ: Tượng Số Bát Quái - Điều tạng / Cân bằng năng lượng */}
                 <div className="rounded-lg border border-purple-500/30 bg-gradient-to-br from-purple-500/5 to-purple-500/10 p-4">
                   {(() => {
                     const affectedOrgan = aiAnalysis?.treatmentOrigin?.affectedOrgan || '';
@@ -841,19 +872,20 @@ function ResultsContent() {
                     
                     return (
                       <>
-                        <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center justify-between mb-2">
                           <h3 className="flex items-center gap-2 text-base font-semibold text-foreground">
                             <Zap className="h-5 w-5 text-purple-600" />
-                            Gói bổ trợ: Tượng Số Bát Quái
+                            Gói Tượng Số Bát Quái
                           </h3>
                           <Badge variant="outline" className="bg-purple-500/10 text-purple-700 border-purple-500/30">
-                            Bổ trợ song song
+                            Điều tạng &bull; Cân bằng năng lượng
                           </Badge>
                         </div>
                         
                         <p className="text-sm text-muted-foreground mb-4">
-                          Liệu pháp niệm số kết hợp với 2 gói chính để tăng cường hiệu quả điều trị. 
-                          Có thể sử dụng độc lập hoặc song song với bài thuốc/bấm huyệt.
+                          Dựa trên quẻ cá nhân để xây dựng nhịp thở &ndash; thiền &ndash; tần số cân bằng năng lượng, 
+                          giúp ổn định thần kinh, điều hòa cảm xúc và tăng hiệu quả điều chỉnh tạng phủ. 
+                          Phù hợp khi muốn điều chỉnh sâu nhưng nhẹ nhàng, có thể dùng mỗi ngày.
                         </p>
                         
                         <div className="rounded-lg border border-purple-500/20 bg-background/50 p-4">
@@ -893,7 +925,7 @@ function ResultsContent() {
                                 onClick={() => handleOpenPayment(3)}
                               >
                                 <Sparkles className="mr-2 h-4 w-4" />
-                                Mở khóa hướng dẫn chi tiết
+                                Chọn lộ trình này
                               </Button>
                             </div>
                           </div>
