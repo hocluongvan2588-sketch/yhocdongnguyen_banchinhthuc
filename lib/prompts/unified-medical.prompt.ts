@@ -157,7 +157,7 @@ Họ đang hỏi về sức khỏe của ${subjectContext.label}.
 Khi phân tích, hãy xưng hô đúng ngôi vị (ví dụ: "cha bạn", "mẹ bạn", "con bạn"...).
 Lời khuyên nên hướng đến cả người hỏi (cách chăm sóc) VÀ người bệnh (cách tự chăm sóc).` : ''}
 
-══════════════════════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════��══════════════════
 THÔNG TIN NGƯỜI BỆNH (${subjectContext.label})
 ══════════════════════════════════════════════════════════════════════════
 - Giới tính: ${patientContext.gender}
@@ -349,19 +349,29 @@ ${seasonInfo ? `
 - GIẢI THÍCH: [Giải thích tác động của mùa lên tình trạng bệnh - 1-2 câu]
 `}
 
-【GỢI Ý DỊCH VỤ CHUYÊN SÂU】
+【TỪ LUẬN GIẢI ĐẾN HÀNH ĐỘNG】
 
-BÀI THUỐC ĐÔNG Y:
-- Khuyến nghị: [Có/Không]
-- Lý do: [từ quẻ - quan hệ Thể-Dụng hoặc vị trí Hào]
+Viết 2-3 câu "bắc cầu" từ phân tích sang hành động. Công thức:
+- Câu 1: "Quẻ đã cho thấy [tóm tắt gốc vấn đề]."
+- Câu 2: "Nếu chỉ dừng ở việc biết, cơ thể vẫn vận hành theo quán tính cũ. Bước quan trọng nhất lúc này là can thiệp đúng chỗ."
+- Câu 3: "Thông khí — để không ứ. Điều tạng — để không lệch. Dẫn khí — để không tái."
 
-HUYỆT VỊ BẤM/CHÂM:
-- Khuyến nghị: [Có/Không]
-- Lý do: [từ quẻ - vị trí Hào hoặc triệu chứng]
+Sau đó gợi ý 3 lộ trình (VIẾT THEO LỢI ÍCH, không liệt kê tính năng):
 
-NĂNG LƯỢNG SỐ:
+GÓI KHAI HUYỆT (Thông khí - Giảm ứ trệ):
 - Khuyến nghị: [Có/Không]
-- Lý do: [từ quẻ - quan hệ hoặc cảm xúc]
+- Mô tả lợi ích: "Tác động trực tiếp vào kinh lạc liên quan đến tạng chủ trong quẻ, giúp thông khí huyết, giảm uất trệ và hỗ trợ cơ thể tự hồi phục nhanh hơn. Phù hợp khi muốn xử lý ngay phần khí – thần – huyết bên trong."
+- Lý do từ quẻ: [1 câu liên kết với vị trí Hào hoặc triệu chứng]
+
+GÓI TƯỢNG SỐ BÁT QUÁI (Điều tạng - Cân bằng năng lượng):
+- Khuyến nghị: [Có/Không]
+- Mô tả lợi ích: "Dựa trên quẻ cá nhân để xây dựng nhịp thở – thiền – tần số cân bằng năng lượng, giúp ổn định thần kinh, điều hòa cảm xúc và tăng hiệu quả điều chỉnh tạng phủ. Phù hợp khi muốn điều chỉnh sâu nhưng nhẹ nhàng, có thể dùng mỗi ngày."
+- Lý do từ quẻ: [1 câu liên kết với quan hệ Thể-Dụng hoặc cảm xúc]
+
+GÓI NAM DƯỢC (Bồi bổ tạng phủ - Điều chỉnh sâu):
+- Khuyến nghị: [Có/Không]
+- Mô tả lợi ích: "Áp dụng khi cần điều chỉnh sâu về tạng phủ. Bài thảo dược được pha chế riêng theo ngũ hành cá nhân, hỗ trợ bồi bổ tạng gốc và điều hòa toàn diện."
+- Lý do từ quẻ: [1 câu liên kết với quan hệ Thể-Dụng]
 
 ══════════════════════════════════════════════════════════════════════════
 NGUYÊN TẮC BẮT BUỘC:
