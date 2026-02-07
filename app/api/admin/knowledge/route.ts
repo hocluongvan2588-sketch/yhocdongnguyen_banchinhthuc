@@ -4,23 +4,38 @@ import { createClient } from '@/lib/supabase/server';
 // GET - Lấy danh sách tất cả tài liệu
 export async function GET(request: NextRequest) {
   try {
+    console.log('[v0] GET /api/admin/knowledge - Starting request');
     const supabase = await createClient();
+    console.log('[v0] Supabase client created successfully');
 
     // Check admin
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError) {
+      console.error('[v0] Auth error:', authError);
+      return NextResponse.json({ error: 'Auth failed' }, { status: 401 });
+    }
     if (!user) {
+      console.log('[v0] No user found');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    console.log('[v0] User authenticated:', user.id);
 
-    const { data: userProfile } = await supabase
+    const { data: userProfile, error: profileError } = await supabase
       .from('users')
       .select('role')
       .eq('id', user.id)
       .single();
 
+    if (profileError) {
+      console.error('[v0] Error fetching user profile:', profileError);
+      return NextResponse.json({ error: 'Profile fetch failed' }, { status: 500 });
+    }
+
     if (userProfile?.role !== 'admin') {
+      console.log('[v0] User is not admin:', userProfile?.role);
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
+    console.log('[v0] User is admin, fetching documents...');
 
     // Fetch all documents
     const { data, error } = await supabase
@@ -28,12 +43,19 @@ export async function GET(request: NextRequest) {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      console.error('[v0] Database error fetching documents:', error);
+      throw error;
+    }
 
-    return NextResponse.json(data);
+    console.log('[v0] Successfully fetched', data?.length || 0, 'documents');
+    return NextResponse.json(data || []);
   } catch (error) {
     console.error('[v0] Error fetching knowledge documents:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Failed to fetch documents',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
 }
 
