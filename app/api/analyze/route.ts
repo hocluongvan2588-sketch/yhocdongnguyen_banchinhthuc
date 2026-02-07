@@ -1,7 +1,6 @@
 import { generateText } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 import { createGroq } from '@ai-sdk/groq';
-import { SYSTEM_INSTRUCTION } from '@/lib/ai/prompts/system-instruction';
 import { buildUnifiedMedicalPrompt, UNIFIED_MEDICAL_CONFIG } from '@/lib/prompts/unified-medical.prompt';
 import {
   buildJsonFormatterPrompt,
@@ -275,38 +274,64 @@ export async function POST(req: Request) {
       pronoun: subjectInfo.pronoun
     });
 
-    // Build user prompt với context đầy đủ + KHÓA THÔNG TIN CÁ NHÂN
-    const userPrompt = `
-# ═══════════════════════════════════════════════════════════
-# THÔNG TIN BỆNH NHÂN (BẮT BUỘC TUÂN THỦ - KHÔNG ĐƯỢC THAY ĐỔI)
-# ═══════════════════════════════════════════════════════════
-- Đối tượng hỏi: ${subjectInfo.label}
-- Giới tính BỆNH NHÂN: ${genderText} (KHÔNG ĐƯỢC NHẦM)
-- Tuổi BỆNH NHÂN: ${ageText} (KHÔNG ĐƯỢC NHẦM)
-- Cách xưng hô: "${subjectInfo.pronoun}"
-- Câu hỏi: ${patientContext.question || 'Chẩn đoán tổng quát'}
+    // ═══════════════════════════════════════════════════════════
+    // XÂY DỰNG PROMPT CHUYÊN GIA TỪ buildUnifiedMedicalPrompt
+    // ═══════════════════════════════════════════════════════════
+    const unifiedPromptInput = {
+      patientContext: {
+        gender: genderText,
+        age: patientContext.age || 30,
+        subject: subject,
+        question: patientContext.question || 'Chẩn đoán tổng quát',
+      },
+      maihua: {
+        mainHexagram: { name: maihua.mainHexagram?.name || 'N/A' },
+        changedHexagram: { name: maihua.changedHexagram?.name || 'N/A' },
+        mutualHexagram: { name: maihua.mutualHexagram?.name || 'N/A' },
+        movingLine: maihua.movingLine || 1,
+        interpretation: {
+          health: maihua.interpretation?.health || '',
+          trend: maihua.interpretation?.trend || '',
+          mutual: maihua.interpretation?.mutual || '',
+        },
+      },
+      diagnostic: {
+        mapping: {
+          upperTrigram: {
+            name: diagnostic.mapping?.upperTrigram?.name || '',
+            element: diagnostic.mapping?.upperTrigram?.element || '',
+            primaryOrgans: diagnostic.mapping?.upperTrigram?.primaryOrgans || [],
+          },
+          lowerTrigram: {
+            name: diagnostic.mapping?.lowerTrigram?.name || '',
+            element: diagnostic.mapping?.lowerTrigram?.element || '',
+            primaryOrgans: diagnostic.mapping?.lowerTrigram?.primaryOrgans || [],
+          },
+          movingYao: {
+            name: diagnostic.mapping?.movingYao?.name || '',
+            position: diagnostic.mapping?.movingYao?.position || maihua.movingLine || 1,
+            bodyLevel: diagnostic.mapping?.movingYao?.bodyLevel || '',
+            anatomy: diagnostic.mapping?.movingYao?.anatomy || [],
+            organs: diagnostic.mapping?.movingYao?.organs || [],
+            clinicalSignificance: diagnostic.mapping?.movingYao?.clinicalSignificance || '',
+          },
+        },
+        expertAnalysis: {
+          tiDung: {
+            ti: { element: diagnostic.expertAnalysis?.tiDung?.ti?.element || '' },
+            dung: { element: diagnostic.expertAnalysis?.tiDung?.dung?.element || '' },
+            relation: diagnostic.expertAnalysis?.tiDung?.relation || '',
+            severity: diagnostic.expertAnalysis?.tiDung?.severity || 'trung bình',
+            prognosis: diagnostic.expertAnalysis?.tiDung?.prognosis || '',
+          },
+        },
+      },
+      seasonInfo,
+      namDuocInfo: undefined, // Sẽ bổ sung khi có NamDuocEngine
+    };
 
-⚠️ CẢNH BÁO: Bạn PHẢI sử dụng đúng giới tính "${genderText}" và tuổi "${ageText}" trong TOÀN BỘ phân tích. Nếu viết sai giới tính hoặc tuổi, toàn bộ phân tích sẽ VÔ GIÁ TRỊ.
-
-# KẾT QUẢ GIEO QUẺ
-- Quẻ chính: ${maihua.mainHexagram?.name || 'N/A'}
-- Quẻ biến: ${maihua.changedHexagram?.name || 'N/A'}
-- Hào động: Hào ${maihua.movingLine || 1}
-- Vị trí cơ thể: ${diagnostic.mapping?.movingYao?.anatomy?.join(', ') || 'N/A'}
-
-# PHÂN TÍCH NGŨ HÀNH
-- Tạng Thể (cơ thể): ${diagnostic.expertAnalysis?.tiDung?.ti?.element || 'N/A'}
-- Tạng Dụng (bệnh): ${diagnostic.expertAnalysis?.tiDung?.dung?.element || 'N/A'}
-- Quan hệ: ${diagnostic.expertAnalysis?.tiDung?.relation || 'N/A'}
-- Mức độ: ${diagnostic.expertAnalysis?.tiDung?.severity || 'trung bình'}
-
-# TIẾT KHÍ HIỆN TẠI
-- Tiết khí: ${seasonInfo.tietKhi.name}
-- Mùa: ${seasonInfo.tietKhi.season}
-- Ngũ hành mùa: ${seasonInfo.tietKhi.element}
-- Quan hệ với bệnh: ${seasonInfo.seasonAnalysis.relation}
-
-Hãy phân tích theo cấu trúc UX-friendly đã được hướng dẫn.`;
+    const userPrompt = buildUnifiedMedicalPrompt(unifiedPromptInput);
+    console.log(`[v0] Built unified expert prompt, length: ${userPrompt.length} chars`);
 
     let layer1Result;
     const MAX_RETRIES = 2;
@@ -317,11 +342,10 @@ Hãy phân tích theo cấu trúc UX-friendly đã được hướng dẫn.`;
         layer1Result = await generateText({
           model: openai('gpt-4o'),
           messages: [
-            { role: 'system', content: SYSTEM_INSTRUCTION },
             { role: 'user', content: userPrompt }
           ],
           temperature: 0.5,
-          maxTokens: 2000, // Tăng lên để đủ cho format UX mới
+          maxTokens: 4000, // Prompt chuyên gia cần output dài và chi tiết
         });
         
         // Kiểm tra response có đủ dài không
@@ -404,7 +428,7 @@ Hãy phân tích theo cấu trúc UX-friendly đã được hướng dẫn.`;
       model: 'llama-3.3-70b-versatile',
       prompt: jsonFormatterPrompt,
       temperature: 0.05, // Cực thấp để tăng tính deterministic
-      maxTokens: 2600, // Tăng từ 2000 để tránh sát trần khi explanation dài
+      maxTokens: 4000, // Tăng để chứa đủ explanation chi tiết từ prompt chuyên gia
     });
 
     const layer2Time = Date.now() - layer2Start;

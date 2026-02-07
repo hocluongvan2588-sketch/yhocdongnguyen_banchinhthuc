@@ -119,7 +119,7 @@ Phân tích ngắn gọn theo 6 phần, mỗi phần 50-80 từ:
 
 async function generateTextWithOpenAI(systemPrompt: string, userPrompt: string): Promise<string> {
   const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 seconds timeout
+  const timeoutId = setTimeout(() => controller.abort(), 30000) // 30 seconds timeout cho prompt chuyên gia
 
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -129,13 +129,13 @@ async function generateTextWithOpenAI(systemPrompt: string, userPrompt: string):
         Authorization: `Bearer ${process.env.OPENAI_API_KEY || ""}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "gpt-4o",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
         temperature: 0.5,
-        max_tokens: 1500, // Tăng lên để đủ cho format UX mới
+        max_tokens: 4000, // Prompt chuyên gia cần output dài và chi tiết
       }),
       signal: controller.signal,
     })
@@ -445,7 +445,7 @@ ${relevantKnowledge}`
         return NextResponse.json(
           {
             error: "Kết nối AI bị gián đoạn",
-            details: "Vui lòng thử lại hoặc tắt chế độ AI để xem kết quả cơ bản",
+            details: "Vui lòng thử lại hoặc t���t chế độ AI để xem kết quả cơ bản",
             status: "connection_error",
             fallback: true,
           },
