@@ -1,6 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { UserNav } from "@/components/user-nav"
@@ -25,11 +26,20 @@ function AppHeader({ showHomeButton = false, badges }: AppHeaderProps) {
         {/* Main header row */}
         <div className="flex h-14 md:h-16 items-center justify-between">
           {/* Left: Logo */}
-          <div className="accent-border-left flex-shrink-0 cursor-pointer" onClick={() => router.push("/")}>
-            <h1 className="text-base md:text-xl font-bold">Y Dịch Đồng Nguyên</h1>
-            <p className="text-[10px] md:text-xs text-muted-foreground hidden sm:block">
-              梅花易数 • Mai Hoa Dịch Số
-            </p>
+          <div className="flex items-center gap-2 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => router.push("/")}>
+            <Image
+              src="/logo.jpg"
+              alt="Y Dịch Đồng Nguyên Logo"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+            <div>
+              <h1 className="text-base md:text-xl font-bold">Y Dịch Đồng Nguyên</h1>
+              <p className="text-[10px] md:text-xs text-muted-foreground hidden sm:block">
+                梅花易数 - Mai Hoa Dịch Số
+              </p>
+            </div>
           </div>
 
           {/* Center: Badges - only show on md+ screens when present */}

@@ -58,18 +58,38 @@ function constructPrompt(
   chiNgay?: string,
   element?: string,
   lunarYear?: string,
+  subject?: string,
 ): string {
+  // Xử lý thông tin cá nhân hóa
+  const genderText = gender === "male" ? "Nam" : gender === "female" ? "Nữ" : "Không rõ";
+  const subjectLabels: Record<string, { label: string; pronoun: string }> = {
+    'banthan': { label: 'Bản thân (người hỏi)', pronoun: 'bạn' },
+    'cha': { label: 'Cha của người hỏi', pronoun: 'cha bạn' },
+    'me': { label: 'Mẹ của người hỏi', pronoun: 'mẹ bạn' },
+    'con': { label: 'Con của người hỏi', pronoun: 'con bạn' },
+    'vo': { label: 'Vợ của người hỏi', pronoun: 'vợ bạn' },
+    'chong': { label: 'Chồng của người hỏi', pronoun: 'chồng bạn' },
+    'anhchiem': { label: 'Anh chị em của người hỏi', pronoun: 'anh/chị/em bạn' },
+  };
+  const subjectInfo = subjectLabels[subject || 'banthan'] || subjectLabels['banthan'];
+
   const anthropometricContext =
     gender || age || painLocation || userLocation || canNam
       ? `
-**Thông tin bệnh nhân:**
-${gender ? `- Giới tính: ${gender === "male" ? "Nam" : gender === "female" ? "Nữ" : "Không rõ"}` : ""}
-${age ? `- Tuổi: ${age} tuổi` : ""}
+**═══════════════════════════════════════════════════════════**
+**THÔNG TIN BỆNH NHÂN (BẮT BUỘC TUÂN THỦ - KHÔNG ĐƯỢC THAY ĐỔI)**
+**═══════════════════════════════════════════════════════════**
+${subject ? `- Đối tượng hỏi: ${subjectInfo.label}` : ""}
+${gender ? `- Giới tính BỆNH NHÂN: ${genderText} (KHÔNG ĐƯỢC NHẦM)` : ""}
+${age ? `- Tuổi BỆNH NHÂN: ${age} tuổi (KHÔNG ĐƯỢC NHẦM)` : ""}
+${subject ? `- Cách xưng hô: "${subjectInfo.pronoun}"` : ""}
 ${canNam && chiNam ? `- Can Chi Năm: ${canNam} ${chiNam}${lunarYear ? ` (Năm âm lịch: ${lunarYear})` : ""}` : ""}
 ${canNgay && chiNgay ? `- Can Chi Ngày: ${canNgay} ${chiNgay}` : ""}
 ${element ? `- Mệnh ngũ hành: ${element}` : ""}
 ${painLocation && painLocation !== "unknown" ? `- Vị trí đau: ${painLocation === "left" ? "Bên trái" : painLocation === "right" ? "Bên phải" : painLocation === "center" ? "Ở giữa" : painLocation === "whole" ? "Toàn thân" : "Không rõ"}` : ""}
 ${userLocation ? `- Địa lý: ${userLocation}` : ""}
+
+⚠️ CẢNH BÁO: Bạn PHẢI sử dụng đúng giới tính "${genderText}" và tuổi "${age}" trong TOÀN BỘ phân tích.
 `
       : ""
 
@@ -80,18 +100,26 @@ ${anthropometricContext}
 **Cơ quan:** ${rawData.affectedOrgans.primary}, ${rawData.affectedOrgans.secondary}
 **Tháng:** ${currentMonth}
 
+PHONG CÁCH VIẾT BẮT BUỘC:
+- Mở đầu mỗi phần bằng 1 câu trấn an, gần gũi ("ôm người đọc")
+- Chia nhỏ đoạn, mỗi ý 2-3 câu. KHÔNG viết đoạn dài liền mạch.
+- KHÔNG dùng từ: "phức tạp", "viêm loét", "trào ngược", "nghiêm trọng", "nặng", "biến chứng"
+- Thay bằng: "dễ kéo dài", "kích ứng niêm mạc", "dịch vị lên cao", "cần chú ý", "cần lưu ý", "diễn tiến kéo dài"
+- Khi dùng thuật ngữ Đông y → giải thích ngay trong ngoặc. VD: "Tỳ (hệ tiêu hóa trung tâm)"
+- Giọng điệu: ấm áp, gần gũi, như bác sĩ gia đình nói chuyện
+
 Phân tích ngắn gọn theo 6 phần, mỗi phần 50-80 từ:
-1. TỔNG QUAN - Kết luận chính 
-2. CƠ CHẾ - Nguyên nhân từ quẻ
-3. TRIỆU CHỨNG - Biểu hiện cụ thể
-4. THỜI ĐIỂM - Tháng nào tốt/xấu
-5. XỬ LÝ NGAY - 3 điều cần làm
-6. PHÁC ĐỒ - Hướng điều trị dài hạn`
+1. TỔNG QUAN - Mô tả cảm giác cơ thể + mức độ + kết luận gọn
+2. CƠ CHẾ - Y học hiện đại (2 câu) + Đông y (2 câu, giải thích thuật ngữ)
+3. TRIỆU CHỨNG - Biểu hiện cụ thể bằng ngôn ngữ cảm giác
+4. THỜI ĐIỂM - Tháng nào thuận/nghịch, giải thích tại sao
+5. XỬ LÝ NGAY - 3 điều cụ thể, dễ làm, có lý do
+6. PHÁC ĐỒ - Chỉnh cả thân và tâm, hướng điều chỉnh từ gốc`
 }
 
 async function generateTextWithOpenAI(systemPrompt: string, userPrompt: string): Promise<string> {
   const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 seconds timeout
+  const timeoutId = setTimeout(() => controller.abort(), 30000) // 30 seconds timeout cho prompt chuyên gia
 
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -101,13 +129,13 @@ async function generateTextWithOpenAI(systemPrompt: string, userPrompt: string):
         Authorization: `Bearer ${process.env.OPENAI_API_KEY || ""}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "gpt-4o",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
         temperature: 0.5,
-        max_tokens: 500,
+        max_tokens: 4000, // Prompt chuyên gia cần output dài và chi tiết
       }),
       signal: controller.signal,
     })
@@ -235,7 +263,10 @@ export async function POST(request: NextRequest) {
       chiNgay,
       element,
       lunarYear,
+      subject, // Đối tượng hỏi: banthan, cha, me, con, vo, chong, anhchiem
     } = body
+    
+    console.log('[v0] Patient personalization:', { subject, gender, age })
 
     if (
       upperTrigram === null ||
@@ -335,21 +366,22 @@ export async function POST(request: NextRequest) {
         1000,
       )
 
-      const userPrompt = constructPrompt(
-        rawCalculation,
-        healthConcern || "",
-        currentMonth || 1,
-        gender,
-        age,
-        painLocation,
-        userLocation,
-        canNam,
-        chiNam,
-        canNgay,
-        chiNgay,
-        element,
-        lunarYear,
-      )
+const userPrompt = constructPrompt(
+  rawCalculation,
+  healthConcern || "",
+  currentMonth || 1,
+  gender,
+  age,
+  painLocation,
+  userLocation,
+  canNam,
+  chiNam,
+  canNgay,
+  chiNgay,
+  element,
+  lunarYear,
+  subject, // Truyền subject để cá nhân hóa
+  )
 
       const systemPrompt = `${SYSTEM_INSTRUCTION}
 
@@ -413,7 +445,7 @@ ${relevantKnowledge}`
         return NextResponse.json(
           {
             error: "Kết nối AI bị gián đoạn",
-            details: "Vui lòng thử lại hoặc tắt chế độ AI để xem kết quả cơ bản",
+            details: "Vui lòng thử lại hoặc t���t chế độ AI để xem kết quả cơ bản",
             status: "connection_error",
             fallback: true,
           },

@@ -18,9 +18,9 @@ function AcupressureContent() {
   const [selectedPoint, setSelectedPoint] = useState<AcupressurePoint | null>(null)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
 
-  const upper = Number.parseInt(searchParams.get("upper") || "1")
-  const lower = Number.parseInt(searchParams.get("lower") || "1")
-  const moving = Number.parseInt(searchParams.get("moving") || "1")
+  const upper = Number.parseInt(searchParams.get("upper") ?? "1", 10) || 1
+  const lower = Number.parseInt(searchParams.get("lower") ?? "1", 10) || 1
+  const moving = Number.parseInt(searchParams.get("moving") ?? "1", 10) || 1
 
   useEffect(() => {
     const result = getAcupressureTreatment(upper, lower, moving)
@@ -372,7 +372,7 @@ function AcupressureContent() {
       <PaymentModal
         isOpen={showPaymentModal}
         onClose={() => setShowPaymentModal(false)}
-        packageNumber={1}
+        packageNumber={2}
         upper={upper}
         lower={lower}
         moving={moving}
