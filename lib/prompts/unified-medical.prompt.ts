@@ -339,18 +339,32 @@ Mở đầu = 1 câu CHUYỂN TIẾP ngắn nối từ tóm tắt sang phân tí
 "Vì sao lại đau ở vùng này? Có 2 góc nhìn giúp ${subjectContext.pronoun} hiểu rõ hơn:"
 hoặc: "Để hiểu rõ gốc vấn đề, ta nhìn từ 2 phía:"
 
-CHIA THÀNH 2 PHẦN RÕ RÀNG, mỗi phần 3-4 câu:
+FORMAT OUTPUT BẮT BUỘC (AI PHẢI TUÂN THỦ CHÍNH XÁC):
 
-PHẦN 1 - "Theo y học hiện đại":
-Đi thẳng vào CƠ CHẾ SINH LÝ. VD:
-"Khi căng thẳng kéo dài, hệ thần kinh giao cảm hoạt động quá mức, khiến các cơ vùng cổ-vai co cứng liên tục. Tư thế ngồi lâu làm giảm lưu lượng máu đến vùng này, dẫn đến thiếu oxy mô cơ và tích tụ acid lactic. Điều này giải thích vì sao cơn đau tăng vào cuối ngày."
+**Theo y học hiện đại:**
+[3-4 câu giải thích CƠ CHẾ SINH LÝ cụ thể - VD: hệ thần kinh, tuần hoàn, sinh hóa cơ thể]
+- Câu 1: Nguyên nhân sinh lý trực tiếp
+- Câu 2: Cơ chế bệnh lý (vì sao gây triệu chứng)
+- Câu 3-4: Kết quả trên cơ thể (giải thích triệu chứng)
 
-PHẦN 2 - "Theo ngôn ngữ Đông y":
-Dịch sang khái niệm Đông y, PHẢI giải thích thuật ngữ ngay trong ngoặc, rồi KẾT NỐI VỚI QUẺ. VD:
-"Biểu hiện này có thể gọi là khí trệ (khí không lưu thông) ở vùng kinh Đởm và kinh Bàng quang. Khi Gan (tạng điều tiết khí huyết) bị căng vì cảm xúc, khí không sơ tiết được, gây ứ ở vai gáy. Theo quẻ ${maihua.mainHexagram.name}, Thể thuộc ${diagnostic.expertAnalysis.tiDung.ti.element}, Dụng thuộc ${diagnostic.expertAnalysis.tiDung.dung.element} — cho thấy sự tiêu hao năng lượng từ [hệ A] sang [hệ B]."
+**Theo ngôn ngữ Đông y:**
+[2-3 câu dịch sang khái niệm Đông y, PHẢI giải thích thuật ngữ trong ngoặc]
+- Câu 1: Tên chứng bệnh Đông y (giải thích đời thường)
+- Câu 2: Giải thích theo Tạng Phủ và cơ chế (có giải thích trong ngoặc)
+- Câu 3 (BẮT BUỘC): Theo quẻ ${maihua.mainHexagram.name}, Thể thuộc **${diagnostic.expertAnalysis.tiDung.ti.element}**, Dụng thuộc **${diagnostic.expertAnalysis.tiDung.dung.element}** — cho thấy [giải thích quan hệ Thể-Dụng ảnh hưởng sức khỏe như thế nào].
 
-KẾT ĐOẠN (BẮT BUỘC 1-2 câu trấn an):
+[KẾT ĐOẠN - BẮT BUỘC 1 câu trấn an]:
 "Tình trạng hiện tại cần chú ý nhưng nếu được điều chỉnh đúng cách, ${subjectContext.pronoun} có thể giảm bớt triệu chứng và giúp cơ thể ổn định sớm hơn."
+
+⚠️ VÍ DỤ HOÀN CHỈNH (để AI tham khảo cấu trúc):
+
+**Theo y học hiện đại:**
+Khi căng thẳng kéo dài, hệ thần kinh giao cảm hoạt động quá mức, khiến các cơ vùng cổ-vai co cứng liên tục. Tư thế ngồi lâu làm giảm lưu lượng máu đến vùng này, dẫn đến thiếu oxy mô cơ và tích tụ acid lactic. Điều này giải thích vì sao cơn đau tăng vào cuối ngày, đặc biệt sau những giờ làm việc căng thẳng.
+
+**Theo ngôn ngữ Đông y:**
+Biểu hiện này có thể gọi là khí trệ (khí không lưu thông) ở vùng kinh Đởm và kinh Bàng quang. Khi Gan (tạng điều tiết khí huyết) bị căng vì cảm xúc, khí không sơ tiết được, gây ứ ở vai gáy. Theo quẻ Địa Sơn Khiêm, Thể thuộc **Thổ**, Dụng thuộc **Thổ** — cho thấy sự tiêu hao năng lượng từ hệ tiêu hóa (Tỳ Vị thuộc Thổ), khiến khí huyết không đủ nuôi cơ vùng vai cổ.
+
+Tình trạng hiện tại cần chú ý nhưng nếu được điều chỉnh đúng cách, bạn có thể giảm bớt triệu chứng và giúp cơ thể ổn định sớm hơn.
 
 【KẾT LUẬN: BỆNH TỪ TẠNG NÀO PHÁT SINH】
 ⚠️ PHẦN NÀY CỰC KỲ QUAN TRỌNG - THỂ HIỆN TRÌNH ĐỘ CHUYÊN GIA
@@ -485,7 +499,7 @@ VD cho ĐAU DẠ DÀY:
 
 **Cơ chế gây bệnh (Y học hiện đại):**
 
-[2-3 câu bằng sinh lý học, PHẢI liên quan đến HỆ CƠ QUAN mà bệnh nhân đang bị]
+[2-3 câu bằng sinh lý học, PHẢI liên quan đến H�� CƠ QUAN mà bệnh nhân đang bị]
 
 VD cho ĐAU CHÂN:
 "Căng thẳng kéo dài làm tăng cortisol, giảm tuần hoàn ngoại vi. Máu đến chi dưới giảm, cơ dễ co cứng và thiếu oxy, gây đau nhức kéo dài. Thêm vào đó, cortisol làm tăng độ nhạy cảm của các thụ thể đau, khiến cơn đau dễ bùng phát hơn."
