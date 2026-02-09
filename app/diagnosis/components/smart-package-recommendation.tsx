@@ -1,8 +1,10 @@
 "use client"
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowDown } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { AlertTriangle, Info, CheckCircle2, ArrowRight, Zap } from "lucide-react"
 import type { SeverityLevel } from "@/lib/diagnosis/interpretation-logic"
 
 interface SmartPackageRecommendationProps {
@@ -20,29 +22,77 @@ export function SmartPackageRecommendation({
   reason,
   onScrollToPackages,
 }: SmartPackageRecommendationProps) {
-  const getBridgeContent = () => {
+  const getRecommendationContent = () => {
     if (severity === "severe") {
       return {
-        headline: "Bạn đã thấy rõ gốc tạng và chiều lệch khí.",
-        body: "Nếu chỉ dừng ở việc \"biết\", cơ thể vẫn sẽ tự vận hành theo quán tính cũ. Khí huyết để lâu không thông thì càng khó hồi phục. Bước quan trọng nhất lúc này là can thiệp đúng chỗ, đúng thời điểm.",
-        urgency: "Điều chỉnh sớm giúp cơ thể tự cân bằng nhanh hơn, tránh tình trạng kéo dài.",
+        variant: "destructive" as const,
+        icon: <AlertTriangle className="h-6 w-6 flex-shrink-0" />,
+        title: "Tình trạng cần quan tâm đặc biệt",
+        description:
+          "Dựa trên phân tích Mai Hoa Dịch Số, tình trạng của bạn cần được chú ý và chăm sóc kịp thời. Chúng tôi khuyến nghị bạn tham khảo gói tư vấn chuyên sâu để có phác đồ chi tiết nhất.",
+        recommendedPackages: [
+          {
+            name: "Gói Tượng Số",
+            description: "Phân tích toàn diện với lộ trình dài hạn",
+            highlight: true,
+          },
+          {
+            name: "Gói Nam Dược",
+            description: "Bài thảo dược riêng theo ngũ hành",
+            highlight: false,
+          },
+        ],
+        alertClass: "bg-red-50 border-red-300 text-red-900",
       }
     }
+
     if (severity === "moderate") {
       return {
-        headline: "Quẻ đã cho thấy điểm lệch khí và tạng chủ đạo của bạn.",
-        body: "Nếu chỉ dừng ở việc \"biết\", cơ thể vẫn sẽ tự vận hành theo quán tính cũ. Bước tiếp theo quan trọng nhất là can thiệp đúng chỗ để cơ thể tự điều chỉnh lại.",
-        urgency: "Khí huyết lệch lâu sẽ khó hồi. Điều chỉnh sớm sẽ nhẹ nhàng và hiệu quả hơn nhiều.",
+        variant: "default" as const,
+        icon: <Info className="h-6 w-6 flex-shrink-0 text-amber-600" />,
+        title: "Nên theo dõi và chăm sóc",
+        description:
+          "Kết quả chẩn đoán cho thấy cơ thể bạn cần được hỗ trợ để tránh tình trạng trở nên nghiêm trọng hơn. Việc can thiệp sớm sẽ giúp phục hồi nhanh chóng.",
+        recommendedPackages: [
+          {
+            name: "Gói Nam Dược",
+            description: "Cân bằng ngũ hành với thảo dược",
+            highlight: true,
+          },
+          {
+            name: "Gói Khai Huyệt",
+            description: "Khai thông kinh lạc bằng huyệt đạo",
+            highlight: false,
+          },
+        ],
+        alertClass: "bg-amber-50 border-amber-300 text-amber-900",
       }
     }
+
+    // mild severity
     return {
-      headline: "Cơ thể bạn đang trong trạng thái tương đối cân bằng.",
-      body: "Đây là thời điểm tốt để tối ưu hóa sức khỏe. Thay vì đợi đến khi có vấn đề, việc chủ động điều chỉnh ngay bây giờ giúp duy trì trạng thái này lâu dài.",
-      urgency: "Phòng bệnh hơn chữa bệnh. Duy trì nhịp sống đúng giúp tạng phủ tự cân bằng bền vững.",
+      variant: "default" as const,
+      icon: <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-blue-600" />,
+      title: "Tình trạng ổn định - Có thể tối ưu",
+      description:
+        "Cơ thể bạn đang trong trạng thái cân bằng tốt. Để duy trì và tối ưu hóa sức khỏe, bạn có thể tham khảo các gói tư vấn để hiểu sâu hơn về cách chăm sóc bản thân.",
+      recommendedPackages: [
+        {
+          name: "Gói Tượng Số",
+          description: "Hiểu sâu về bản thân qua Dịch học",
+          highlight: true,
+        },
+        {
+          name: "Gói Khai Huyệt",
+          description: "Duy trì sức khỏe phòng ngừa",
+          highlight: false,
+        },
+      ],
+      alertClass: "bg-blue-50 border-blue-300 text-blue-900",
     }
   }
 
-  const bridge = getBridgeContent()
+  const content = getRecommendationContent()
 
   // Don't show for mild cases with good status
   if (severity === "mild" && status === "good") {
@@ -50,45 +100,79 @@ export function SmartPackageRecommendation({
   }
 
   return (
-    <Card className="border border-primary/20 bg-gradient-to-b from-background to-primary/5">
-      <CardContent className="pt-6 space-y-5">
-        <div className="space-y-4">
-          <h3 className="text-xl md:text-2xl font-bold text-foreground leading-snug">
-            {bridge.headline}
-          </h3>
+    <Card className="border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10">
+      <CardContent className="pt-6 space-y-6">
+        <Alert variant={content.variant} className={`border-2 ${content.alertClass || ""}`}>
+          {content.icon}
+          <AlertTitle className="text-xl md:text-2xl font-bold mb-3 whitespace-normal">{content.title}</AlertTitle>
+          <AlertDescription className="text-base md:text-lg leading-relaxed whitespace-normal break-words">
+            {content.description}
+          </AlertDescription>
+        </Alert>
 
-          <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
-            {bridge.body}
-          </p>
-
-          <div className="flex flex-col gap-2 pl-4 border-l-2 border-primary/30">
-            <p className="text-base text-foreground">
-              <span className="font-medium">{"Th\u00F4ng kh\u00ED"}</span>{" \u2014 \u0111\u1EC3 kh\u00F4ng \u1EE9"}
-            </p>
-            <p className="text-base text-foreground">
-              <span className="font-medium">{"\u0110i\u1EC1u t\u1EA1ng"}</span>{" \u2014 \u0111\u1EC3 kh\u00F4ng l\u1EC7ch"}
-            </p>
-            <p className="text-base text-foreground">
-              <span className="font-medium">{"D\u1EABn kh\u00ED"}</span>{" \u2014 \u0111\u1EC3 kh\u00F4ng t\u00E1i"}
-            </p>
+        <div className="bg-background/50 rounded-lg p-5 space-y-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Zap className="w-5 h-5 text-primary flex-shrink-0" />
+            <h3 className="text-lg md:text-xl font-semibold whitespace-normal">Gợi ý dựa trên kết quả của bạn</h3>
           </div>
 
-          <p className="text-sm md:text-base text-primary/80 italic leading-relaxed">
-            {bridge.urgency}
+          <p className="text-base md:text-lg text-muted-foreground leading-relaxed whitespace-normal break-words">
+            {reason}
           </p>
+
+          <div className="grid md:grid-cols-2 gap-4 mt-4">
+            {content.recommendedPackages.map((pkg, index) => (
+              <div
+                key={index}
+                className={`p-4 rounded-lg border-2 ${
+                  pkg.highlight
+                    ? "bg-primary/10 border-primary shadow-md"
+                    : "bg-muted/30 border-border hover:border-primary/50"
+                } transition-all`}
+              >
+                <div className="flex items-start justify-between mb-2">
+                  <h4 className="text-base md:text-lg font-semibold">{pkg.name}</h4>
+                  {pkg.highlight && (
+                    <Badge variant="default" className="text-sm flex-shrink-0">
+                      Khuyên dùng
+                    </Badge>
+                  )}
+                </div>
+                <p className="text-sm md:text-base text-muted-foreground whitespace-normal break-words">
+                  {pkg.description}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
-          <div className="flex-1 min-w-0">
-            <p className="text-base text-muted-foreground leading-relaxed">
-              {"H\u1EC7 th\u1ED1ng g\u1EE3i \u00FD c\u00E1c l\u1ED9 tr\u00ECnh b\u00EAn d\u01B0\u1EDBi d\u1EF1a tr\u00EAn ch\u00EDnh qu\u1EBB v\u00E0 t\u00ECnh tr\u1EA1ng c\u1EE7a b\u1EA1n, kh\u00F4ng ch\u1ECDn \u0111\u1EA1i tr\u00E0."}
+        <div className="flex flex-col sm:flex-row items-center gap-4 p-5 bg-primary/10 rounded-lg border border-primary/20">
+          <div className="flex-1 space-y-1 min-w-0">
+            <p className="font-semibold text-base md:text-lg whitespace-normal">
+              Sẵn sàng bắt đầu hành trình chăm sóc sức khỏe?
+            </p>
+            <p className="text-sm md:text-base text-muted-foreground whitespace-normal break-words">
+              Xem chi tiết các gói phù hợp với tình trạng của bạn
             </p>
           </div>
           <Button onClick={onScrollToPackages} size="lg" className="gap-2 text-base w-full sm:w-auto flex-shrink-0">
-            {"Xem l\u1ED9 tr\u00ECnh ph\u00F9 h\u1EE3p"}
-            <ArrowDown className="w-5 h-5" />
+            Xem gói dịch vụ
+            <ArrowRight className="w-5 h-5" />
           </Button>
         </div>
+
+        {severity === "severe" && (
+          <Alert className="bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800">
+            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" />
+            <AlertTitle className="text-base md:text-lg font-semibold text-amber-800 dark:text-amber-200">
+              Lưu ý quan trọng
+            </AlertTitle>
+            <AlertDescription className="text-sm md:text-base text-amber-700 dark:text-amber-300 leading-relaxed whitespace-normal break-words">
+              Kết quả chẩn đoán qua Mai Hoa Dịch Số là công cụ tham khảo. Với các triệu chứng nghiêm trọng, bạn nên đi
+              khám bác sĩ chuyên khoa để có chẩn đoán chính xác và phương pháp chăm sóc kịp thời.
+            </AlertDescription>
+          </Alert>
+        )}
       </CardContent>
     </Card>
   )

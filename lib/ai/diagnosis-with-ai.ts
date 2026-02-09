@@ -29,7 +29,7 @@ export async function diagnoseWithAI(
   retryCount = 0,
 ): Promise<AIDiagnosisResult> {
   const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 45000) // 45s client timeout cho prompt chuyên gia
+  const timeoutId = setTimeout(() => controller.abort(), 25000) // 25s client timeout
   
   try {
     const response = await fetch("/api/diagnose-ai", {

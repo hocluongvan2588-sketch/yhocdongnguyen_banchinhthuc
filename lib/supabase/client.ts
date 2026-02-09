@@ -1,18 +1,16 @@
-import { createBrowserClient } from '@supabase/ssr'
-import type { SupabaseClient } from '@supabase/supabase-js'
+import { createBrowserClient } from "@supabase/ssr"
 
-// Singleton pattern to prevent multiple Supabase client instances
-let supabaseClient: SupabaseClient | null = null
+let client: ReturnType<typeof createBrowserClient> | null = null
 
+export function getSupabaseBrowserClient() {
+  if (client) return client
+
+  client = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
+
+  return client
+}
+
+// Alias for consistency with server client
 export function createClient() {
-  if (supabaseClient) {
-    return supabaseClient
-  }
-
-  supabaseClient = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
-
-  return supabaseClient
+  return getSupabaseBrowserClient()
 }

@@ -1,10 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { createClient } from "@/lib/supabase/server"
+import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { Package, ShoppingCart, TrendingUp, Users } from "lucide-react"
-import { getSupabaseServerClient } from "@/lib/supabase/server" // Declare the variable here
 
 export async function SolutionsStats() {
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
 
   // Get total solutions count
   const { count: totalSolutions } = await supabase

@@ -10,14 +10,11 @@ import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, AlertCircle, CheckCircle } from "lucide-react"
 import { signUp } from "@/lib/actions/auth-actions"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 
 export default function RegisterPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const redirectTo = searchParams.get("redirectTo") || "/"
-  
   const [fullName, setFullName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -52,9 +49,9 @@ export default function RegisterPage() {
     } else {
       setSuccess(true)
       setIsLoading(false)
-      // Redirect after 2 seconds - giữ nguyên redirectTo param
+      // Redirect after 2 seconds
       setTimeout(() => {
-        router.push(`/auth/login?redirectTo=${encodeURIComponent(redirectTo)}`)
+        router.push("/auth/login")
       }, 2000)
     }
   }
@@ -162,7 +159,7 @@ export default function RegisterPage() {
 
             <div className="text-center text-sm text-muted-foreground">
               Đã có tài khoản?{" "}
-              <Link href={`/auth/login?redirectTo=${encodeURIComponent(redirectTo)}`} className="text-primary hover:underline font-medium">
+              <Link href="/auth/login" className="text-primary hover:underline font-medium">
                 Đăng nhập
               </Link>
             </div>

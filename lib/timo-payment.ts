@@ -155,26 +155,19 @@ export function calculateTimoFee(amount: number, feePercentage = 0, feeFixed = 0
 // ==================== VALIDATION ====================
 
 /**
- * Validate Timo payment amount
- * Now accepts any positive amount since prices are dynamic from database
+ * Validate Timo payment amount for fixed-price packages
+ * Only accepts: 99,000 | 199,000 | 299,000 VND
  *
  * @param amount - Số tiền cần kiểm tra
  * @returns Object chứa validation result
  */
 export function validateTimoAmount(amount: number): { valid: boolean; error?: string } {
-  // Basic validation: amount must be positive
-  if (!amount || amount <= 0) {
-    return {
-      valid: false,
-      error: `Số tiền thanh toán phải lớn hơn 0`,
-    }
-  }
+  const validAmounts = [99000, 199000, 299000]
 
-  // Minimum amount 1,000 VND
-  if (amount < 1000) {
+  if (!validAmounts.includes(amount)) {
     return {
       valid: false,
-      error: `Số tiền thanh toán tối thiểu là 1.000đ`,
+      error: `Số tiền thanh toán phải là 99.000đ, 199.000đ hoặc 299.000đ`,
     }
   }
 

@@ -1,8 +1,6 @@
 "use client"
 
 import type React from "react"
-import { getSupabaseBrowserClient } from "@/lib/supabase/client" // Declare the variable before using it
-import { createClient } from "@/lib/supabase/client" // Import the createClient function
 
 import { useState } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -10,22 +8,17 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Lock, Mail, User, Chrome } from "lucide-react"
+import { getSupabaseBrowserClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface QuickAuthModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  redirectTo?: string // URL để redirect sau khi đăng nhập
 }
 
-export function QuickAuthModal({ open, onOpenChange, redirectTo }: QuickAuthModalProps) {
+export function QuickAuthModal({ open, onOpenChange }: QuickAuthModalProps) {
   const router = useRouter()
-  
-  // Lấy URL redirect - ưu tiên prop, sau đó là current URL
-  const getRedirectUrl = () => {
-    return redirectTo || window.location.pathname + window.location.search
-  }
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
 
@@ -43,15 +36,11 @@ export function QuickAuthModal({ open, onOpenChange, redirectTo }: QuickAuthModa
     setError("")
 
     try {
-      // Lưu redirect URL vào sessionStorage trước khi chuyển sang Google
-      const targetRedirect = getRedirectUrl()
-      sessionStorage.setItem('auth-redirect-url', targetRedirect)
-      
-      const supabase = createClient()
+      const supabase = getSupabaseBrowserClient()
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?redirectTo=${encodeURIComponent(targetRedirect)}`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       })
 
@@ -68,7 +57,7 @@ export function QuickAuthModal({ open, onOpenChange, redirectTo }: QuickAuthModa
     setError("")
 
     try {
-      const supabase = createClient()
+      const supabase = getSupabaseBrowserClient()
       const { error } = await supabase.auth.signInWithPassword({
         email: loginEmail,
         password: loginPassword,
@@ -76,13 +65,8 @@ export function QuickAuthModal({ open, onOpenChange, redirectTo }: QuickAuthModa
 
       if (error) throw error
 
-      // Close modal first
       onOpenChange(false)
-      
-      // Wait a bit before refreshing to allow modal to close
-      setTimeout(() => {
-        router.refresh()
-      }, 100)
+      router.refresh()
     } catch (err: any) {
       setError(err.message || "Đăng nhập thất bại")
     } finally {
@@ -96,7 +80,7 @@ export function QuickAuthModal({ open, onOpenChange, redirectTo }: QuickAuthModa
     setError("")
 
     try {
-      const supabase = createClient()
+      const supabase = getSupabaseBrowserClient()
       const { data, error } = await supabase.auth.signUp({
         email: registerEmail,
         password: registerPassword,
@@ -115,13 +99,8 @@ export function QuickAuthModal({ open, onOpenChange, redirectTo }: QuickAuthModa
         await supabase.from("users").update({ full_name: registerFullName }).eq("id", data.user.id)
       }
 
-      // Close modal first
       onOpenChange(false)
-      
-      // Wait a bit before refreshing to allow modal to close
-      setTimeout(() => {
-        router.refresh()
-      }, 100)
+      router.refresh()
     } catch (err: any) {
       setError(err.message || "Đăng ký thất bại")
     } finally {

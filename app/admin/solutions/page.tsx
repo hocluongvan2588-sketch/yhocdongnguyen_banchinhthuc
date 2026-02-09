@@ -1,16 +1,15 @@
 import { Suspense } from "react"
-import { createClient } from "@/lib/supabase/server"
+import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SolutionsTable } from "./components/solutions-table"
 import { PurchaseHistory } from "./components/purchase-history"
 import { SolutionsStats } from "./components/solutions-stats"
-import { getSupabaseServerClient } from "@/lib/supabase/server" // Declare the variable before using it
 
 export default async function AdminSolutionsPage() {
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
 
-  // Check if user is authenticated and admin (using profiles.role like admin layout)
+  // Check if user is authenticated and admin
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -19,13 +18,9 @@ export default async function AdminSolutionsPage() {
     redirect("/")
   }
 
-  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
+  const { data: userData } = await supabase.from("users").select("is_admin").eq("id", user.id).maybeSingle()
 
-  console.log('[v0] Solutions page - user:', user.id);
-  console.log('[v0] Solutions page - profile:', profile);
-
-  if (!profile || profile.role !== 'admin') {
-    console.log('[v0] Solutions page - NOT ADMIN, redirecting');
+  if (!userData?.is_admin) {
     redirect("/")
   }
 

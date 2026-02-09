@@ -1,6 +1,6 @@
 "use server"
 
-import { createClient, getSupabaseServerClient } from "@/lib/supabase/server"
+import { getSupabaseServerClient } from "@/lib/supabase/server"
 
 const DAILY_LIMIT = 3 // Theo nguyên tắc "Nhất Sự Nhất Chiêm"
 const MIN_SPACING_MINUTES = 15 // Thời gian tối thiểu giữa 2 lần gieo
@@ -13,7 +13,7 @@ export async function checkRapidDivination(): Promise<{
   count: number
   message?: string
 }> {
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -55,7 +55,7 @@ export async function checkDuplicateQuestion(healthConcern: string): Promise<{
   }
   message?: string
 }> {
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -105,7 +105,7 @@ export async function checkMinimumSpacing(): Promise<{
   minutesRemaining: number
   message?: string
 }> {
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -148,7 +148,7 @@ export async function checkDailyDivinationLimit(): Promise<{
   todayCount: number
   message?: string
 }> {
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
 
   const {
     data: { user },
@@ -211,7 +211,7 @@ export async function canUserDivine(healthConcern?: string): Promise<{
   }
 }> {
   // Check 1: Authentication
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -284,7 +284,7 @@ export async function saveDivinationRecord(data: {
   hexagramName: string
   healthConcern: string
 }): Promise<{ success: boolean; error?: string; consultationId?: string }> {
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
 
   const {
     data: { user },
@@ -327,7 +327,7 @@ export async function getPreviousDivinations(limit = 10): Promise<{
     hexagram_name: string
   }>
 }> {
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
 
   const {
     data: { user },

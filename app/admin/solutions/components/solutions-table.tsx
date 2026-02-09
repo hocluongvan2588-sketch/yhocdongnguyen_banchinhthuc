@@ -34,13 +34,10 @@ export function SolutionsTable() {
   async function loadSolutions() {
     setLoading(true)
     const result = await getAllSolutions()
-    console.log('[v0] SolutionsTable - getAllSolutions result:', result);
     if (result.solutions) {
-      console.log('[v0] SolutionsTable - solutions count:', result.solutions.length);
-      // Show all solution types (prescription, acupoint, numerology)
-      setSolutions(result.solutions)
-    } else {
-      console.log('[v0] SolutionsTable - NO SOLUTIONS or ERROR:', result.error);
+      // Filter only prescription type for nam duoc
+      const prescriptions = result.solutions.filter((s) => s.solution_type === "prescription")
+      setSolutions(prescriptions)
     }
     setLoading(false)
   }
@@ -53,17 +50,17 @@ export function SolutionsTable() {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Danh sách Gói Dịch Vụ ({solutions.length})</CardTitle>
+          <CardTitle>Danh sách gói Nam Dược ({solutions.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Loại gói</TableHead>
                   <TableHead>Quẻ</TableHead>
-                  <TableHead>Tiêu đề</TableHead>
-                  <TableHead>Mô tả</TableHead>
+                  <TableHead>Tên bài thuốc</TableHead>
+                  <TableHead>Vị thuốc</TableHead>
+                  <TableHead>Kinh lạc</TableHead>
                   <TableHead>Giá unlock</TableHead>
                   <TableHead>Nguồn</TableHead>
                   <TableHead className="text-right">Thao tác</TableHead>
@@ -73,32 +70,19 @@ export function SolutionsTable() {
                 {solutions.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center text-muted-foreground">
-                      Chưa có dữ liệu. Chạy script seed để thêm dữ liệu.
+                      Chưa có dữ liệu. Chạy script seed để thêm 64 bài thuốc.
                     </TableCell>
                   </TableRow>
                 )}
                 {solutions.map((solution) => (
                   <TableRow key={solution.id}>
                     <TableCell>
-                      <Badge 
-                        variant={
-                          solution.solution_type === 'prescription' ? 'default' :
-                          solution.solution_type === 'acupoint' ? 'secondary' :
-                          'outline'
-                        }
-                      >
-                        {solution.solution_type === 'prescription' ? 'Nam Dược' :
-                         solution.solution_type === 'acupoint' ? 'Khai Huyệt' :
-                         solution.solution_type === 'numerology' ? 'Tượng Số' :
-                         solution.solution_type}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
                       <Badge variant="outline">{solution.hexagram_key}</Badge>
                     </TableCell>
                     <TableCell className="font-medium">{solution.title}</TableCell>
-                    <TableCell className="max-w-[200px] truncate">{solution.description || "—"}</TableCell>
-                    <TableCell className="font-semibold">{solution.unlock_cost?.toLocaleString('vi-VN')}đ</TableCell>
+                    <TableCell className="max-w-[200px] truncate">{solution.herb_name || "—"}</TableCell>
+                    <TableCell className="max-w-[150px] truncate">{solution.meridian_pathway || "—"}</TableCell>
+                    <TableCell>{solution.unlock_cost} coin</TableCell>
                     <TableCell className="text-xs text-muted-foreground max-w-[150px] truncate">
                       {solution.reference_source || "—"}
                     </TableCell>

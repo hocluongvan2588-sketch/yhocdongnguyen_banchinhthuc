@@ -1,12 +1,11 @@
-import { createClient } from "@/lib/supabase/server"
+import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { formatDistanceToNow } from "date-fns"
 import { vi } from "date-fns/locale"
-import { getSupabaseServerClient } from "@/lib/supabase/server" // Declare the variable before using it
 
 export async function DepositsTable() {
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
 
   const { data: deposits } = await supabase
     .from("deposits")

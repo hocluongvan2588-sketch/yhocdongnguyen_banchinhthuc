@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2, AlertCircle, CheckCircle, Copy, QrCode, RefreshCw, Smartphone, Monitor, LogIn } from "lucide-react"
+import { Loader2, AlertCircle, CheckCircle, Copy, QrCode, RefreshCw, Smartphone, Monitor } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { getSolutionsByHexagram, getSolutionsByHexagramKey } from "@/lib/actions/solution-actions"
 import { getCurrentUser } from "@/lib/actions/auth-actions"
@@ -21,30 +21,29 @@ interface PaymentModalProps {
   moving: number
 }
 
-// Package metadata (prices fetched from database)
-const PACKAGE_METADATA = {
+const PACKAGE_INFO = {
   1: {
-    name: "Gói Khai Huyệt",
-    route: "/treatment/acupressure",
-    solutionType: "acupoint" as const,
-    packageId: "package_1",
-  },
-  2: {
     name: "Gói Nam Dược",
+    price: "199.000đ",
+    amount: 199000,
     route: "/treatment/herbal",
     solutionType: "prescription" as const,
-    packageId: "package_2",
+  },
+  2: {
+    name: "Gói Khai Huyệt",
+    price: "299.000đ",
+    amount: 299000,
+    route: "/treatment/acupressure",
+    solutionType: "acupoint" as const,
   },
   3: {
     name: "Gói Tượng Số",
+    price: "99.000đ",
+    amount: 99000,
     route: "/treatment/numerology",
     solutionType: "numerology" as const,
-    packageId: "package_3",
   },
 }
-
-// Key để lưu thông tin thanh toán pending (phải khớp với gated-content-wrapper.tsx)
-const PENDING_PAYMENT_KEY = "pending-payment-after-login"
 
 export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, moving }: PaymentModalProps) {
   const router = useRouter()
@@ -55,10 +54,6 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
   const [success, setSuccess] = useState(false)
   const [copied, setCopied] = useState<string | null>(null)
   const [isMobile, setIsMobile] = useState(false)
-  const [needsLogin, setNeedsLogin] = useState(false)
-  const [packagePrice, setPackagePrice] = useState<number | null>(null)
-  const [promoMessage, setPromoMessage] = useState<string | null>(null)
-  const [loadingPrice, setLoadingPrice] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -69,87 +64,27 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
-  // Fetch package price and promo message from database when modal opens
+  // Auto-create deposit when modal opens
   useEffect(() => {
-    const fetchPackageData = async () => {
-      if (!packageNumber || !isOpen) return
-      
-      setLoadingPrice(true)
-      try {
-        const metadata = PACKAGE_METADATA[packageNumber]
-        const response = await fetch(`/api/packages/price?packageId=${metadata.packageId}`)
-        const data = await response.json()
-        
-        if (data.price !== undefined) {
-          setPackagePrice(data.price)
-        }
-        if (data.promoMessage) {
-          setPromoMessage(data.promoMessage)
-        }
-      } catch (err) {
-        console.error('[v0] Error fetching package data:', err)
-      }
-      setLoadingPrice(false)
-    }
-    
-    fetchPackageData()
-  }, [isOpen, packageNumber])
-
-  // Auto-create deposit when modal opens and price is loaded
-  useEffect(() => {
-    if (isOpen && packageNumber && !deposit && !isCreating && packagePrice !== null) {
+    if (isOpen && packageNumber && !deposit && !isCreating) {
       handleCreateDeposit()
     }
-  }, [isOpen, packageNumber, packagePrice])
+  }, [isOpen, packageNumber])
 
   if (!packageNumber) return null
 
-  const packageMetadata = PACKAGE_METADATA[packageNumber]
-  const packageInfo = {
-    ...packageMetadata,
-    amount: packagePrice || 0,
-    price: packagePrice ? `${packagePrice.toLocaleString('vi-VN')}đ` : 'Đang tải...',
-  }
-  
-  // Hàm xử lý khi user cần đăng nhập để thanh toán
-  const handleLoginForPayment = () => {
-    // Lưu thông tin thanh toán pending vào localStorage
-    const pendingPayment = {
-      packageNumber,
-      upper,
-      lower,
-      moving,
-      timestamp: Date.now()
-    }
-    localStorage.setItem(PENDING_PAYMENT_KEY, JSON.stringify(pendingPayment))
-    
-    // Redirect đến trang results với params quẻ và trigger mở payment modal sau khi đăng nhập
-    const redirectUrl = `/results?openPayment=${packageNumber}`
-    sessionStorage.setItem("auth-redirect-url", redirectUrl)
-    
-    // Đóng modal và chuyển đến trang login
-    onClose()
-    router.push(`/auth/login?redirectTo=${encodeURIComponent(redirectUrl)}`)
-  }
+  const packageInfo = PACKAGE_INFO[packageNumber]
 
   const handleCreateDeposit = async () => {
     setError(null)
     setIsCreating(true)
 
     try {
-      // Validate package price is loaded and not zero
-      if (!packageInfo.amount || packageInfo.amount === 0) {
-        console.log("[v0] Cannot create deposit - price not loaded yet or is zero")
-        setError("Đang tải thông tin giá, vui lòng đợi...")
-        setIsCreating(false)
-        return
-      }
-
       // Check authentication
       const { user } = await getCurrentUser()
 
       if (!user) {
-        setNeedsLogin(true)
+        setError("Bạn cần đăng nhập để thanh toán")
         setIsCreating(false)
         return
       }
@@ -276,57 +211,14 @@ export function PaymentModal({ isOpen, onClose, packageNumber, upper, lower, mov
     setTimeout(() => setCopied(null), 2000)
   }
 
-  // Deep link generators cho các app ngân hàng phổ biến tại VN
-  const generateBankingDeepLinks = () => {
-    if (!deposit) return []
-
-    const accountNumber = deposit.payment_data?.account_number || ""
-    const amount = deposit.amount
-    const description = deposit.payment_code
-    const accountName = deposit.payment_data?.account_name || ""
-
-    return [
-      {
-        name: "VietQR",
-        subtitle: "Mở bất kỳ app ngân hàng",
-        url: `https://dl.vietqr.io/pay?app=VietQR&bankCode=${TIMO_BANK_CODE}&accountNumber=${accountNumber}&amount=${amount}&description=${encodeURIComponent(description)}`,
-        icon: "🏦",
-        primary: true,
-      },
-      {
-        name: "MoMo",
-        subtitle: "Ví điện tử MoMo",
-        url: `momo://app?action=transfer&partnerId=TIMO&partnerName=${encodeURIComponent(accountName)}&amount=${amount}&description=${encodeURIComponent(description)}`,
-        icon: "💜",
-      },
-      {
-        name: "ZaloPay",
-        subtitle: "Ví ZaloPay",
-        url: `zalopay://app?action=pay&amount=${amount}&description=${encodeURIComponent(description)}`,
-        icon: "💙",
-      },
-    ]
-  }
-
-  // Copy toàn bộ thông tin chuyển khoản
-  const handleCopyAll = () => {
-    if (!deposit) return
-    
-    const allInfo = `Ngân hàng: Timo (Viet Capital Bank)
-Số TK: ${deposit.payment_data?.account_number}
-Tên: ${deposit.payment_data?.account_name}
-Số tiền: ${deposit.amount.toLocaleString("vi-VN")} VND
-Nội dung: ${deposit.payment_code}`
-
-    navigator.clipboard.writeText(allInfo)
-    setCopied("all")
-    setTimeout(() => setCopied(null), 2000)
-  }
-
-  // Fallback: VietQR link cho nút chính
   const generateBankingDeepLink = () => {
     if (!deposit) return "#"
-    return `https://dl.vietqr.io/pay?app=VietQR&bankCode=${TIMO_BANK_CODE}&accountNumber=${deposit.payment_data?.account_number}&amount=${deposit.amount}&description=${encodeURIComponent(deposit.payment_code)}`
+
+    // VietQR deep link format for universal banking apps
+    const qrData = `${TIMO_BANK_CODE}${deposit.payment_data?.account_number}${deposit.amount}${deposit.payment_code}`
+
+    // Try VietQR universal link first (works with most banking apps)
+    return `https://dl.vietqr.io/pay?bankCode=${TIMO_BANK_CODE}&accountNumber=${deposit.payment_data?.account_number}&amount=${deposit.amount}&description=${encodeURIComponent(deposit.payment_code)}`
   }
 
   const handleRefreshStatus = async () => {
@@ -388,62 +280,73 @@ Nội dung: ${deposit.payment_code}`
   if (deposit) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-lg max-h-[85vh] md:max-h-[90vh] flex flex-col p-0 gap-0">
-          {/* Sticky Header - luôn hiển thị ở trên */}
-          <DialogHeader className="space-y-1 px-4 sm:px-6 pt-3 sm:pt-6 pb-2 sm:pb-3 border-b bg-background sticky top-0 z-10 flex-shrink-0">
-            <DialogTitle className="text-sm sm:text-lg text-foreground leading-tight">
-              {isMobile ? "Thanh Toán" : "Quét Mã QR Để Thanh Toán"}
+        <DialogContent className="sm:max-w-lg max-h-[95vh] overflow-y-auto p-3 sm:p-6">
+          <DialogHeader className="space-y-1 sm:space-y-2">
+            <DialogTitle className="text-base sm:text-lg text-foreground">
+              {isMobile ? "Chuyển Khoản Thanh Toán" : "Quét Mã QR Để Thanh Toán"}
             </DialogTitle>
-            <DialogDescription className="text-xs sm:text-sm">{packageInfo.name} - {packageInfo.price}</DialogDescription>
+            <DialogDescription className="text-xs sm:text-sm">{packageInfo.name}</DialogDescription>
           </DialogHeader>
-          
-          {/* Scrollable Content Area */}
-          <div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-4 sm:pb-6 overscroll-contain">
 
-          <div className="space-y-2.5 sm:space-y-6 py-3 sm:py-4">
-            {/* Promo Message Banner */}
-            {promoMessage && (
-              <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 border-2 border-primary/30 rounded-lg p-3 sm:p-4">
-                <p className="text-xs sm:text-sm text-center font-medium text-primary leading-relaxed">
-                  {promoMessage}
-                </p>
-              </div>
+          <div className="space-y-3 sm:space-y-6 py-2 sm:py-4">
+            {isMobile ? (
+              <>
+                {/* Mobile: Primary CTA button to open banking app */}
+                <div className="space-y-2">
+                  <Button
+                    onClick={() => (window.location.href = generateBankingDeepLink())}
+                    className="w-full h-11 sm:h-14 text-sm sm:text-lg font-semibold"
+                    size="lg"
+                  >
+                    <Smartphone className="mr-1.5 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                    Mở App Ngân Hàng
+                  </Button>
+
+                  <p className="text-[10px] sm:text-xs text-center text-muted-foreground leading-tight">
+                    Hoặc chuyển khoản thủ công với thông tin bên dưới
+                  </p>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Desktop: Show QR Code */}
+                <div className="flex justify-center bg-white p-4 rounded-lg">
+                  {deposit.payment_data?.qr_url ? (
+                    <img
+                      src={deposit.payment_data.qr_url || "/placeholder.svg"}
+                      alt="Mã QR thanh toán"
+                      className="w-64 h-64"
+                    />
+                  ) : (
+                    <div className="w-64 h-64 flex items-center justify-center bg-muted">
+                      <QrCode className="w-12 h-12 text-muted-foreground" />
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                  <Monitor className="w-4 h-4" />
+                  <span>Quét bằng app ngân hàng trên điện thoại</span>
+                </div>
+              </>
             )}
 
-            {/* QR Code - hiển thị cho cả mobile và desktop */}
-            <div className="flex justify-center bg-white p-4 rounded-lg">
-              {deposit.payment_data?.qr_url ? (
-                <img
-                  src={deposit.payment_data.qr_url || "/placeholder.svg"}
-                  alt="Mã QR thanh toán"
-                  className="w-48 h-48 sm:w-64 sm:h-64"
-                />
-              ) : (
-                <div className="w-48 h-48 sm:w-64 sm:h-64 flex items-center justify-center bg-muted">
-                  <QrCode className="w-12 h-12 text-muted-foreground" />
-                </div>
-              )}
-            </div>
-
-            <div className="flex items-center justify-center gap-2 text-xs sm:text-sm text-muted-foreground">
-              <QrCode className="w-4 h-4" />
-              <span>Quét mã QR bằng app ngân hàng</span>
-            </div>
-
-            <div className="space-y-1.5 sm:space-y-3 bg-primary/5 p-2.5 sm:p-4 rounded-lg border border-primary/20">
-              <div className="text-center pb-1 sm:pb-2 border-b border-primary/20">
+            <div className="space-y-2 sm:space-y-3 bg-primary/5 p-3 sm:p-4 rounded-lg border-2 border-primary/20">
+              <div className="text-center pb-1.5 sm:pb-2 border-b border-primary/20">
                 <p className="text-[10px] sm:text-xs text-muted-foreground font-medium">Thông tin chuyển khoản</p>
               </div>
 
-              <div className="space-y-1.5 sm:space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 <div>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5">Ngân hàng</p>
-                  <p className="text-xs sm:text-sm font-medium text-foreground">Timo (Viet Capital Bank)</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">Ngân hàng</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs sm:text-sm font-medium text-foreground">Timo (Viet Capital Bank)</p>
+                  </div>
                 </div>
 
                 <div>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5">Số tài khoản</p>
-                  <div className="flex items-center gap-1.5">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">Số tài khoản</p>
+                  <div className="flex items-center gap-1.5 sm:gap-2">
                     <p className="font-mono text-xs sm:text-sm font-medium text-foreground flex-1 break-all">
                       {formatTimoAccountNumber(deposit.payment_data?.account_number || "")}
                     </p>
@@ -451,48 +354,50 @@ Nội dung: ${deposit.payment_code}`
                       size="sm"
                       variant="outline"
                       onClick={() => handleCopy(deposit.payment_data?.account_number || "", "account")}
-                      className="h-7 sm:h-9 px-2 flex-shrink-0"
+                      className="h-7 sm:h-9 px-2 sm:px-3 flex-shrink-0"
                     >
                       <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <span className="ml-0.5 sm:ml-1 text-[10px] sm:text-xs">{copied === "account" ? "✓" : ""}</span>
                     </Button>
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5">Tên chủ tài khoản</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">Tên chủ tài khoản</p>
                   <p className="text-xs sm:text-sm font-medium text-foreground">{deposit.payment_data?.account_name}</p>
                 </div>
 
                 <div>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5">Số tiền</p>
-                  <div className="flex items-center gap-1.5">
-                    <p className="text-base sm:text-2xl font-bold text-primary flex-1">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">Số tiền</p>
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <p className="text-lg sm:text-2xl font-bold text-primary flex-1">
                       {deposit.amount.toLocaleString("vi-VN")} VND
                     </p>
                     <Button 
                       size="sm" 
                       variant="outline" 
                       onClick={() => handleCopy(deposit.amount.toString(), "amount")}
-                      className="h-7 sm:h-9 px-2 flex-shrink-0"
+                      className="h-7 sm:h-9 px-2 sm:px-3 flex-shrink-0"
                     >
                       <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <span className="ml-0.5 sm:ml-1 text-[10px] sm:text-xs">{copied === "amount" ? "✓" : ""}</span>
                     </Button>
                   </div>
                 </div>
 
-                <div className="pt-1 sm:pt-2 border-t border-primary/30">
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5">
+                <div className="pt-1.5 sm:pt-2 border-t-2 border-primary/30">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">
                     <span className="text-red-500 font-bold">*</span> Nội dung chuyển khoản (Bắt buộc)
                   </p>
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <p className="font-mono font-bold text-xs sm:text-lg text-primary flex-1 bg-primary/10 px-2 sm:px-3 py-1.5 sm:py-2 rounded break-all">
+                  <div className="flex items-center gap-1.5 sm:gap-2 mt-0.5 sm:mt-1">
+                    <p className="font-mono font-bold text-sm sm:text-lg text-primary flex-1 bg-primary/10 px-2 sm:px-3 py-1.5 sm:py-2 rounded break-all">
                       {deposit.payment_code}
                     </p>
                     <Button
                       size="sm"
                       variant="default"
                       onClick={() => handleCopy(deposit.payment_code, "code")}
-                      className="h-8 sm:h-10 px-2 flex-shrink-0"
+                      className="h-8 sm:h-10 px-2 sm:px-3 flex-shrink-0"
                     >
                       <Copy className="w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1" />
                       <span className="text-[10px] sm:text-xs">{copied === "code" ? "✓" : "Copy"}</span>
@@ -502,36 +407,43 @@ Nội dung: ${deposit.payment_code}`
               </div>
             </div>
 
-            {/* Instructions - Compact */}
-            <Alert className="border-primary/20 py-2 sm:py-3">
-              <AlertDescription className="text-[10px] sm:text-sm leading-snug">
-                <p className="font-semibold mb-1 text-[11px] sm:text-sm">Hướng dẫn thanh toán:</p>
-                <ol className="list-decimal list-inside space-y-0.5 sm:space-y-1 text-[10px] sm:text-sm">
-                  <li>Quét mã QR bằng app ngân hàng hoặc copy thông tin bên dưới</li>
+            {/* Instructions */}
+            <Alert className="border-primary/20">
+              <AlertDescription className="text-[11px] sm:text-sm leading-relaxed">
+                <p className="font-semibold mb-1 sm:mb-2 text-xs sm:text-sm">Hướng dẫn thanh toán:</p>
+                <ol className="list-decimal list-inside space-y-0.5 sm:space-y-1.5 text-[10px] sm:text-sm">
+                  {isMobile ? (
+                    <>
+                      <li>Nhấn nút "Mở App Ngân Hàng" phía trên</li>
+                      <li>Hoặc mở app ngân hàng và chuyển khoản thủ công</li>
+                    </>
+                  ) : (
+                    <li>Quét mã QR bằng app ngân hàng trên điện thoại</li>
+                  )}
                   <li>
-                    <strong className="text-red-600 font-bold">Nội dung bắt buộc: {deposit.payment_code}</strong>
+                    <strong className="text-red-600 font-bold">Nhập đúng nội dung: {deposit.payment_code}</strong>
                   </li>
-                  <li>Số tiền: <strong>{deposit.amount.toLocaleString("vi-VN")}đ</strong></li>
+                  <li>Xác nhận thanh toán đúng số tiền {deposit.amount.toLocaleString("vi-VN")}đ</li>
                   <li>Giao dịch sẽ được xác nhận tự động trong 1-5 phút</li>
                 </ol>
               </AlertDescription>
             </Alert>
 
             {/* Status */}
-            <div className="flex items-center justify-between p-2 sm:p-3 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg border border-yellow-200 dark:border-yellow-800 -mb-1">
-              <div className="flex items-center gap-1.5">
+            <div className="flex items-center justify-between p-2 sm:p-3 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 animate-pulse flex-shrink-0" />
-                <span className="text-[10px] sm:text-sm font-medium text-yellow-700 dark:text-yellow-400">Đang chờ thanh toán...</span>
+                <span className="text-[11px] sm:text-sm font-medium text-yellow-700 dark:text-yellow-400">Đang chờ thanh toán...</span>
               </div>
               <Button 
                 size="sm" 
                 variant="ghost" 
                 onClick={handleRefreshStatus} 
                 disabled={isChecking}
-                className="h-7 sm:h-8 px-1.5 flex-shrink-0"
+                className="h-7 sm:h-8 px-1.5 sm:px-2 flex-shrink-0"
               >
                 <RefreshCw className={`w-3 h-3 sm:w-4 sm:h-4 ${isChecking ? "animate-spin" : ""}`} />
-                <span className="ml-0.5 text-[10px] sm:text-xs">Kiểm tra</span>
+                <span className="ml-0.5 sm:ml-1 text-[10px] sm:text-xs">Kiểm tra</span>
               </Button>
             </div>
 
@@ -542,7 +454,6 @@ Nội dung: ${deposit.payment_code}`
               </Alert>
             )}
           </div>
-          </div>
         </DialogContent>
       </Dialog>
     )
@@ -551,7 +462,7 @@ Nội dung: ${deposit.payment_code}`
   // Initial state - show package info and create deposit button
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-foreground">Thanh Toán</DialogTitle>
           <DialogDescription>{packageInfo.name}</DialogDescription>
@@ -570,50 +481,27 @@ Nội dung: ${deposit.payment_code}`
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          
-          {/* Hiển thị khi cần đăng nhập */}
-          {needsLogin ? (
-            <>
-              <Alert className="border-primary/30 bg-primary/5">
-                <AlertCircle className="h-4 w-4 text-primary" />
-                <AlertDescription className="text-foreground">
-                  Vui lòng đăng nhập để tiếp tục thanh toán
-                </AlertDescription>
-              </Alert>
-              
-              <Button onClick={handleLoginForPayment} className="w-full" size="lg">
-                <LogIn className="mr-2 h-4 w-4" />
-                Đăng nhập để thanh toán
-              </Button>
-              
-              <p className="text-xs text-center text-muted-foreground">
-                Sau khi đăng nhập, bạn sẽ được quay lại để hoàn tất thanh toán
-              </p>
-            </>
-          ) : (
-            <>
-              {/* Payment Button */}
-              <Button onClick={handleCreateDeposit} disabled={isCreating} className="w-full" size="lg">
-                {isCreating ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Đang tạo mã QR...
-                  </>
-                ) : (
-                  <>
-                    <QrCode className="mr-2 h-4 w-4" />
-                    Tạo mã QR thanh toán
-                  </>
-                )}
-              </Button>
 
-              <p className="text-xs text-center text-muted-foreground">
-                Thanh toán qua chuyển khoản ngân hàng Timo
-                <br />
-                Tự động xác nhận trong 1-5 phút
-              </p>
-            </>
-          )}
+          {/* Payment Button */}
+          <Button onClick={handleCreateDeposit} disabled={isCreating} className="w-full" size="lg">
+            {isCreating ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Đang tạo mã QR...
+              </>
+            ) : (
+              <>
+                <QrCode className="mr-2 h-4 w-4" />
+                Tạo mã QR thanh toán
+              </>
+            )}
+          </Button>
+
+          <p className="text-xs text-center text-muted-foreground">
+            Thanh toán qua chuyển khoản ngân hàng Timo
+            <br />
+            Tự động xác nhận trong 1-5 phút
+          </p>
         </div>
       </DialogContent>
     </Dialog>

@@ -1,9 +1,9 @@
 // File này chỉ để export các config nếu cần custom
 
 export const AI_CONFIG = {
-  model: "openai/gpt-4o", // Model chuyên gia - cần output chi tiết
-  temperature: 0.5, // Cân bằng sáng tạo và chính xác
-  maxTokens: 4000, // Prompt chuyên gia cần output dài
+  model: "openai/gpt-4o-mini", // Default model qua Vercel AI Gateway
+  temperature: 0.7,
+  maxTokens: 1200, // Giảm từ 2000 xuống 1200
   cacheEnabled: true, // Enable caching
   cacheDuration: 5 * 60 * 1000, // 5 phút
 }

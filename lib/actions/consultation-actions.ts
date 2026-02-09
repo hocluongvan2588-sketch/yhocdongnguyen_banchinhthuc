@@ -1,8 +1,7 @@
 "use server"
 
-import { createClient } from "@/lib/supabase/server"
+import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
-import { getSupabaseServerClient } from "@/lib/supabase/server" // Declared the missing variable
 
 export async function createConsultation(data: {
   name: string
@@ -15,7 +14,7 @@ export async function createConsultation(data: {
   hexagram_change?: string
   interpretation?: string
 }) {
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
 
   // Get current user
   const {
@@ -46,7 +45,7 @@ export async function createConsultation(data: {
 }
 
 export async function getUserConsultations() {
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
 
   const {
     data: { user },
@@ -71,7 +70,7 @@ export async function getUserConsultations() {
 }
 
 export async function getConsultationById(id: string) {
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
 
   const {
     data: { user },

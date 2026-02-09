@@ -130,17 +130,11 @@ export function getCanChiNam(
 }
 
 /**
- * Tính tuổi Âm lịch (Vietnamese lunar age)
- * Theo truyền thống Việt Nam:
- * - Sinh ra đã 1 tuổi
- * - Tăng 1 tuổi mỗi Tết Nguyên Đán
- * 
- * Công thức đơn giản: (Năm hiện tại - Năm sinh) + 1
- * Lưu ý: Đây là tuổi âm lịch đầy đủ, không phụ thuộc vào việc đã qua sinh nhật chưa
+ * Tính tuổi từ năm sinh dương lịch
  */
 export function calculateAge(birthYear: number): number {
   const currentYear = new Date().getFullYear()
-  return currentYear - birthYear + 1
+  return currentYear - birthYear
 }
 
 /**
@@ -263,8 +257,8 @@ export function getAgeGroupDescription(ageGroup: "pediatric" | "youth" | "adult"
 }
 
 /**
- * Tính tuổi Âm lịch từ năm sinh (chỉ dùng năm, không cần tháng/ngày)
+ * Tính tuổi từ năm sinh (chỉ dùng năm, không cần tháng/ngày)
  */
 export function calculateSimpleAge(birthYear: number): number {
-  return new Date().getFullYear() - birthYear + 1
+  return new Date().getFullYear() - birthYear
 }

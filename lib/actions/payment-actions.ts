@@ -1,8 +1,7 @@
 "use server"
 
-import { createClient } from "@/lib/supabase/server"
+import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
-import { getSupabaseServerClient } from "@/lib/supabase/server" // Declared the missing variable
 
 export async function processPayment(data: {
   solutionId: string
@@ -15,7 +14,7 @@ export async function processPayment(data: {
     cvv: string
   }
 }) {
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
 
   const {
     data: { user },
@@ -72,7 +71,7 @@ export async function processPayment(data: {
 }
 
 export async function grantAccessToSolution(solutionId: string, userId?: string) {
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
 
   // If no userId provided, use current user
   let targetUserId = userId
@@ -119,7 +118,7 @@ export async function grantAccessToSolution(solutionId: string, userId?: string)
 }
 
 export async function revokeAccessToSolution(solutionId: string, userId?: string) {
-  const supabase = await createClient()
+  const supabase = await getSupabaseServerClient()
 
   // If no userId provided, use current user
   let targetUserId = userId

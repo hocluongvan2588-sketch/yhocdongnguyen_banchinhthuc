@@ -19,9 +19,9 @@ function NumerologyContent() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
 
-  const upper = Number.parseInt(searchParams.get("upper") ?? "1", 10) || 1
-  const lower = Number.parseInt(searchParams.get("lower") ?? "1", 10) || 1
-  const moving = Number.parseInt(searchParams.get("moving") ?? "1", 10) || 1
+  const upper = Number.parseInt(searchParams.get("upper") || "1")
+  const lower = Number.parseInt(searchParams.get("lower") || "1")
+  const moving = Number.parseInt(searchParams.get("moving") || "1")
 
   useEffect(() => {
     const result = getNumerologyTreatment(upper, lower, moving)
@@ -104,16 +104,11 @@ function NumerologyContent() {
             <div className="container mx-auto px-4 py-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h1 className="text-3xl font-bold tracking-tight text-foreground">Tuong So Bat Quai</h1>
-                    <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-purple-500/20 text-purple-700 border border-purple-500/30">
-                      Goi bo tro
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-1">Lieu phap niem so - Bo tro song song voi cac goi chinh</p>
+                  <h1 className="text-3xl font-bold tracking-tight text-foreground">Gói 3: Tượng Số Bát Quái</h1>
+                  <p className="text-sm text-muted-foreground mt-1">Liệu pháp chữa bệnh bằng số</p>
                 </div>
                 <Button variant="outline" onClick={() => (window.location.href = "/")}>
-                  Trang chu
+                  Trang chủ
                 </Button>
               </div>
             </div>
@@ -121,18 +116,6 @@ function NumerologyContent() {
 
           <main className="container mx-auto px-4 py-12">
             <div className="max-w-5xl mx-auto space-y-8">
-              {/* Ghi chú về gói bổ trợ */}
-              <Alert className="border-purple-500/30 bg-purple-500/5">
-                <Sparkles className="h-5 w-5 text-purple-600" />
-                <AlertDescription className="ml-2">
-                  <p className="text-sm text-muted-foreground">
-                    <strong className="text-foreground">Goi bo tro:</strong> Tuong So Bat Quai la lieu phap niem so co the su dung 
-                    <strong className="text-purple-700"> doc lap hoac ket hop song song</strong> voi cac goi chinh (Nam Duoc, Bam Huyet) 
-                    de tang cuong hieu qua dieu tri. Phuong phap nay tac dong vao truong nang luong cua co the thong qua tan so am thanh va y niem.
-                  </p>
-                </AlertDescription>
-              </Alert>
-
               {/* Diagnosis Summary */}
               <Card className="border-primary/30 shadow-lg">
                 <CardHeader>

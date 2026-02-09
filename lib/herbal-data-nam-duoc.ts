@@ -1,24 +1,5 @@
 import { getTrigramByNumber } from "./data/trigram-data"
 import { getHexagramByTrigrams } from "./data/hexagram-data"
-import { createClient } from "./supabase/client"
-
-// Interface cho bai thuoc tu database
-export interface DatabasePhuongThuoc {
-  id: string;
-  ten_phuong: string;
-  ten_han: string | null;
-  xuat_xu: string | null;
-  ngu_hanh_chinh: string | null;
-  tang_phu_chinh: string[] | null;
-  thanh_phan: { ten: string; lieu: string }[] | null;
-  cach_dung: string | null;
-  chi_dinh: string[] | null;
-  chong_chi_dinh: string[] | null;
-  luu_y: string | null;
-  que_thuong: number | null;
-  que_ha: number | null;
-  is_active: boolean;
-}
 
 export interface NamDuocHerb {
   code: string // T001, M001, K001, H001, TH001
@@ -460,105 +441,7 @@ Chủ về tiếp thu ẩm thực. Khi Vì khí uất trệ, đình trệ, gây 
   },
 }
 
-// Query bai thuoc tu database dua tren que
-export async function getPrescriptionFromDatabase(
-  upperTrigram: number,
-  lowerTrigram: number
-): Promise<DatabasePhuongThuoc | null> {
-  try {
-    const supabase = createClient();
-    const { data, error } = await supabase
-      .from('nam_duoc_phuong_thuoc')
-      .select('*')
-      .eq('que_thuong', upperTrigram)
-      .eq('que_ha', lowerTrigram)
-      .eq('is_active', true)
-      .order('do_uu_tien', { ascending: true })
-      .limit(1)
-      .single();
-    
-    if (error || !data) {
-      console.log(`[NamDuoc] No prescription found for hexagram ${upperTrigram}_${lowerTrigram}`);
-      return null;
-    }
-    
-    console.log(`[NamDuoc] Found prescription from DB: ${data.ten_phuong}`);
-    return data;
-  } catch (err) {
-    console.error('[NamDuoc] Database query error:', err);
-    return null;
-  }
-}
-
-// Convert database prescription to NamDuocPrescription format
-export function convertDatabaseToNamDuoc(dbPrescription: DatabasePhuongThuoc): NamDuocPrescription {
-  // Map thanh phan to formula
-  const formula = (dbPrescription.thanh_phan || []).map((item, index) => {
-    // Assign role based on position
-    let role: "Quân" | "Thần" | "Tá" | "Sứ" = "Tá";
-    if (index === 0) role = "Quân";
-    else if (index === 1) role = "Thần";
-    else if (index === (dbPrescription.thanh_phan?.length || 0) - 1) role = "Sứ";
-    
-    // Create herb object from name
-    const herb: NamDuocHerb = {
-      code: `DB${index}`,
-      name: item.ten,
-      taste: "",
-      nature: "",
-      element: dbPrescription.ngu_hanh_chinh || "",
-      organ: dbPrescription.tang_phu_chinh?.[0] || "",
-      effects: "",
-    };
-    
-    return { herb, amount: item.lieu, role };
-  });
-
-  return {
-    name: dbPrescription.ten_phuong,
-    indication: dbPrescription.chi_dinh?.join(", ") || "",
-    analysis: dbPrescription.xuat_xu || undefined,
-    formula,
-    preparation: [
-      "Rửa sạch các vị thuốc, ngâm trong nước lạnh 20-30 phút",
-      "Đun sôi với 800ml nước, sau đó hạ lửa nhỏ",
-      "Sắc trong 35-45 phút đến khi còn 300-350ml",
-      "Lọc bỏ bã, chia làm 2 lần uống",
-    ],
-    dosage: dbPrescription.cach_dung || "Uống 150-175ml mỗi lần, sáng và tối sau ăn 30 phút",
-    duration: "Liên tục trong 2-4 tuần, tái khám nếu không cải thiện",
-    precautions: dbPrescription.chong_chi_dinh || [
-      "Uống sau khi ăn để tránh khó tiêu",
-      "Tránh ăn thực phẩm cay nóng, dầu mỡ trong thời gian dùng thuốc",
-      "Nghỉ ngơi đầy đủ, tránh căng thẳng",
-      "Nên tham khảo ý kiến thầy thuốc trước khi dùng",
-    ],
-  };
-}
-
-// Async version: Generate prescription - uu tien query tu database
-export async function generateNamDuocPrescriptionAsync(
-  upperTrigram: number,
-  lowerTrigram: number,
-  movingLine: number,
-): Promise<NamDuocPrescription> {
-  // Step 1: Try to get from database first
-  const dbPrescription = await getPrescriptionFromDatabase(upperTrigram, lowerTrigram);
-  if (dbPrescription) {
-    return convertDatabaseToNamDuoc(dbPrescription);
-  }
-  
-  // Step 2: Fallback to local fixed prescriptions
-  const hexagramKey = `${upperTrigram}_${lowerTrigram}`;
-  if (FIXED_PRESCRIPTIONS[hexagramKey]) {
-    return FIXED_PRESCRIPTIONS[hexagramKey];
-  }
-  
-  // Step 3: Dynamic generation as last resort
-  return generateNamDuocPrescriptionDynamic(upperTrigram, lowerTrigram, movingLine);
-}
-
-// Sync version (legacy): Generate prescription based on hexagram and symptoms
+// Generate prescription based on hexagram and symptoms
 export function generateNamDuocPrescription(
   upperTrigram: number,
   lowerTrigram: number,
@@ -569,18 +452,8 @@ export function generateNamDuocPrescription(
   if (FIXED_PRESCRIPTIONS[hexagramKey]) {
     return FIXED_PRESCRIPTIONS[hexagramKey]
   }
-  
-  // Fallback to dynamic generation
-  return generateNamDuocPrescriptionDynamic(upperTrigram, lowerTrigram, movingLine);
-}
 
-// Dynamic generation logic
-function generateNamDuocPrescriptionDynamic(
-  upperTrigram: number,
-  lowerTrigram: number,
-  movingLine: number,
-): NamDuocPrescription {
-  // Use dynamic generation based on hexagram elements
+  // Otherwise, use dynamic generation
   const { primaryElement, affectedOrgans, selectedHerbs } = selectHerbsByHexagram(
     upperTrigram,
     lowerTrigram,

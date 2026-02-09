@@ -21,7 +21,6 @@ interface Solution {
   meridian_pathway: string | null
   preparation_method: string | null
   reference_source: string | null
-  promo_message: string | null
 }
 
 interface SolutionEditDialogProps {
@@ -38,7 +37,6 @@ export function SolutionEditDialog({ solution, open, onOpenChange, onSaved }: So
     description: solution.description || "",
     unlock_cost: solution.unlock_cost,
     reference_source: solution.reference_source || "",
-    promo_message: solution.promo_message || "",
   })
 
   async function handleSubmit(e: React.FormEvent) {
@@ -107,20 +105,6 @@ export function SolutionEditDialog({ solution, open, onOpenChange, onSaved }: So
               value={formData.reference_source}
               onChange={(e) => setFormData({ ...formData, reference_source: e.target.value })}
             />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="promo_message">Thông báo khuyến mãi (tùy chọn)</Label>
-            <Textarea
-              id="promo_message"
-              value={formData.promo_message}
-              onChange={(e) => setFormData({ ...formData, promo_message: e.target.value })}
-              rows={2}
-              placeholder="VD: 🎊 Chúc mừng năm mới! Giảm giá đặc biệt 20% dịp Tết"
-            />
-            <p className="text-xs text-muted-foreground">
-              Thông báo này sẽ hiển thị trong modal thanh toán để user biết về khuyến mãi/tri ân
-            </p>
           </div>
 
           <div className="bg-muted p-4 rounded-lg space-y-2">
