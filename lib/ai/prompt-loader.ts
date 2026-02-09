@@ -34,13 +34,16 @@ export async function loadPromptBySlug(slug: string): Promise<PromptTemplate | n
       .single();
 
     if (error) {
-      console.error(`[v0] Failed to load prompt ${slug}:`, error.message);
+      // Don't log error if table doesn't exist yet - this is expected in new installations
+      if (!error.message.includes('does not exist')) {
+        console.error(`[v0] Failed to load prompt ${slug}:`, error.message);
+      }
       return null;
     }
 
     return data;
   } catch (error) {
-    console.error('[v0] Prompt loader error:', error);
+    // Gracefully handle database errors - system should work without database prompts
     return null;
   }
 }

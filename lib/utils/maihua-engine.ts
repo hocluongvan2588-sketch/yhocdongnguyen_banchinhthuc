@@ -123,7 +123,7 @@ export const HEXAGRAM_64: Record<number, { name: string; chinese: string; meanin
   75: { name: "Sơn Phong Cổ", chinese: "山風蠱", meaning: "Rối loạn, tỳ gan" },
   76: { name: "Sơn Thủy Mông", chinese: "山水蒙", meaning: "Mù mờ, tỳ thận" },
   77: { name: "Cấn", chinese: "艮", meaning: "Sơn - Dạ dày, lưng" },
-  78: { name: "Sơn Địa Bác", chinese: "山地剝", meaning: "Bóc lột, tiêu hóa kém" },
+  78: { name: "Sơn Địa Bác", chinese: "山地剝", meaning: "Bóc l��t, tiêu hóa kém" },
   
   // Nhóm 8: Khôn Thượng (8)
   81: { name: "Địa Thiên Thái", chinese: "地天泰", meaning: "Thái hòa, tỳ phổi cân bằng" },
@@ -349,7 +349,9 @@ export function calculateMaiHua(
   const interpretation = {
     mainMeaning: mainInfo.meaning || "Trạng thái hiện tại của cơ thể",
     changedMeaning: changedInfo.meaning || "Xu hướng diễn biến của bệnh",
-    health: `Quẻ chủ ${mainInfo.name} cho thấy tình trạng sức khỏe liên quan đến ${mainInfo.meaning}. Hào động ở vị trí ${movingLineValue} và quẻ biến ${changedInfo.name} cho thấy xu hướng ${changedInfo.meaning}.`
+    health: `Quẻ chủ ${mainInfo.name} cho thấy tình trạng sức khỏe liên quan đến ${mainInfo.meaning}. Hào động ở vị trí ${movingLineValue} và quẻ biến ${changedInfo.name} cho thấy xu hướng ${changedInfo.meaning}.`,
+    mutual: `Quẻ Hỗ ${mutualInfo.name} thể hiện trạng thái trung gian, cho thấy bản chất sâu xa của vấn đề sức khỏe liên quan đến ${mutualInfo.meaning || 'quá trình chuyển hóa nội tại'}.`,
+    trend: `Quẻ Biến ${changedInfo.name} cho thấy xu hướng diễn biến ${changedInfo.meaning || 'thay đổi theo thời gian'}, giúp dự đoán hướng phát triển của tình trạng sức khỏe.`
   };
   
   return {

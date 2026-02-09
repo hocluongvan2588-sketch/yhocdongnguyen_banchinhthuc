@@ -332,16 +332,12 @@ export async function POST(req: Request) {
       namDuocInfo: undefined, // Sẽ bổ sung khi có NamDuocEngine
     };
 
-    // Thử load prompt từ database trước, fallback về hardcoded prompt
+    // Load prompt từ database, auto-fallback về hardcoded nếu database unavailable
     let userPrompt: string;
     try {
-      console.log('[v0] Attempting to load dynamic prompt from database...');
       userPrompt = await buildDynamicMedicalPrompt(unifiedPromptInput);
-      console.log(`[v0] ✅ Loaded dynamic prompt from database, length: ${userPrompt.length} chars`);
     } catch (error) {
-      console.log('[v0] ⚠️ Failed to load dynamic prompt, using hardcoded fallback:', error);
       userPrompt = buildUnifiedMedicalPrompt(unifiedPromptInput);
-      console.log(`[v0] Built hardcoded unified prompt, length: ${userPrompt.length} chars`);
     }
 
     let layer1Result;
@@ -353,10 +349,14 @@ export async function POST(req: Request) {
         layer1Result = await generateText({
           model: openai('gpt-4o'),
           messages: [
+            { 
+              role: 'system', 
+              content: 'Bạn là chuyên gia y học cổ truyền kết hợp y học hiện đại. Nhiệm vụ của bạn là phân tích dữ liệu quẻ số Mai Hoa để đưa ra đánh giá sức khỏe theo nguyên lý Đông - Tây y kết hợp. Đây là phân tích văn hóa và tham khảo, không thay thế khám bác sĩ. Hãy tuân thủ CHÍNH XÁC format trong 【】 và sử dụng ngôn ngữ gần gũi, dễ hiểu.' 
+            },
             { role: 'user', content: userPrompt }
           ],
-          temperature: 0.5,
-          maxTokens: 4000, // Prompt chuyên gia cần output dài và chi tiết
+          temperature: 0.4,
+          maxTokens: 4000,
         });
         
         // Kiểm tra response có đủ dài không
