@@ -169,8 +169,8 @@ async function generateTextWithOpenAI(systemPrompt: string, userPrompt: string):
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
-        temperature: 0.5,
-        max_tokens: 4000, // Prompt chuyên gia cần output dài và chi tiết
+        max_tokens: 1500,
+        temperature: 0.3, // Giảm temperature để AI tuân thủ format chặt chẽ hơn
       }),
       signal: controller.signal,
     })
@@ -405,10 +405,22 @@ export async function POST(request: NextRequest) {
         subject,
       )
 
-      // System prompt is minimal - all instructions are in unified prompt
-      const systemPrompt = `Bạn là chuyên gia phân tích y học cổ truyền. Tuân thủ CHÍNH XÁC format được yêu cầu trong prompt.`
+      // System prompt - enforce strict format compliance
+      const systemPrompt = `Bạn là chuyên gia phân tích y học cổ truyền.
+
+⚠️ QUY TẮC TUYỆT ĐỐI:
+1. BẮT BUỘC tuân thủ CHÍNH XÁC format trong 【】
+2. PHẢI có cấu trúc "**Theo y học hiện đại:**" + "**Theo ngôn ngữ Đông y:**"
+3. KHÔNG tự ý sáng tạo format khác
+4. SỬ DỤNG đúng ví dụ mẫu đã cho
+5. KHÔNG bỏ qua bất kỳ phần bắt buộc nào
+
+Nếu AI vi phạm format, output sẽ bị từ chối.`
 
       console.log("[v0] Starting AI generation...")
+      console.log("[v0] User prompt preview (first 1000 chars):", userPrompt.substring(0, 1000))
+      console.log("[v0] Search for '【PHÂN TÍCH Y LÝ】' in prompt:", userPrompt.includes('【PHÂN TÍCH Y LÝ】'))
+      console.log("[v0] Search for 'FORMAT OUTPUT BẮT BUỘC' in prompt:", userPrompt.includes('FORMAT OUTPUT BẮT BUỘC'))
       const startTime = Date.now()
       const text = await generateTextWithOpenAI(systemPrompt, userPrompt)
       const endTime = Date.now()
