@@ -62,51 +62,27 @@ export interface DiagnosisInput {
  * Build medical diagnosis prompt with database fallback
  */
 export async function buildDynamicMedicalPrompt(input: DiagnosisInput): Promise<string> {
-  const variables = {
-    // Patient info
-    gender: input.patientContext.gender,
-    age: input.patientContext.age,
-    subject: input.patientContext.subject,
-    question: input.patientContext.question,
+  try {
+    // Try to load from database first
+    const dbPrompt = await buildPromptWithFallback(
+      'unified-medical-diagnosis',
+      {},
+      ''
+    );
     
-    // Hexagram info
-    mainHexagram: input.maihua.mainHexagram.name,
-    changedHexagram: input.maihua.changedHexagram.name,
-    mutualHexagram: input.maihua.mutualHexagram.name,
-    movingLine: input.maihua.movingLine,
-    
-    // Trigram info
-    upperTrigramName: input.diagnostic.mapping.upperTrigram.name,
-    upperTrigramElement: input.diagnostic.mapping.upperTrigram.element,
-    lowerTrigramName: input.diagnostic.mapping.lowerTrigram.name,
-    lowerTrigramElement: input.diagnostic.mapping.lowerTrigram.element,
-    
-    // Yao info
-    movingYaoPosition: input.diagnostic.mapping.movingYao.position,
-    movingYaoBodyLevel: input.diagnostic.mapping.movingYao.bodyLevel,
-    movingYaoAnatomy: input.diagnostic.mapping.movingYao.anatomy.join(', '),
-    movingYaoOrgans: input.diagnostic.mapping.movingYao.organs.join(', '),
-    
-    // Ti-Dung analysis
-    tiElement: input.diagnostic.expertAnalysis.tiDung.ti.element,
-    dungElement: input.diagnostic.expertAnalysis.tiDung.dung.element,
-    tiDungRelation: input.diagnostic.expertAnalysis.tiDung.relation,
-    severity: input.diagnostic.expertAnalysis.tiDung.severity,
-    
-    // Season info
-    season: input.seasonInfo?.tietKhi?.season || 'N/A',
-    seasonElement: input.seasonInfo?.tietKhi?.element || 'N/A',
-  };
+    // If database prompt is available and different from fallback, use it
+    if (dbPrompt && dbPrompt.length > 100) {
+      console.log('[v0] Using database prompt');
+      return dbPrompt;
+    }
+  } catch (error) {
+    console.log('[v0] Database prompt unavailable, using fallback');
+  }
   
-  // Fallback template (use hardcoded unified-medical-prompt)
-  const fallbackTemplate = buildUnifiedMedicalPrompt(input);
-  
-  // Try database first, fallback to hardcoded
-  return await buildPromptWithFallback(
-    'unified-medical-diagnosis',
-    variables,
-    fallbackTemplate
-  );
+  // Fallback to hardcoded unified-medical-prompt
+  // Use buildUnifiedMedicalPrompt directly - it's already fully built, not a template
+  console.log('[v0] Using hardcoded unified-medical-prompt');
+  return buildUnifiedMedicalPrompt(input);
 }
 
 /**
