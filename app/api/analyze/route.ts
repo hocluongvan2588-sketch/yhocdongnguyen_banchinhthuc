@@ -351,12 +351,12 @@ export async function POST(req: Request) {
           messages: [
             { 
               role: 'system', 
-              content: 'Bạn là chuyên gia y học cổ truyền kết hợp y học hiện đại. Nhiệm vụ của bạn là phân tích dữ liệu quẻ số Mai Hoa để đưa ra đánh giá sức khỏe theo nguyên lý Đông - Tây y kết hợp. Đây là phân tích văn hóa và tham khảo, không thay thế khám bác sĩ. Hãy tuân thủ CHÍNH XÁC format trong 【】 và sử dụng ngôn ngữ gần gũi, dễ hiểu.' 
+              content: 'Bạn là chuyên gia y học cổ truyền kết hợp y học hiện đại. Nhiệm vụ của bạn là phân tích dữ liệu quẻ số Mai Hoa để đưa ra đánh giá sức khỏe theo nguyên lý Đông - Tây y kết hợp. Đây là phân tích văn hóa và tham khảo, không thay thế khám bác sĩ. Hãy tuân thủ CHÍNH XÁC format trong 【】 và viết CHI TIẾT, đầy đủ, KHÔNG ngắn gọn. Sử dụng ngôn ngữ gần gũi, dễ hiểu nhưng phải chuyên sâu.' 
             },
             { role: 'user', content: userPrompt }
           ],
           temperature: 0.4,
-          maxTokens: 4000,
+          maxTokens: 6000,
         });
         
         // Kiểm tra response có đủ dài không

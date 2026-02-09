@@ -345,13 +345,20 @@ export function calculateMaiHua(
   const mutualLines = getHexagramLines(mutualTrigrams.upper, mutualTrigrams.lower);
   const mutualInfo = getHexagramInfo(mutualTrigrams.upper, mutualTrigrams.lower);
   
+  // Helper function to ensure proper encoding
+  const sanitizeText = (text: string) => {
+    if (!text) return '';
+    // Normalize Unicode and ensure proper encoding
+    return text.normalize('NFC').replace(/[\uFFFD\u0000-\u001F]/g, '');
+  };
+
   // Diễn giải y lý cơ bản
   const interpretation = {
-    mainMeaning: mainInfo.meaning || "Trạng thái hiện tại của cơ thể",
-    changedMeaning: changedInfo.meaning || "Xu hướng diễn biến của bệnh",
-    health: `Quẻ chủ ${mainInfo.name} cho thấy tình trạng sức khỏe liên quan đến ${mainInfo.meaning}. Hào động ở vị trí ${movingLineValue} và quẻ biến ${changedInfo.name} cho thấy xu hướng ${changedInfo.meaning}.`,
-    mutual: `Quẻ Hỗ ${mutualInfo.name} thể hiện trạng thái trung gian, cho thấy bản chất sâu xa của vấn đề sức khỏe liên quan đến ${mutualInfo.meaning || 'quá trình chuyển hóa nội tại'}.`,
-    trend: `Quẻ Biến ${changedInfo.name} cho thấy xu hướng diễn biến ${changedInfo.meaning || 'thay đổi theo thời gian'}, giúp dự đoán hướng phát triển của tình trạng sức khỏe.`
+    mainMeaning: sanitizeText(mainInfo.meaning || "Trạng thái hiện tại của cơ thể"),
+    changedMeaning: sanitizeText(changedInfo.meaning || "Xu hướng diễn biến của bệnh"),
+    health: sanitizeText(`Quẻ chủ ${mainInfo.name} cho thấy tình trạng sức khỏe liên quan đến ${mainInfo.meaning}. Hào động ở vị trí ${movingLineValue} và quẻ biến ${changedInfo.name} cho thấy xu hướng ${changedInfo.meaning}.`),
+    mutual: sanitizeText(`Quẻ Hỗ ${mutualInfo.name} thể hiện trạng thái trung gian, cho thấy bản chất sâu xa của vấn đề sức khỏe liên quan đến ${mutualInfo.meaning || 'quá trình chuyển hóa nội tại'}.`),
+    trend: sanitizeText(`Quẻ Biến ${changedInfo.name} cho thấy xu hướng diễn biến ${changedInfo.meaning || 'thay đổi theo thời gian'}, giúp dự đoán hướng phát triển của tình trạng sức khỏe.`)
   };
   
   return {
