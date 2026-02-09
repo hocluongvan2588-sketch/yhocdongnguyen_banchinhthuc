@@ -52,7 +52,7 @@ export async function checkUserAccess(solutionId: string) {
     .from("users")
     .select("is_admin")
     .eq("id", user.id)
-    .single()
+    .maybeSingle()
 
   if (userData?.is_admin) {
     console.log("[v0] Admin user detected - granting full access")
@@ -100,7 +100,7 @@ export async function getUserAccessibleSolutions() {
     .from("users")
     .select("is_admin")
     .eq("id", user.id)
-    .single()
+    .maybeSingle()
 
   // If admin, return all solutions (no need for user_access check)
   if (userData?.is_admin) {

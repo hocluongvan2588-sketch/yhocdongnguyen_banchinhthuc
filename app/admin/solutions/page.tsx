@@ -18,7 +18,7 @@ export default async function AdminSolutionsPage() {
     redirect("/")
   }
 
-  const { data: userData } = await supabase.from("users").select("is_admin").eq("id", user.id).single()
+  const { data: userData } = await supabase.from("users").select("is_admin").eq("id", user.id).maybeSingle()
 
   if (!userData?.is_admin) {
     redirect("/")

@@ -19,7 +19,7 @@ async function checkAdminAccess() {
     .from("users")
     .select("is_admin")
     .eq("email", user.email)
-    .single()
+    .maybeSingle()
 
   if (userError || !userData?.is_admin) {
     return { error: "Bạn không có quyền truy cập trang quản trị", isAdmin: false }
