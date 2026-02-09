@@ -21,3 +21,6 @@ export async function getSupabaseServerClient() {
     },
   })
 }
+
+// Backward compatibility: export createClient as alias for getSupabaseServerClient
+export const createClient = getSupabaseServerClient
