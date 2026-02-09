@@ -7,6 +7,7 @@ import {
   GEOGRAPHY_KNOWLEDGE,
 } from "@/lib/ai/prompts/system-instruction"
 import { buildUnifiedMedicalPrompt } from "@/lib/prompts/unified-medical.prompt"
+import { getHexagramName } from "@/lib/data/hexagram-data"
 import fs from "fs"
 import path from "path"
 import { selectRelevantChunks } from "@/lib/ai/knowledge/knowledge-loader"
@@ -17,7 +18,6 @@ import {
   setCachedResponse,
 } from "@/lib/ai/cache/response-cache"
 import { generateIntelligentFallback } from "@/lib/ai/fallback-diagnosis"
-import { constructPrompt } from "@/lib/prompts/construct-prompt" // Declare the variable here
 
 let knowledgeBaseCache: string | null = null
 let knowledgeBaseCacheTime: number | null = null
@@ -72,6 +72,11 @@ function buildUnifiedPromptInput(
   const upperInfo = getTrigramInfo(rawData.mainHexagram.upperName);
   const lowerInfo = getTrigramInfo(rawData.mainHexagram.lowerName);
   
+  // Get proper Vietnamese hexagram names
+  const mainHexagramName = getHexagramName(rawData.mainHexagram.upper, rawData.mainHexagram.lower);
+  const changedHexagramName = getHexagramName(rawData.transformedHexagram.upper, rawData.transformedHexagram.lower);
+  const mutualHexagramName = getHexagramName(rawData.mutualHexagram.upper, rawData.mutualHexagram.lower);
+  
   const input = {
     patientContext: {
       gender: gender || 'Không rõ',
@@ -80,14 +85,14 @@ function buildUnifiedPromptInput(
       question: healthConcern,
     },
     maihua: {
-      mainHexagram: { name: `${rawData.mainHexagram.upperName} ${rawData.mainHexagram.lowerName}` },
-      changedHexagram: { name: 'Quẻ Biến' }, // TODO: Get from rawData if available
-      mutualHexagram: { name: 'Quẻ Hỗ' }, // TODO: Get from rawData if available
+      mainHexagram: { name: mainHexagramName },
+      changedHexagram: { name: changedHexagramName },
+      mutualHexagram: { name: mutualHexagramName },
       movingLine: rawData.mainHexagram.movingLine,
       interpretation: {
-        health: rawData.mainHexagram.name || '',
+        health: rawData.interpretation.title || mainHexagramName,
         trend: rawData.bodyUseAnalysis.relationship,
-        mutual: '',
+        mutual: rawData.mutualHexagram.meaning || '',
       },
     },
     diagnostic: {
@@ -106,9 +111,9 @@ function buildUnifiedPromptInput(
           name: `Hào ${rawData.mainHexagram.movingLine}`,
           position: rawData.mainHexagram.movingLine,
           bodyLevel: rawData.affectedOrgans.bodyLevel || 'Trung tiêu',
-          anatomy: [rawData.affectedOrgans.primary],
+          anatomy: rawData.affectedOrgans.bodyParts || [rawData.affectedOrgans.primary],
           organs: [rawData.affectedOrgans.primary, rawData.affectedOrgans.secondary],
-          clinicalSignificance: rawData.bodyUseAnalysis.relationship,
+          clinicalSignificance: rawData.interpretation.summary || rawData.bodyUseAnalysis.relationship,
         },
       },
       expertAnalysis: {
@@ -133,7 +138,7 @@ function buildUnifiedPromptInput(
       },
       seasonAnalysis: {
         relation: 'trung-hòa' as const,
-        description: 'Phân tích theo tiết khí',
+        description: rawData.seasonalAnalysis.overallAssessment,
         advice: 'Tuân thủ theo mùa',
       },
       lunar: {
