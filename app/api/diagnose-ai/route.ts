@@ -405,26 +405,14 @@ export async function POST(request: NextRequest) {
         subject,
       )
 
-      // System prompt - enforce strict format compliance
-      const systemPrompt = `Bạn là chuyên gia phân tích y học cổ truyền.
+      // System prompt - cultural analysis guidance
+      const systemPrompt = `You are a specialist in classical Chinese medicine and I Ching divination analysis. Your task is to provide educational and cultural insights into health patterns based on hexagram readings and Five Elements theory. This is for informational purposes only, not medical advice.
 
-⚠️ QUY TẮC TUYỆT ĐỐI:
-1. BẮT BUỘC tuân thủ CHÍNH XÁC format trong 【】
-2. PHẢI có cấu trúc "**Theo y học hiện đại:**" + "**Theo ngôn ngữ Đông y:**"
-3. KHÔNG tự ý sáng tạo format khác
-4. SỬ DỤNG đúng ví dụ mẫu đã cho
-5. KHÔNG bỏ qua bất kỳ phần bắt buộc nào
+Please structure your response with clear sections as indicated in the user prompt, including both modern medical perspective and traditional Eastern medicine concepts. Be comprehensive and explain all terminology clearly for the reader's understanding.`
 
-Nếu AI vi phạm format, output sẽ bị từ chối.`
-
-      console.log("[v0] Starting AI generation...")
-      console.log("[v0] User prompt preview (first 1000 chars):", userPrompt.substring(0, 1000))
-      console.log("[v0] Search for '【PHÂN TÍCH Y LÝ】' in prompt:", userPrompt.includes('【PHÂN TÍCH Y LÝ】'))
-      console.log("[v0] Search for 'FORMAT OUTPUT BẮT BUỘC' in prompt:", userPrompt.includes('FORMAT OUTPUT BẮT BUỘC'))
       const startTime = Date.now()
       const text = await generateTextWithOpenAI(systemPrompt, userPrompt)
       const endTime = Date.now()
-      console.log(`[v0] AI generation completed in ${endTime - startTime}ms`)
       const aiInterpretation = parseAIResponse(text)
 
       const result = {
