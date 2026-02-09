@@ -15,6 +15,7 @@ import DateTimeInfo from '@/components/DateTimeInfo';
 import Header from '@/components/Header';
 import { PaymentModal } from '@/components/payment-modal';
 import { Suspense } from 'react';
+import MarkdownParagraph from '@/components/MarkdownParagraph'; // Import MarkdownParagraph component
 
 interface ResultsData {
   maihua: MaiHuaResult;
@@ -448,12 +449,14 @@ function ResultsContent() {
                 {/* Giải thích y lý */}
                 <div className="rounded-lg border border-border/50 bg-muted/30 p-4">
                   <h3 className="mb-2 text-base font-semibold text-foreground">Phân tích y lý (Đông - Tây y kết hợp)</h3>
-                  <div className="text-sm leading-relaxed text-muted-foreground whitespace-pre-line">
-                    {typeof aiAnalysis.explanation === 'string' 
-                      ? aiAnalysis.explanation 
-                      : typeof aiAnalysis.explanation === 'object' && aiAnalysis.explanation !== null
-                        ? Object.values(aiAnalysis.explanation).filter(v => typeof v === 'string').join('\n\n')
-                        : ''}
+                  <div className="text-sm text-muted-foreground prose prose-sm max-w-none prose-p:my-2 prose-p:leading-relaxed prose-strong:text-amber-900 dark:prose-strong:text-amber-100">
+                    <MarkdownParagraph 
+                      text={typeof aiAnalysis.explanation === 'string' 
+                        ? aiAnalysis.explanation 
+                        : typeof aiAnalysis.explanation === 'object' && aiAnalysis.explanation !== null
+                          ? Object.values(aiAnalysis.explanation).filter(v => typeof v === 'string').join('\n\n')
+                          : ''} 
+                    />
                   </div>
                   
                   {/* Kết luận: Bệnh từ tạng nào phát sinh */}

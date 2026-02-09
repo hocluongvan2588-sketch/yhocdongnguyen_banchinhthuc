@@ -335,9 +335,11 @@ VD MẪU: "${subjectContext.pronoun.charAt(0).toUpperCase() + subjectContext.pro
 ⚠️ TUYỆT ĐỐI KHÔNG ĐƯỢC BẮT ĐẦU BẰNG MÔ TẢ TRIỆU CHỨNG. Phần Tóm tắt bệnh trạng ở trên đã làm việc đó rồi.
 ⚠️ CẤM viết lại câu kiểu: "${subjectContext.pronoun.charAt(0).toUpperCase() + subjectContext.pronoun.slice(1)} đang cảm thấy [triệu chứng]..." — AI phải nhảy thẳng vào phân tích cơ chế.
 
-Mở đầu = 1 câu CHUYỂN TIẾP ngắn nối từ tóm tắt sang phân tích, VD:
+BẮT BUỘC MỞ ĐẦU BẰNG PHẦN MAPPING QUẺ XUỐNG CƠ QUAN (2-3 câu):
+"Quẻ Chủ **${maihua.mainHexagram.name}** trong Dịch Học ám chỉ [ý nghĩa chung về sức khỏe]. **Hào ${maihua.movingLine}** động chỉ ra rằng vấn đề sức khỏe nằm ở **${diagnostic.mapping.movingYao.bodyLevel}** của cơ thể, đặc biệt là vùng **${diagnostic.mapping.movingYao.anatomy.join(', ')}**, có thể liên quan đến các cơ quan như **${diagnostic.mapping.movingYao.organs?.join(' và ') || 'các tạng phủ liên quan'}**."
+
+SAU ĐÓ MỚI CHUYỂN TIẾP sang phân tích Đông-Tây y:
 "Vì sao lại đau ở vùng này? Có 2 góc nhìn giúp ${subjectContext.pronoun} hiểu rõ hơn:"
-hoặc: "Để hiểu rõ gốc vấn đề, ta nhìn từ 2 phía:"
 
 FORMAT OUTPUT BẮT BUỘC (AI PHẢI TUÂN THỦ CHÍNH XÁC):
 
