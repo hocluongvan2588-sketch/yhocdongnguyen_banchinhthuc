@@ -1,13 +1,7 @@
-import { buildUnifiedMedicalPrompt } from '@/lib/prompts/unified-medical.prompt';
-import {
-  buildJsonFormatterPrompt,
-  JSON_FORMATTER_CONFIG,
-} from '@/lib/prompts/json-formatter.prompt';
 import {
   getSeasonInfo,
   analyzeSeasonRelation,
 } from '@/lib/utils/lunar-calendar';
-import { buildDynamicMedicalPrompt } from '@/lib/prompts/dynamic-medical.prompt'; // Declare the variable before using it
 
 /**
  * Tạo fallback response dựa trên dữ liệu đã tính toán
@@ -325,14 +319,6 @@ export async function POST(req: Request) {
       seasonInfo,
       namDuocInfo: undefined, // Sẽ bổ sung khi có NamDuocEngine
     };
-
-    // Load prompt từ database, auto-fallback về hardcoded nếu database unavailable
-    let userPrompt: string;
-    try {
-      userPrompt = await buildDynamicMedicalPrompt(unifiedPromptInput);
-    } catch (error) {
-      userPrompt = buildUnifiedMedicalPrompt(unifiedPromptInput);
-    }
 
     // Skip OpenAI entirely - use local fallback analysis as primary method
     // OpenAI content filters block medical/health analysis requests regardless of framing
