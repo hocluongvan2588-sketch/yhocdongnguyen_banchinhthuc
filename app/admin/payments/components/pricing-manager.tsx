@@ -1,9 +1,10 @@
-import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { PricingEditForm } from "./pricing-edit-form"
+import { getSupabaseServerClient } from "@/lib/supabase/server" // Declare the variable before using it
 
 export async function PricingManager() {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   // Get current pricing for each solution type
   const { data: pricingData } = await supabase

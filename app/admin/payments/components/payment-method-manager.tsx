@@ -1,10 +1,11 @@
-import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { PaymentMethodEditForm } from "./payment-method-edit-form"
+import { getSupabaseServerClient } from "@/lib/supabase/server" // Declare the variable before using it
 
 export async function PaymentMethodManager() {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const { data: paymentMethods } = await supabase
     .from("payment_methods")

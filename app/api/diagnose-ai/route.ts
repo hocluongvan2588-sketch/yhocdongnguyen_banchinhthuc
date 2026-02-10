@@ -6,6 +6,8 @@ import {
   CORE_KNOWLEDGE,
   GEOGRAPHY_KNOWLEDGE,
 } from "@/lib/ai/prompts/system-instruction"
+import { buildUnifiedMedicalPrompt } from "@/lib/prompts/unified-medical.prompt"
+import { getHexagramName } from "@/lib/data/hexagram-data"
 import fs from "fs"
 import path from "path"
 import { selectRelevantChunks } from "@/lib/ai/knowledge/knowledge-loader"
@@ -44,54 +46,115 @@ function loadKnowledgeBase(): string {
   }
 }
 
-function constructPrompt(
+function buildUnifiedPromptInput(
   rawData: ReturnType<typeof performComprehensiveDiagnosis>,
   healthConcern: string,
   currentMonth: number,
   gender?: string,
   age?: number,
-  painLocation?: string,
-  userLocation?: string,
-  canNam?: string,
-  chiNam?: string,
-  canNgay?: string,
-  chiNgay?: string,
-  element?: string,
-  lunarYear?: string,
-): string {
-  const anthropometricContext =
-    gender || age || painLocation || userLocation || canNam
-      ? `
-**Thông tin bệnh nhân:**
-${gender ? `- Giới tính: ${gender === "male" ? "Nam" : gender === "female" ? "Nữ" : "Không rõ"}` : ""}
-${age ? `- Tuổi: ${age} tuổi` : ""}
-${canNam && chiNam ? `- Can Chi Năm: ${canNam} ${chiNam}${lunarYear ? ` (Năm âm lịch: ${lunarYear})` : ""}` : ""}
-${canNgay && chiNgay ? `- Can Chi Ngày: ${canNgay} ${chiNgay}` : ""}
-${element ? `- Mệnh ngũ hành: ${element}` : ""}
-${painLocation && painLocation !== "unknown" ? `- Vị trí đau: ${painLocation === "left" ? "Bên trái" : painLocation === "right" ? "Bên phải" : painLocation === "center" ? "Ở giữa" : painLocation === "whole" ? "Toàn thân" : "Không rõ"}` : ""}
-${userLocation ? `- Địa lý: ${userLocation}` : ""}
-`
-      : ""
+  subject?: string,
+) {
+  // Map trigram names to get full hexagram information
+  const getTrigramInfo = (name: string) => {
+    const trigramMap: Record<string, { element: string; organs: string[] }> = {
+      'Càn': { element: 'Kim', organs: ['Phổi', 'Đại Tràng'] },
+      'Đoài': { element: 'Kim', organs: ['Phổi', 'Đại Tràng'] },
+      'Ly': { element: 'Hỏa', organs: ['Tâm', 'Tiểu Tràng'] },
+      'Chấn': { element: 'Mộc', organs: ['Gan', 'Mật'] },
+      'Tốn': { element: 'Mộc', organs: ['Gan', 'Mật'] },
+      'Khảm': { element: 'Thủy', organs: ['Thận', 'Bàng Quang'] },
+      'Cấn': { element: 'Thổ', organs: ['Tỳ', 'Vị'] },
+      'Khôn': { element: 'Thổ', organs: ['Tỳ', 'Vị'] },
+    };
+    return trigramMap[name] || { element: 'Kim', organs: ['Phổi'] };
+  };
 
-  return `**Triệu chứng:** "${healthConcern}"
-${anthropometricContext}
-**Quẻ:** ${rawData.mainHexagram.upperName}/${rawData.mainHexagram.lowerName}, Hào ${rawData.mainHexagram.movingLine}
-**Thể-Dụng:** ${rawData.bodyUseAnalysis.bodyElement} vs ${rawData.bodyUseAnalysis.useElement} (${rawData.bodyUseAnalysis.relationship})
-**Cơ quan:** ${rawData.affectedOrgans.primary}, ${rawData.affectedOrgans.secondary}
-**Tháng:** ${currentMonth}
+  const upperInfo = getTrigramInfo(rawData.mainHexagram.upperName);
+  const lowerInfo = getTrigramInfo(rawData.mainHexagram.lowerName);
+  
+  // Get proper Vietnamese hexagram names
+  const mainHexagramName = getHexagramName(rawData.mainHexagram.upper, rawData.mainHexagram.lower);
+  const changedHexagramName = getHexagramName(rawData.transformedHexagram.upper, rawData.transformedHexagram.lower);
+  const mutualHexagramName = getHexagramName(rawData.mutualHexagram.upper, rawData.mutualHexagram.lower);
+  
+  const input = {
+    patientContext: {
+      gender: gender || 'Không rõ',
+      age: age || 0,
+      subject: subject || 'banthan',
+      question: healthConcern,
+    },
+    maihua: {
+      mainHexagram: { name: mainHexagramName },
+      changedHexagram: { name: changedHexagramName },
+      mutualHexagram: { name: mutualHexagramName },
+      movingLine: rawData.mainHexagram.movingLine,
+      interpretation: {
+        health: rawData.interpretation.title || mainHexagramName,
+        trend: rawData.bodyUseAnalysis.relationship,
+        mutual: rawData.mutualHexagram.meaning || '',
+      },
+    },
+    diagnostic: {
+      mapping: {
+        upperTrigram: {
+          name: rawData.mainHexagram.upperName,
+          element: upperInfo.element,
+          primaryOrgans: upperInfo.organs,
+        },
+        lowerTrigram: {
+          name: rawData.mainHexagram.lowerName,
+          element: lowerInfo.element,
+          primaryOrgans: lowerInfo.organs,
+        },
+        movingYao: {
+          name: `Hào ${rawData.mainHexagram.movingLine}`,
+          position: rawData.mainHexagram.movingLine,
+          bodyLevel: rawData.affectedOrgans.bodyLevel || 'Trung tiêu',
+          anatomy: rawData.affectedOrgans.bodyParts || [rawData.affectedOrgans.primary],
+          organs: [rawData.affectedOrgans.primary, rawData.affectedOrgans.secondary],
+          clinicalSignificance: rawData.interpretation.summary || rawData.bodyUseAnalysis.relationship,
+        },
+      },
+      expertAnalysis: {
+        tiDung: {
+          ti: { element: rawData.bodyUseAnalysis.bodyElement },
+          dung: { element: rawData.bodyUseAnalysis.useElement },
+          relation: rawData.bodyUseAnalysis.relationship,
+          severity: rawData.bodyUseAnalysis.severity,
+          prognosis: rawData.bodyUseAnalysis.prognosis,
+        },
+      },
+    },
+    seasonInfo: {
+      tietKhi: {
+        name: 'Hiện tại',
+        season: currentMonth >= 3 && currentMonth <= 5 ? 'Xuân' : 
+                currentMonth >= 6 && currentMonth <= 8 ? 'Hạ' :
+                currentMonth >= 9 && currentMonth <= 11 ? 'Thu' : 'Đông',
+        element: currentMonth >= 3 && currentMonth <= 5 ? 'Mộc' : 
+                 currentMonth >= 6 && currentMonth <= 8 ? 'Hỏa' :
+                 currentMonth >= 9 && currentMonth <= 11 ? 'Kim' : 'Thủy',
+      },
+      seasonAnalysis: {
+        relation: 'trung-hòa' as const,
+        description: rawData.seasonalAnalysis.overallAssessment,
+        advice: 'Tuân thủ theo mùa',
+      },
+      lunar: {
+        day: new Date().getDate(),
+        month: currentMonth,
+        year: new Date().getFullYear(),
+      },
+    },
+  };
 
-Phân tích ngắn gọn theo 6 phần, mỗi phần 50-80 từ:
-1. TỔNG QUAN - Kết luận chính 
-2. CƠ CHẾ - Nguyên nhân từ quẻ
-3. TRIỆU CHỨNG - Biểu hiện cụ thể
-4. THỜI ĐIỂM - Tháng nào tốt/xấu
-5. XỬ LÝ NGAY - 3 điều cần làm
-6. PHÁC ĐỒ - Hướng điều trị dài hạn`
+  return buildUnifiedMedicalPrompt(input);
 }
 
 async function generateTextWithOpenAI(systemPrompt: string, userPrompt: string): Promise<string> {
   const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 seconds timeout
+  const timeoutId = setTimeout(() => controller.abort(), 30000) // 30 seconds timeout cho prompt chuyên gia
 
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -101,13 +164,13 @@ async function generateTextWithOpenAI(systemPrompt: string, userPrompt: string):
         Authorization: `Bearer ${process.env.OPENAI_API_KEY || ""}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "gpt-4o",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
-        temperature: 0.5,
-        max_tokens: 500,
+        max_tokens: 1500,
+        temperature: 0.3, // Giảm temperature để AI tuân thủ format chặt chẽ hơn
       }),
       signal: controller.signal,
     })
@@ -235,7 +298,10 @@ export async function POST(request: NextRequest) {
       chiNgay,
       element,
       lunarYear,
+      subject, // Đối tượng hỏi: banthan, cha, me, con, vo, chong, anhchiem
     } = body
+    
+    console.log('[v0] Patient personalization:', { subject, gender, age })
 
     if (
       upperTrigram === null ||
@@ -329,44 +395,24 @@ export async function POST(request: NextRequest) {
 
     try {
       // Giảm max tokens từ 1500 -> 1000 để tăng tốc độ
-      const relevantKnowledge = selectRelevantChunks(
-        healthConcern || "",
-        [rawCalculation.affectedOrgans.primary, rawCalculation.affectedOrgans.secondary],
-        1000,
-      )
-
-      const userPrompt = constructPrompt(
+      // Use unified medical prompt builder
+      const userPrompt = buildUnifiedPromptInput(
         rawCalculation,
         healthConcern || "",
         currentMonth || 1,
         gender,
         age,
-        painLocation,
-        userLocation,
-        canNam,
-        chiNam,
-        canNgay,
-        chiNgay,
-        element,
-        lunarYear,
+        subject,
       )
 
-      const systemPrompt = `${SYSTEM_INSTRUCTION}
+      // System prompt - cultural analysis guidance
+      const systemPrompt = `You are a specialist in classical Chinese medicine and I Ching divination analysis. Your task is to provide educational and cultural insights into health patterns based on hexagram readings and Five Elements theory. This is for informational purposes only, not medical advice.
 
-${ANALYSIS_RULES}
+Please structure your response with clear sections as indicated in the user prompt, including both modern medical perspective and traditional Eastern medicine concepts. Be comprehensive and explain all terminology clearly for the reader's understanding.`
 
-${CORE_KNOWLEDGE}
-
-${userLocation ? GEOGRAPHY_KNOWLEDGE : ""}
-
-KIẾN THỨC LIÊN QUAN:
-${relevantKnowledge}`
-
-      console.log("[v0] Starting AI generation...")
       const startTime = Date.now()
       const text = await generateTextWithOpenAI(systemPrompt, userPrompt)
       const endTime = Date.now()
-      console.log(`[v0] AI generation completed in ${endTime - startTime}ms`)
       const aiInterpretation = parseAIResponse(text)
 
       const result = {
@@ -442,28 +488,49 @@ function parseAIResponse(text: string) {
     timing: "",
     immediateAdvice: "",
     longTermTreatment: "",
+    rootOrganAnalysis: "",
     seasonal: {
       favorableMonths: [] as number[],
       unfavorableMonths: [] as number[],
     },
   }
 
-  const summaryMatch = text.match(/##\s*1\.\s*TỔNG QUAN[^\n]*\n([\s\S]*?)(?=##|$)/i)
-  const mechanismMatch = text.match(/##\s*2\.\s*CƠ CHẾ BỆNH LÝ[^\n]*\n([\s\S]*?)(?=##|$)/i)
-  const symptomsMatch = text.match(/##\s*3\.\s*TRIỆU CHỨNG[^\n]*\n([\s\S]*?)(?=##|$)/i)
-  const timingMatch = text.match(/##\s*4\.\s*THỜI ĐIỂM[^\n]*\n([\s\S]*?)(?=##|$)/i)
-  const immediateMatch = text.match(/##\s*5\.\s*XỬ LÝ NGAY[^\n]*\n([\s\S]*?)(?=##|$)/i)
-  const longTermMatch = text.match(/##\s*6\.\s*PHÁC ĐỒ[^\n]*\n([\s\S]*?)(?=##|$)/i)
+  // Parse phần TÓM TẮT BỆNH TRẠNG (unified format)
+  const summaryMatch = text.match(/【TÓM TẮT BỆNH TRẠNG】[\s\S]*?\n([\s\S]*?)(?=【|$)/i)
+  
+  // Parse phần PHÂN TÍCH Y LÝ (Đông - Tây y kết hợp)
+  const mechanismMatch = text.match(/【PHÂN TÍCH Y LÝ[^\]]*】[\s\S]*?\n([\s\S]*?)(?=【|$)/i)
+  
+  // Parse phần KẾT LUẬN: BỆNH TỪ TẠNG NÀO PHÁT SINH
+  const rootOrganMatch = text.match(/【KẾT LUẬN[^\]]*】[\s\S]*?\n([\s\S]*?)(?=【|$)/i)
+  
+  // Parse phần TRIỆU CHỨNG CÓ THỂ GẶP
+  const symptomsMatch = text.match(/【TRIỆU CHỨNG[^\]]*】[\s\S]*?\n([\s\S]*?)(?=【|$)/i)
+  
+  // Parse phần HƯỚNG ĐIỀU CHỈNH
+  const immediateMatch = text.match(/【HƯỚNG ĐIỀU CHỈNH】[\s\S]*?\n([\s\S]*?)(?=【|$)/i)
+  
+  // Parse phần CHẾ ĐỘ ĂN UỐNG
+  const dietMatch = text.match(/【CHẾ ĐỘ ĂN UỐNG[^\]]*】[\s\S]*?\n([\s\S]*?)(?=【|$)/i)
+  
+  // Parse phần LỜI KHUYÊN SINH HOẠT
+  const lifestyleMatch = text.match(/【LỜI KHUYÊN SINH HOẠT】[\s\S]*?\n([\s\S]*?)(?=【|$)/i)
+  
+  // Parse phần YẾU TỐ MÙA
+  const seasonalMatch = text.match(/【YẾU TỐ MÙA[^\]]*】[\s\S]*?\n([\s\S]*?)(?=【|$)/i)
 
   sections.summary = summaryMatch?.[1]?.trim() || ""
   sections.mechanism = mechanismMatch?.[1]?.trim() || ""
+  sections.rootOrganAnalysis = rootOrganMatch?.[1]?.trim() || ""
   sections.symptoms = symptomsMatch?.[1]?.trim() || ""
-  sections.timing = timingMatch?.[1]?.trim() || ""
   sections.immediateAdvice = immediateMatch?.[1]?.trim() || ""
-  sections.longTermTreatment = longTermMatch?.[1]?.trim() || ""
+  sections.timing = seasonalMatch?.[1]?.trim() || ""
+  sections.longTermTreatment = [dietMatch?.[1]?.trim(), lifestyleMatch?.[1]?.trim()].filter(Boolean).join('\n\n') || ""
 
-  if (!sections.summary && !sections.mechanism) {
-    sections.summary = text.substring(0, 500)
+  // Fallback for old format (if unified format not found)
+  if (!sections.summary) {
+    const oldSummaryMatch = text.match(/##\s*1\.\s*TỔNG QUAN[^\n]*\n([\s\S]*?)(?=##|【|$)/i)
+    sections.summary = oldSummaryMatch?.[1]?.trim() || text.substring(0, 500)
   }
 
   return sections

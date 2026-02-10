@@ -16,10 +16,19 @@ import { useRouter } from "next/navigation"
 interface AuthGateModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  redirectTo?: string // URL để redirect sau khi đăng nhập
 }
 
-export function AuthGateModal({ open, onOpenChange }: AuthGateModalProps) {
+export function AuthGateModal({ open, onOpenChange, redirectTo }: AuthGateModalProps) {
   const router = useRouter()
+  
+  // Lưu redirect URL vào sessionStorage trước khi chuyển trang
+  const handleRedirect = (path: string) => {
+    const targetRedirect = redirectTo || window.location.pathname + window.location.search
+    sessionStorage.setItem('auth-redirect-url', targetRedirect)
+    onOpenChange(false)
+    router.push(`${path}?redirectTo=${encodeURIComponent(targetRedirect)}`)
+  }
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -52,20 +61,14 @@ export function AuthGateModal({ open, onOpenChange }: AuthGateModalProps) {
           <Button
             variant="outline"
             className="sm:flex-1 bg-transparent"
-            onClick={() => {
-              onOpenChange(false)
-              router.push("/auth/login")
-            }}
+            onClick={() => handleRedirect("/auth/login")}
           >
             <LogIn className="w-4 h-4 mr-2" />
             Đăng nhập
           </Button>
           <AlertDialogAction
             className="sm:flex-1"
-            onClick={() => {
-              onOpenChange(false)
-              router.push("/auth/register")
-            }}
+            onClick={() => handleRedirect("/auth/register")}
           >
             <UserPlus className="w-4 h-4 mr-2" />
             Đăng ký ngay

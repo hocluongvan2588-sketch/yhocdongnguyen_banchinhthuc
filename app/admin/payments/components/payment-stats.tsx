@@ -1,9 +1,10 @@
-import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DollarSign, Clock, CheckCircle2, XCircle } from "lucide-react"
+import { getSupabaseServerClient } from "@/lib/supabase/server" // Declare the variable before using it
 
 export async function PaymentStats() {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   // Get statistics
   const { data: deposits } = await supabase.from("deposits").select("amount, status, created_at")

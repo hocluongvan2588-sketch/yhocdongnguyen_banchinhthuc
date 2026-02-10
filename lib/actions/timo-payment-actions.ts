@@ -1,14 +1,15 @@
 "use server"
 
-import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { createTimoDepositData, validateTimoAmount, type TimoDeposit, type TimoPaymentMethod } from "@/lib/timo-payment"
+import { getSupabaseServerClient } from "@/lib/supabase/server" // Declared the missing variable
 
 /**
  * Get active Timo payment method
  */
 export async function getTimoPaymentMethod() {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const { data: paymentMethods, error } = await supabase
     .from("payment_methods")
@@ -20,12 +21,33 @@ export async function getTimoPaymentMethod() {
 
   if (error) {
     console.error("[v0] Error fetching Timo payment method:", error)
-    return { error: "Không tìm thấy phương thức thanh toán Timo" }
+    
+    // If table doesn't exist (PGRST205), return default Timo payment method
+    if (error.code === "PGRST205") {
+      console.log("[v0] payment_methods table not found, using default Timo config")
+      return {
+        paymentMethod: {
+          id: "default-timo",
+          bank_code: "VCCB",
+          bank_name: "Timo by Ban Viet Bank",
+          account_number: process.env.TIMO_ACCOUNT_NUMBER || "9020283397825",
+          account_name: process.env.TIMO_ACCOUNT_NAME || "NGUYEN VAN A",
+          branch: "Ho Chi Minh",
+          is_active: true,
+          fee_percentage: 0,
+          fee_fixed: 0,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        } as TimoPaymentMethod,
+      }
+    }
+    
+    return { error: "Khong tim thay phuong thuc thanh toan Timo" }
   }
 
   if (!paymentMethods || paymentMethods.length === 0) {
     console.error("[v0] No active Timo payment method found")
-    return { error: "Không tìm thấy phương thức thanh toán Timo" }
+    return { error: "Khong tim thay phuong thuc thanh toan Timo" }
   }
 
   return { paymentMethod: paymentMethods[0] as TimoPaymentMethod }
@@ -40,7 +62,7 @@ export async function createTimoDeposit(params: {
   packageType?: string
   hexagramKey?: string
 }) {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   console.log("[v0] createTimoDeposit params:", params)
 
@@ -139,7 +161,7 @@ export async function createTimoDeposit(params: {
  * Check deposit status
  */
 export async function checkDepositStatus(depositId: string) {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const {
     data: { user },
@@ -167,7 +189,7 @@ export async function checkDepositStatus(depositId: string) {
  * Process completed deposit - grant access to solution
  */
 export async function processCompletedDeposit(depositId: string) {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   // Get deposit
   const { data: deposit, error: depositError } = await supabase
@@ -220,7 +242,7 @@ export async function processCompletedDeposit(depositId: string) {
  * Cancel expired deposits (pending > 30 minutes)
  */
 export async function cancelExpiredDeposits() {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString()
 

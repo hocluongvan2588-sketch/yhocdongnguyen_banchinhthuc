@@ -1,10 +1,10 @@
 "use server"
 
-import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { createClient, getSupabaseServerClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 
 async function checkAdminAccess() {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const {
     data: { user },
@@ -14,14 +14,18 @@ async function checkAdminAccess() {
     return { error: "Người dùng chưa đăng nhập", isAdmin: false }
   }
 
-  // Check if user has admin role
-  const { data: userData, error: userError } = await supabase
-    .from("users")
-    .select("is_admin")
-    .eq("email", user.email)
+  // Check if user has admin role (using profiles.role like other admin pages)
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
     .single()
 
-  if (userError || !userData?.is_admin) {
+  console.log('[v0] checkAdminAccess - user:', user.id);
+  console.log('[v0] checkAdminAccess - profile:', profile);
+
+  if (profileError || !profile || profile.role !== 'admin') {
+    console.log('[v0] checkAdminAccess - NOT ADMIN');
     return { error: "Bạn không có quyền truy cập trang quản trị", isAdmin: false }
   }
 
@@ -40,7 +44,7 @@ export async function updateSolutionPricing(
     return { error: adminCheck.error }
   }
 
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   // Update all solutions of this type
   const { error } = await supabase.from("solutions").update({ unlock_cost: newPrice }).eq("solution_type", solutionType)
@@ -70,7 +74,7 @@ export async function updatePaymentMethod(
     return { error: adminCheck.error }
   }
 
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const { error } = await supabase.from("payment_methods").update(data).eq("id", methodId)
 
@@ -87,12 +91,17 @@ export async function updatePaymentMethod(
  * Get all solutions (for admin management)
  */
 export async function getAllSolutions() {
+  console.log('[v0] getAllSolutions - START');
   const adminCheck = await checkAdminAccess()
+  console.log('[v0] getAllSolutions - adminCheck result:', adminCheck);
+  
   if (!adminCheck.isAdmin) {
+    console.log('[v0] getAllSolutions - FAILED admin check:', adminCheck.error);
     return { error: adminCheck.error }
   }
 
-  const supabase = await getSupabaseServerClient()
+  console.log('[v0] getAllSolutions - Admin check PASSED, fetching solutions...');
+  const supabase = await createClient()
 
   const { data: solutions, error } = await supabase
     .from("solutions")
@@ -100,10 +109,11 @@ export async function getAllSolutions() {
     .order("hexagram_key")
 
   if (error) {
-    console.error("[v0] Error fetching solutions:", error)
-    return { error: "Không thể tải danh sách gói dịch vụ" }
+    console.error("[v0] getAllSolutions - Supabase error:", error)
+    return { error: "Không thể tải danh sách gói dịch vụ: " + error.message }
   }
 
+  console.log('[v0] getAllSolutions - SUCCESS, solutions count:', solutions?.length);
   return { solutions }
 }
 
@@ -117,6 +127,7 @@ export async function updateSolution(
     description?: string
     unlock_cost?: number
     reference_source?: string
+    promo_message?: string
   },
 ) {
   const adminCheck = await checkAdminAccess()
@@ -124,7 +135,7 @@ export async function updateSolution(
     return { error: adminCheck.error }
   }
 
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const { error } = await supabase.from("solutions").update(data).eq("id", solutionId)
 

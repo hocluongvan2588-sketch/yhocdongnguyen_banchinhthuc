@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Leaf, FlaskConical, Clock, AlertTriangle, Info, Utensils, Heart, Download, ChevronRight } from "lucide-react"
 import { getTrigramByNumber } from "@/lib/data/trigram-data"
-import { generateNamDuocPrescription, type NamDuocPrescription } from "@/lib/herbal-data-nam-duoc"
+import { generateNamDuocPrescriptionAsync, generateNamDuocPrescription, type NamDuocPrescription } from "@/lib/herbal-data-nam-duoc"
 import { GatedContentWrapper } from "@/components/gated-content-wrapper"
 import { PaymentModal } from "@/components/payment-modal"
 import AppHeader from "@/components/app-header" // Declare the AppHeader variable
@@ -19,14 +19,29 @@ function HerbalContent() {
   const searchParams = useSearchParams()
   const [prescription, setPrescription] = useState<NamDuocPrescription | null>(null)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
-  const upper = Number.parseInt(searchParams.get("upper") || "1")
-  const lower = Number.parseInt(searchParams.get("lower") || "1")
-  const moving = Number.parseInt(searchParams.get("moving") || "1")
+  const upper = Number.parseInt(searchParams.get("upper") ?? "1", 10) || 1
+  const lower = Number.parseInt(searchParams.get("lower") ?? "1", 10) || 1
+  const moving = Number.parseInt(searchParams.get("moving") ?? "1", 10) || 1
 
   useEffect(() => {
-    const result = generateNamDuocPrescription(upper, lower, moving)
-    setPrescription(result)
+    const fetchPrescription = async () => {
+      setIsLoading(true)
+      try {
+        // Uu tien query tu database, fallback sang local
+        const result = await generateNamDuocPrescriptionAsync(upper, lower, moving)
+        setPrescription(result)
+      } catch (error) {
+        console.error('[v0] Error fetching prescription:', error)
+        // Fallback to sync version
+        const result = generateNamDuocPrescription(upper, lower, moving)
+        setPrescription(result)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchPrescription()
   }, [upper, lower, moving])
 
   const upperTrigram = getTrigramByNumber(upper)
@@ -34,8 +49,15 @@ function HerbalContent() {
 
   const hexagramName = `${upperTrigram.vietnamese} ${lowerTrigram.vietnamese}`
 
-  if (!prescription) {
-    return <div className="text-center py-12">Đang tải...</div>
+  if (isLoading || !prescription) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-emerald-50/50 to-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-4" />
+          <p className="text-muted-foreground">Dang tai bai thuoc tu co so du lieu...</p>
+        </div>
+      </div>
+    )
   }
 
   const downloadPDF = () => {
@@ -1000,7 +1022,7 @@ function HerbalContent() {
       <PaymentModal
         isOpen={showPaymentModal}
         onClose={() => setShowPaymentModal(false)}
-        packageNumber={2}
+        packageNumber={1}
         upper={upper}
         lower={lower}
         moving={moving}

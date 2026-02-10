@@ -3,13 +3,23 @@
 import type React from "react"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, Lock, LogIn } from "lucide-react"
 import { getCurrentUser } from "@/lib/actions/auth-actions"
 import { checkUserAccess, getSolutionsByHexagram } from "@/lib/actions/solution-actions"
+
+// Key để lưu thông tin thanh toán pending
+const PENDING_PAYMENT_KEY = "pending-payment-after-login"
+
+// Map package number sang route tương ứng
+const PACKAGE_ROUTES = {
+  1: "/treatment/herbal",
+  2: "/treatment/acupressure", 
+  3: "/treatment/numerology",
+}
 
 interface GatedContentWrapperProps {
   children: React.ReactNode
@@ -86,7 +96,29 @@ export function GatedContentWrapper({
   }, [hexagram, solutionType])
 
   const handleLoginClick = () => {
-    router.push("/auth/login")
+    // Lấy thông tin quẻ từ URL params
+    const urlParams = new URLSearchParams(window.location.search)
+    const upper = urlParams.get("upper") || "1"
+    const lower = urlParams.get("lower") || "1"
+    const moving = urlParams.get("moving") || "1"
+    
+    // Lưu thông tin thanh toán pending vào localStorage (không bị mất khi qua Google OAuth)
+    // Sau khi đăng nhập, sẽ redirect đến trang results với trigger mở payment modal
+    const pendingPayment = {
+      packageNumber,
+      upper,
+      lower,
+      moving,
+      timestamp: Date.now()
+    }
+    localStorage.setItem(PENDING_PAYMENT_KEY, JSON.stringify(pendingPayment))
+    
+    // Redirect đến trang results với params quẻ và trigger payment
+    // Sau khi đăng nhập, user sẽ thấy kết quả chẩn đoán và tự động mở payment modal
+    const redirectUrl = `/results?upper=${upper}&lower=${lower}&moving=${moving}&openPayment=${packageNumber}`
+    sessionStorage.setItem("auth-redirect-url", redirectUrl)
+    
+    router.push(`/auth/login?redirectTo=${encodeURIComponent(redirectUrl)}`)
   }
 
   const handlePaymentClick = () => {

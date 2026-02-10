@@ -1,11 +1,12 @@
 "use server"
 
-import { getSupabaseServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import { getSupabaseServerClient } from "@/lib/supabase/server" // Declare the variable before using it
 
 export async function signUp(email: string, password: string, fullName?: string) {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -23,9 +24,9 @@ export async function signUp(email: string, password: string, fullName?: string)
     return { error: error.message }
   }
 
-  // Update user profile in users table
+  // Update user profile in profiles table (trigger handles creation)
   if (data.user && fullName) {
-    await supabase.from("users").update({ full_name: fullName }).eq("id", data.user.id)
+    await supabase.from("profiles").update({ full_name: fullName }).eq("id", data.user.id)
   }
 
   revalidatePath("/")
@@ -33,7 +34,7 @@ export async function signUp(email: string, password: string, fullName?: string)
 }
 
 export async function signIn(email: string, password: string) {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -50,7 +51,7 @@ export async function signIn(email: string, password: string) {
 }
 
 export async function signOut() {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const { error } = await supabase.auth.signOut()
 
@@ -64,7 +65,7 @@ export async function signOut() {
 }
 
 export async function getCurrentUser() {
-  const supabase = await getSupabaseServerClient()
+  const supabase = await createClient()
 
   const {
     data: { user },
@@ -77,22 +78,21 @@ export async function getCurrentUser() {
     return { user: null }
   }
 
-  // Fetch additional user data including is_admin from public.users table
-  // Add timestamp to prevent caching
-  const { data: userData, error } = await supabase
-    .from("users")
-    .select("is_admin, full_name")
+  // Fetch additional user data including role from public.profiles table
+  const { data: profileData, error } = await supabase
+    .from("profiles")
+    .select("role, full_name")
     .eq("id", user.id)
     .single()
 
-  console.log("[v0] getCurrentUser - userData:", userData)
+  console.log("[v0] getCurrentUser - profileData:", profileData)
   console.log("[v0] getCurrentUser - error:", error)
 
   return {
     user: {
       ...user,
-      is_admin: userData?.is_admin || false,
-      full_name: userData?.full_name,
+      is_admin: profileData?.role === "admin",
+      full_name: profileData?.full_name,
     },
   }
 }
